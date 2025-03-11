@@ -78,20 +78,27 @@ The process by which the client interacts with the authorization server is out o
 This specification uses the terms "access token", "authorization server", "authorization endpoint", "authorization request", "client", "protected resource", and "resource server" defined by "The OAuth 2.0 Authorization Framework" {{RFC6749}}.
 
 # JWT Access Token Client Extensions Data Structure
+
 ## Client Authentication Information Claims
+
 ### Client Authentication Context claim
 TODO
+
 ### Client Authentication Method claim
 TODO
+
 ## Client Authorization Claims
+
 ### Grant Type claim
 TODO
+
 ### Client Extensions claim
 TODO
 
 
 # Requesting a JWT Access Token with Client Extensions
 TODO
+
 # Validating JWT Access Tokens with Client Extensions
 TODO
 This specification follows the requirements of {{RFC9068}}.
