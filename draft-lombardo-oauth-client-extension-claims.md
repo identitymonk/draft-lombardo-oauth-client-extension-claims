@@ -34,7 +34,6 @@ author:
  
 normative:
   RFC6749: # OAuth2
-  OpenID.Core: # OpenID Connect Core
   RFC7519: # JSON Web Token
   RFC9068: # JWT profiled access Token
   RFC6750: # OAuth2 Bearer Token Usage
@@ -80,16 +79,15 @@ This specification uses the terms "access token", "authorization server", "autho
 
 # JWT Access Token Client Extensions Data Structure
 ## Client Authentication Information Claims
-
 ### Client Authentication Context claim
-
+TODO
 ### Client Authentication Method claim
-
+TODO
 ## Client Authorization Claims
 ### Grant Type claim
-
+TODO
 ### Client Extensions claim
-
+TODO
 
 
 # Requesting a JWT Access Token with Client Extensions
