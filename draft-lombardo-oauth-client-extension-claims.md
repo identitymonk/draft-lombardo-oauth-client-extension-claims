@@ -91,9 +91,9 @@ TODO
 
 
 # Requesting a JWT Access Token with Client Extensions
-
+TODO
 # Validating JWT Access Tokens with Client Extensions
-
+TODO
 This specification follows the requirements of {{RFC9068}}.
 
 # Security Considerations
@@ -105,8 +105,9 @@ TODO Security
 ## Claims Registration
 TODO of this specification refers to the attributes "gty", "cxt", "ccr", and "cmr" to express client metadata JWT access tokens. This section registers those attributes as claims in the "JSON Web Token (JWT)" IANA registry introduced in [RFC7519].
 
-### Registry Content
-#### Grant Type
+## Registry Content
+
+### Grant Type
 Claim Name:
     gty
 Claim Description:
@@ -116,7 +117,7 @@ Change Controller:
 Specification Document(s):
     TODO of Draft
 
-#### Client Extensions
+### Client Extensions
 Claim Name:
     cxt
 Claim Description:
@@ -126,7 +127,7 @@ Change Controller:
 Specification Document(s):
     TODO of Draft
 
-#### Client Authentication Context
+### Client Authentication Context
 Claim Name:
     ccr
 Claim Description:
@@ -136,7 +137,7 @@ Change Controller:
 Specification Document(s):
     TODO of Draft
 
-#### Client Authentication Methods
+### Client Authentication Methods
 Claim Name:
     cmr
 Claim Description:
