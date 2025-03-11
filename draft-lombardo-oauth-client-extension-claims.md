@@ -31,7 +31,7 @@ author:
     fullname: Alex Babeanu
     organization: IndieKite
     email: alex.babeanu@indykite.com
- 
+
 normative:
   RFC6749: # OAuth2
   RFC7519: # JSON Web Token
@@ -41,7 +41,7 @@ normative:
 informative:
   RFC8176: # AMR
   RFC7636: # PKCE
-  RFC9396: # RAR 
+  RFC9396: # RAR
   RFC9126: # PAR
   RFC9101: # JAR
   RFC8693: # Token Exchange
