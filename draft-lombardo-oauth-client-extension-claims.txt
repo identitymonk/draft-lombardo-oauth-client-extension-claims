@@ -77,14 +77,16 @@ Table of Contents
    2.  Conventions and Definitions
    3.  JWT Access Token Client Extensions Data Structure
    4.  Requesting a JWT Access Token with Client Extensions
-   5.  Validating JWT Access Tokens with Client Extensions
-   6.  Security Considerations
-   7.  IANA Considerations
-     7.1.  Registry Content
-       7.1.1.  Client Extensions
-   8.  References
-     8.1.  Normative References
-     8.2.  Informative References
+   5.  Security Considerations
+   6.  IANA Considerations
+     6.1.  Registry Content
+       6.1.1.  Grant Type
+       6.1.2.  Client Extensions
+       6.1.3.  Client Authentication Context
+       6.1.4.  Client Authentication Methods
+   7.  References
+     7.1.  Normative References
+     7.2.  Informative References
    Acknowledgments
    Authors' Addresses
 
@@ -136,47 +138,48 @@ Table of Contents
 
 4.  Requesting a JWT Access Token with Client Extensions
 
-5.  Validating JWT Access Tokens with Client Extensions
+   TODO # Validating JWT Access Tokens with Client Extensions TODO This
+   specification follows the requirements of [RFC9068].
 
-   This specification follows the requirements of [RFC9068].
-
-6.  Security Considerations
+5.  Security Considerations
 
    TODO Security
 
-7.  IANA Considerations
+6.  IANA Considerations
 
    ## Claims Registration TODO of this specification refers to the
    attributes "gty", "cxt", "ccr", and "cmr" to express client metadata
    JWT access tokens.  This section registers those attributes as claims
    in the "JSON Web Token (JWT)" IANA registry introduced in [RFC7519].
 
-7.1.  Registry Content
+6.1.  Registry Content
 
-   #### Grant Type Claim Name: gty Claim Description: Grant Type used
-   Change Controller: IETF Specification Document(s): TODO of Draft
+6.1.1.  Grant Type
 
-7.1.1.  Client Extensions
+   Claim Name: gty Claim Description: Grant Type used Change Controller:
+   IETF Specification Document(s): TODO of Draft
+
+6.1.2.  Client Extensions
 
    Claim Name: cxt Claim Description: Client Extensions used for the
    Grant Type Change Controller: IETF Specification Document(s): TODO of
    Draft
 
-7.1.1.1.  Client Authentication Context
+6.1.3.  Client Authentication Context
 
    Claim Name: ccr Claim Description: Client Authentication Class
    Reference Change Controller: IETF Specification Document(s): TODO of
    Draft
 
-7.1.1.2.  Client Authentication Methods
+6.1.4.  Client Authentication Methods
 
    Claim Name: cmr Claim Description: Client Authentication Methods
    Reference Change Controller: IETF Specification Document(s): TODO of
    Draft
 
-8.  References
+7.  References
 
-8.1.  Normative References
+7.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -204,7 +207,7 @@ Table of Contents
               Access Tokens", RFC 9068, DOI 10.17487/RFC9068, October
               2021, <https://www.rfc-editor.org/rfc/rfc9068>.
 
-8.2.  Informative References
+7.2.  Informative References
 
    [RFC7636]  Sakimura, N., Ed., Bradley, J., and N. Agarwal, "Proof Key
               for Code Exchange by OAuth Public Clients", RFC 7636,
