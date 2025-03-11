@@ -9,18 +9,18 @@ number:
 date:
 consensus: true
 v: 3
-area: "Security"
+area: ""
 workgroup: "Web Authorization Protocol"
 keyword:
  - security
  - trust
 venue:
   group: "Web Authorization Protocol"
-  type: "Working Group"
+  type: ""
   mail: "oauth@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/oauth/"
   github: "identitymonk/draft-lombardo-oauth-client-extension-claims"
-  latest: "https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html" 
+  latest: "https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html"
 
 author:
  -
