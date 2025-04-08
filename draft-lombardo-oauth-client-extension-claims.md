@@ -41,7 +41,7 @@ normative:
   RFC8628: # Device Code
   OpenID.CIBA: https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html #CIBA
   RFC8414: # OAuth 2.0 Authorization Server Metadata
-  IANA.OAuth.Parameters: # IANA Registry
+  IANA.OAuth.Parameters: https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xml # IANA Registry
 
 informative:
   RFC6750: # OAuth2 Bearer Token Usage
@@ -56,8 +56,9 @@ informative:
   RFC8705: # mTLS client
   RFC9421: # HTTP Message Signature
   RFC9700: # OAuth BCP
-  I-D.ietf-winse-s2s-protocol: # WIMSE W2W
-  I-D.ietf-oauth-transaction-tokens: # Transaction tokens
+  I-D.parecki-oauth-identity-assertion-authz-grant-02: # Assertion grant
+  I-D.ietf-winse-s2s-protocol-03: # WIMSE W2W
+  I-D.ietf-oauth-transaction-tokens-05: # Transaction tokens
 
 
 --- abstract
@@ -103,7 +104,7 @@ gty
     REQUIRED - defines the OAuth2 authorization grant type the client used for the issuance of the access token. String that is an identifier for an OAuth2 Grant type. Values used in the `gty` Claim MUST be from those registered in the IANA Grant Type Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2. of {{RFC7591}}, section 2.1 of {{RFC8693}}, and section 4 of {{OpenID.CIBA}}.
 
 cxt
-    REQUIRED - defines the list of extensions the client used in conjonction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in {{RFC 7636}}, Demonstrating Proof of Possession (or DPoP) as defined in {{RFC9449}}. JSON array of strings that are identifiers for extensions used. Values used in the `cxt` Claim MUST be from those registered in the IANA Client Context Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2 of {{RFC8414}}, and Section 5.1 of {{RFC9449}}.
+    REQUIRED - defines the list of extensions the client used in conjonction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in {{RFC7636}}, Demonstrating Proof of Possession (or DPoP) as defined in {{RFC9449}}. JSON array of strings that are identifiers for extensions used. Values used in the `cxt` Claim MUST be from those registered in the IANA Client Context Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2 of {{RFC8414}}, and Section 5.1 of {{RFC9449}}.
 
 ## Client Authentication Information Claims
 
@@ -139,7 +140,9 @@ The JWT access token data layout described here is very similar to that of JWT a
 The security current best practices described in [RFC9700] are applicable.
 
 # IANA Considerations
+
 ## OAuth Grant Type Registration
+
 This specification registers the following grant type in the [IANA.OAuth.Parameters] OAuth Grant Type registry.
 
 ### 'authorization_code' grant type
@@ -253,6 +256,7 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       section 4. of {{OpenID.CIBA}}
 
 ## OAuth Grant Extension Type Registration
+
 This specification registers the following grant extension type in the {{IANA.OAuth.Parameters}} OAuth Grant Extension Type registry.
 
 ### 'pkce' grant extension type
@@ -311,7 +315,8 @@ This specification registers the following grant extension type in the {{IANA.OA
       This RFC as a reference to {{RFC9101}}
 
 ## OAuth Token Endpoint Authentication Methods Registration
-This specification registers additional token endpoint authentication methods in the {{[IANA.OAuth.Parameters}} OAuth Token Endpoint Authentication Methods registry.
+
+This specification registers additional token endpoint authentication methods in the {{IANA.OAuth.Parameters}} OAuth Token Endpoint Authentication Methods registry.
 
 ### 'jwt-bearer' authentication method type
 
