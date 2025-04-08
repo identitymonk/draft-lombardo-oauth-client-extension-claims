@@ -98,10 +98,10 @@ The following claims extend the {{RFC9068}} access token payload data structure:
 The claims listed in this section MUST be issued and reflect grant type and extensions used with authorization server as part of the authorization request from the client. Their values are dynamic accros all access tokens that derive from a given authorization response to reflect the elements used in the process that lead to their issuance.
 
 gty
-    REQUIRED - defines the OAuth2 authorization grant type the client used for the issuance of the access token. String that is an identifier for an OAuth2 Grant type. Values used in the `gty` Claim MUST be from those registered in the IANA Grant Type Reference Values registry [IANA.GTY] established by this RFC and referencing, without being limited to, values established through section 2. of [RFC7591], section 2.1 of [RFC8693], and section 4 of [OpenID.CIBA].
+    REQUIRED - defines the OAuth2 authorization grant type the client used for the issuance of the access token. String that is an identifier for an OAuth2 Grant type. Values used in the `gty` Claim MUST be from those registered in the IANA Grant Type Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2. of [RFC7591], section 2.1 of [RFC8693], and section 4 of {{OpenID.CIBA}}.
 
 cxt
-    REQUIRED - defines the list of extensions the client used in conjonction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in {{RFC 7636}}, Demonstrating Proof of Possession (or DPoP) as defined in {{RFC9449}}. JSON array of strings that are identifiers for extensions used. Values used in the `cxt` Claim MUST be from those registered in the IANA Client Context Reference Values registry [IANA.CXT] established by this RFC and referencing, without being limited to, values established through section 2 of [RFC8414], and Section 5.1 of [RFC9449].
+    REQUIRED - defines the list of extensions the client used in conjonction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in {{RFC 7636}}, Demonstrating Proof of Possession (or DPoP) as defined in {{RFC9449}}. JSON array of strings that are identifiers for extensions used. Values used in the `cxt` Claim MUST be from those registered in the IANA Client Context Reference Values registry [IANA.CXT] established by this RFC and referencing, without being limited to, values established through section 2 of {{RFC8414}}, and Section 5.1 of {{RFC9449}}.
 
 ## Client Authentication Information Claims
 
@@ -320,7 +320,7 @@ This specification registers additional token endpoint authentication methods in
       IETF
 
    Specification document(s):
-      This RFC as a reference to {{RFC7591}} and {{I-D.ietf-oauth-identity-assertion-authz-grant}}
+      This RFC as a reference to {{RFC7591}} and {{I-D.parecki-oauth-identity-assertion-authz-grant}}
 
 ### 'jwt_svid' authentication method type
 
@@ -342,7 +342,7 @@ This specification registers additional token endpoint authentication methods in
       IETF
 
    Specification document(s):
-      This RFC as a reference to [I-D.ietf-wimse-s2s-protocol]
+      This RFC as a reference to {{I-D.ietf-wimse-s2s-protocol}}
 
 ### 'txn_token' authentication method type
 
@@ -353,10 +353,10 @@ This specification registers additional token endpoint authentication methods in
       IETF
 
    Specification document(s):
-      This RFC as a reference to [I-D.ietf-oauth-transaction-tokens]
+      This RFC as a reference to {{I-D.ietf-oauth-transaction-tokens}}
 
 ## Claims Registration
-Section X.Y of this specification refers to the attributes "gty", "cxt", "ccr", and "cmr" to express client metadata JWT access tokens. This section registers those attributes as claims in the "JSON Web Token (JWT)" IANA registry introduced in [RFC7519].
+Section X.Y of this specification refers to the attributes "gty", "cxt", "ccr", and "cmr" to express client metadata JWT access tokens. This section registers those attributes as claims in the "JSON Web Token (JWT)" IANA registry introduced in {{RFC7519}}.
 
 ### Grant Type
 Claim Name:
