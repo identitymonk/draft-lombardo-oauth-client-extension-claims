@@ -322,7 +322,7 @@ This specification registers additional token endpoint authentication methods in
       IETF
 
    Specification document(s):
-      This RFC as a reference to {{RFC7591}} and {{I-D.parecki-oauth-identity-assertion-authz-grant}}
+      This RFC as a reference to {{RFC7591}} and {{I-D.parecki-oauth-identity-assertion-authz-grant-02}}
 
 ### 'jwt_svid' authentication method type
 
@@ -344,7 +344,7 @@ This specification registers additional token endpoint authentication methods in
       IETF
 
    Specification document(s):
-      This RFC as a reference to {{I-D.ietf-wimse-s2s-protocol}}
+      This RFC as a reference to {{I-D.ietf-wimse-s2s-protocol-03}}
 
 ### 'txn_token' authentication method type
 
@@ -355,7 +355,7 @@ This specification registers additional token endpoint authentication methods in
       IETF
 
    Specification document(s):
-      This RFC as a reference to {{I-D.ietf-oauth-transaction-tokens}}
+      This RFC as a reference to {{I-D.ietf-oauth-transaction-tokens-05}}
 
 ## Claims Registration
 Section X.Y of this specification refers to the attributes "gty", "cxt", "ccr", and "cmr" to express client metadata JWT access tokens. This section registers those attributes as claims in the "JSON Web Token (JWT)" IANA registry introduced in {{RFC7519}}.
