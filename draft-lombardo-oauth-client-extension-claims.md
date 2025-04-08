@@ -26,10 +26,13 @@ author:
  -
     fullname: Jeff Lombardo
     organization: AWS
+    country: Canada
     email: jeff@authnopuz.xyz
+
  -
     fullname: Alex Babeanu
     organization: IndieKite
+    country: Canada
     email: alex.babeanu@indykite.com
 
 normative:
@@ -39,9 +42,23 @@ normative:
   RFC7591: # DCR
   RFC8693: # Token Exchange
   RFC8628: # Device Code
-  OpenID.CIBA: https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html #CIBA
+  OpenID.CIBA:
+    target: https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html
+    title: OpenID Connect Client-Initiated Backchannel Authentication Flow - Core 1.0
+    date: 1 September 2021
+    author:
+      -
+        name: G. Fernandez
+      -
+        name: F. Walter
+      -
+        name: A. Nennker
+      -
+        name: D. Tonge
+      -
+        name: B. Campbell
   RFC8414: # OAuth 2.0 Authorization Server Metadata
-  IANA.OAuth.Parameters: https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xml # IANA Registry
+  IANA.oauth-parameters: # IANA Registry
 
 informative:
   RFC6750: # OAuth2 Bearer Token Usage
@@ -56,9 +73,11 @@ informative:
   RFC8705: # mTLS client
   RFC9421: # HTTP Message Signaturenano /etc/update-manager/release-upgrades
   RFC9700: # OAuth BCP
-  I-D.parecki-oauth-identity-assertion-authz-grant-02: # Assertion grant
-  I-D.ietf-winse-s2s-protocol-03: # WIMSE W2W
-  I-D.ietf-oauth-transaction-tokens-05: # Transaction tokens
+  I-D.parecki-oauth-identity-assertion-authz-grant: # Assertion grant
+  I-D.ietf-wimse-s2s-protocol: # WIMSE W2W
+  I-D.ietf-oauth-transaction-tokens: # Transaction tokens
+  IANA.oauth-parameters_token-endpoint-auth-method: # IANA Registry
+  IANA.jwt: # IANA registry
 
 
 --- abstract
@@ -88,7 +107,7 @@ The process by which the client interacts with the authorization server is out o
 {::boilerplate bcp14-tagged}
 
 JWT access token:
-    An OAuth 2.0 access token encoded in JWT format and complying with the requirements described in {{RFC9068}}.
+: An OAuth 2.0 access token encoded in JWT format and complying with the requirements described in {{RFC9068}}.
 
 This specification uses the terms "access token", "authorization server", "authorization endpoint", "authorization request", "client", "protected resource", and "resource server" defined by "The OAuth 2.0 Authorization Framework" {{RFC6749}}.
 
@@ -100,30 +119,30 @@ The following claims extend the {{RFC9068}} access token payload data structure:
 
 The claims listed in this section MUST be issued and reflect grant type and extensions used with authorization server as part of the authorization request from the client. Their values are dynamic accros all access tokens that derive from a given authorization response to reflect the elements used in the process that lead to their issuance.
 
-gty
-    REQUIRED - defines the OAuth2 authorization grant type the client used for the issuance of the access token. String that is an identifier for an OAuth2 Grant type. Values used in the `gty` Claim MUST be from those registered in the IANA Grant Type Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2. of {{RFC7591}}, section 2.1 of {{RFC8693}}, and section 4 of {{OpenID.CIBA}}.
+`gty`:
+: REQUIRED - defines the OAuth2 authorization grant type the client used for the issuance of the access token. String that is an identifier for an OAuth2 Grant type. Values used in the `gty` Claim MUST be from those registered in the IANA Grant Type Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2. of {{RFC7591}}, section 2.1 of {{RFC8693}}, and section 4 of {{OpenID.CIBA}}.
 
-cxt
-    REQUIRED - defines the list of extensions the client used in conjonction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in {{RFC7636}}, Demonstrating Proof of Possession (or DPoP) as defined in {{RFC9449}}. JSON array of strings that are identifiers for extensions used. Values used in the `cxt` Claim MUST be from those registered in the IANA Client Context Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2 of {{RFC8414}}, and Section 5.1 of {{RFC9449}}.
+`cxt`:
+: REQUIRED - defines the list of extensions the client used in conjonction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in {{RFC7636}}, Demonstrating Proof of Possession (or DPoP) as defined in {{RFC9449}}. JSON array of strings that are identifiers for extensions used. Values used in the `cxt` Claim MUST be from those registered in the IANA Client Context Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2 of {{RFC8414}}, and Section 5.1 of {{RFC9449}}.
 
 ## Client Authentication Information Claims
 
 The claims listed in this section MAY be issued and reflect the types and strength of client authentication in the access token that the authentication server enforced prior to returning the authorization response to the client. Their values are fixed and remain the same across all access tokens that derive from a given authorization response, whether the access token was obtained directly in the response (e.g., via the implicit flow) or after obtaining a fresh access token using a refresh token. Those values may change if an access tokenis exchanged for another via an {{RFC8693}} procedure in order to reflect the specifities of this request.
 
-ccr
-    OPTIONAL - defines the authentication context class reference the client satisfied when authenticating to the authorization server. An absolute URI or registered name from furture RFC SHOULD be used as the `ccr` value; registered names MUST NOT be used with a different meaning than that which is registered. Parties using this claim will need to agree upon the meanings of the values used, which may be context specific.
+`ccr`:
+: OPTIONAL - defines the authentication context class reference the client satisfied when authenticating to the authorization server. An absolute URI or registered name from furture RFC SHOULD be used as the `ccr` value; registered names MUST NOT be used with a different meaning than that which is registered. Parties using this claim will need to agree upon the meanings of the values used, which may be context specific.
 
-cmr
-    OPTIONAL - defines the authentication methods the client used when authenticating to the authorization server. String that is an identifier for an authentication method used in the authentication of the client. For instance, a value might indicate the usage of private JWT as defined in {{RFC7521}} and {{RFC7523}} or HTTP message signature as defined in {{RFC9421}} . The `cmr` value is a case-sensitive string. Values used in the `cmr` Claim SHOULD be from those registered in the IANA OAuth Token Endpoint Authentication Methods Values registry {{IANA.OAuth.Parameters}} defined by {{RFC7591}}; parties using this claim will need to agree upon the meanings of any unregistered values used, which may be context specific.
+`cmr`:
+: OPTIONAL - defines the authentication methods the client used when authenticating to the authorization server. String that is an identifier for an authentication method used in the authentication of the client. For instance, a value might indicate the usage of private JWT as defined in {{RFC7521}} and {{RFC7523}} or HTTP message signature as defined in {{RFC9421}} . The `cmr` value is a case-sensitive string. Values used in the `cmr` Claim SHOULD be from those registered in the IANA OAuth Token Endpoint Authentication Methods Values registry {{IANA.oauth-parameters_token-endpoint-auth-method}} defined by {{RFC7591}}; parties using this claim will need to agree upon the meanings of any unregistered values used, which may be context specific.
 
 # Authorization Server Metadata
 
 The following authorization server metadata parameters {{RFC8414}} are introduced to signal the server's capability
 
-support_client_extentison_claims
-    Boolean parameter indicating whether the authorization server will return the extension claimns described in this RFC.
+`support_client_extentison_claims`:
+: Boolean parameter indicating whether the authorization server will return the extension claimns described in this RFC.
 
-> Note that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC.
+Note that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC.
 
 # Requesting a JWT Access Token with Client Extensions
 
@@ -143,267 +162,284 @@ The security current best practices described in {{RFC9700}} are applicable.
 
 ## OAuth Grant Type Registration
 
-This specification registers the following grant type in the {{IANA.OAuth.Parameters}} OAuth Grant Type registry.
+This specification registers the following grant type in the {{IANA.oauth-parameters}} OAuth Grant Type registry.
 
-### 'authorization_code' grant type
+### `authorization_code` grant type
 
-    Type name:
-      authorization_code
-
-   Change controller:
-      IETF
-
-   Specification document(s):
-      section 2. of {{RFC7591}}
-
-### 'implicit' grant type
-
-    Type name:
-      implicit
+   Type name:
+   : `authorization_code`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      section 2. of {{RFC7591}}
+   : section 2. of {{RFC7591}}
 
-### 'password' grant type
+### `implicit` grant type
 
-    Type name:
-      password
+   Type name:
+   : `implicit`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      section 2. of {{RFC7591}}
+   : section 2. of {{RFC7591}}
 
-### 'client_credentials' grant type
+### `password` grant type
 
-    Type name:
-      client_credentials
+   Type name:
+   : `password`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      section 2. of {{RFC7591}}
+   : section 2. of {{RFC7591}}
 
-### 'refresh_token' grant type
+### `client_credentials` grant type
 
-    Type name:
-      refresh_token
+   Type name:
+   : `client_credentials`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      section 2. of {{RFC7591}}
+   : section 2. of {{RFC7591}}
 
-### 'urn:ietf:params:oauth:grant-type:jwt-bearer' grant type
+### `refresh_token` grant type
 
-    Type name:
-      urn:ietf:params:oauth:grant-type:jwt-bearer
+   Type name:
+   : `refresh_token`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      section 2. of {{RFC7591}}
+   : section 2. of {{RFC7591}}
 
-### 'urn:ietf:params:oauth:grant-type:saml2-bearer' grant type
+### `jwt-bearer` grant type
 
-    Type name:
-      urn:ietf:params:oauth:grant-type:saml2-bearer
+   Type name:
+   : `urn:ietf:params:oauth:grant-type:jwt-bearer`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      section 2. of {{RFC7591}}
+   : section 2. of {{RFC7591}}
 
-### 'urn:ietf:params:oauth:grant-type:token-exchange' grant type
+### `saml2-bearer` grant type
 
-    Type name:
-      urn:ietf:params:oauth:grant-type:token-exchange
+   Type name:
+   : `urn:ietf:params:oauth:grant-type:saml2-bearer`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      section 2.1. of {{RFC8693}}
+   : section 2. of {{RFC7591}}
 
-### 'urn:ietf:params:oauth:grant-type:device_code' grant type
+### `token-exchange` grant type
 
-    Type name:
-      urn:ietf:params:oauth:grant-type:device_code
+   Type name:
+   : `urn:ietf:params:oauth:grant-type:token-exchange`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      section 3.4. of {{RFC8628}}
+   : section 2.1. of {{RFC8693}}
 
-### 'urn:openid:params:grant-type:ciba' grant type
+### `device_code` grant type
 
-    Type name:
-      urn:openid:params:grant-type:ciba
+   Type name:
+   : `urn:ietf:params:oauth:grant-type:device_code`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      section 4. of {{OpenID.CIBA}}
+   : section 3.4. of {{RFC8628}}
+
+### `ciba` grant type
+
+   Type name:
+   : `urn:openid:params:grant-type:ciba`
+
+   Change controller:
+   : IETF
+
+   Specification document(s):
+   : section 4. of {{OpenID.CIBA}}
 
 ## OAuth Grant Extension Type Registration
 
-This specification registers the following grant extension type in the {{IANA.OAuth.Parameters}} OAuth Grant Extension Type registry.
+This specification registers the following grant extension type in the {{IANA.oauth-parameters}} OAuth Grant Extension Type registry.
 
-### 'pkce' grant extension type
+### `pkce` grant extension type
 
-    Type name:
-      pkce
-
-   Change controller:
-      IETF
-
-   Specification document(s):
-      This RFC as a reference to {{RFC7636}}
-
-### 'dpop' grant extension type
-
-    Type name:
-      dpop
+   Type name:
+   : `pkce`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      This RFC as a reference to {{RFC9449}}
+   : This RFC as a reference to {{RFC7636}}
 
-### 'rar' grant extension type
+### `dpop` grant extension type
 
-    Type name:
-      rar
+   Type name:
+   : `dpop`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      This RFC as a reference to  {{RFC9396}}
+   : This RFC as a reference to {{RFC9449}}
 
-### 'par' grant extension type
+### `rar` grant extension type
 
-    Type name:
-      par
+   Type name:
+   : `rar`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      This RFC as a reference to {{RFC9126}}
+   : This RFC as a reference to  {{RFC9396}}
 
-### 'jar' grant extension type
+### `par` grant extension type
 
-    Type name:
-      jar
+   Type name:
+   : `par`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      This RFC as a reference to {{RFC9101}}
+   : This RFC as a reference to {{RFC9126}}
+
+### `jar` grant extension type
+
+   Type name:
+   : `jar`
+
+   Change controller:
+   : IETF
+
+   Specification document(s):
+   : This RFC as a reference to {{RFC9101}}
 
 ## OAuth Token Endpoint Authentication Methods Registration
 
-This specification registers additional token endpoint authentication methods in the {{IANA.OAuth.Parameters}} OAuth Token Endpoint Authentication Methods registry.
+This specification registers additional token endpoint authentication methods in the {{IANA.oauth-parameters}} OAuth Token Endpoint Authentication Methods registry.
 
-### 'jwt-bearer' authentication method type
+### `jwt-bearer` token endpoint authentication method
 
-    Type name:
-      jwt-bearer
-
-   Change controller:
-      IETF
-
-   Specification document(s):
-      This RFC as a reference to {{RFC7591}} and {{I-D.parecki-oauth-identity-assertion-authz-grant-02}}
-
-### 'jwt_svid' authentication method type
-
-    Type name:
-      jwt_svid
+   Type name:
+   : `jwt-bearer`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      This RFC as a reference to [SPIFFE JWT-SVID](https://github.com/spiffe/spiffe/blob/main/standards/JWT-SVID.md)
+   : This RFC as a reference to {{RFC7591}} and {{I-D.parecki-oauth-identity-assertion-authz-grant}}
 
-### 'wit' authentication method type
+### `jwt-svid` token endpoint authentication method
 
-    Type name:
-      wit
+   Type name:
+   : `jwt-svid`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      This RFC as a reference to {{I-D.ietf-wimse-s2s-protocol-03}}
+   : This RFC as a reference to [SPIFFE JWT-SVID](https://github.com/spiffe/spiffe/blob/main/standards/JWT-SVID.md)
 
-### 'txn_token' authentication method type
+### `wit` token endpoint authentication method
 
-    Type name:
-      txn_token
+   Type name:
+   : `wit`
 
    Change controller:
-      IETF
+   : IETF
 
    Specification document(s):
-      This RFC as a reference to {{I-D.ietf-oauth-transaction-tokens-05}}
+   : This RFC as a reference to {{I-D.ietf-wimse-s2s-protocol}}
+
+### `txn_token` token endpoint authentication method
+
+   Type name:
+   : `txn_token`
+
+   Change controller:
+   : IETF
+
+   Specification document(s):
+   : This RFC as a reference to {{I-D.ietf-oauth-transaction-tokens}}
 
 ## Claims Registration
-Section X.Y of this specification refers to the attributes "gty", "cxt", "ccr", and "cmr" to express client metadata JWT access tokens. This section registers those attributes as claims in the "JSON Web Token (JWT)" IANA registry introduced in {{RFC7519}}.
 
-### Grant Type
-Claim Name:
-    gty
-Claim Description:
-    OAuth2 Grant Type used
-Change Controller:
-    IETF
-Specification Document(s):
-    Section X.Y of this document
+Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, and `cmr` to express client metadata JWT access tokens. This section registers those attributes as claims in the {{IANA.jwt}} registry introduced in {{RFC7519}}.
 
-### Client Extensions
-Claim Name:
-    cxt
-Claim Description:
-    Client Extensions used on top of the OAuth2 Grant Type
-Change Controller:
-    IETF
-Specification Document(s):
-    Section X.Y of this document
+### `gty` claim definition
 
-### Client Authentication Context
-Claim Name:
-    ccr
-Claim Description:
-    Client Authentication Class Reference
-Change Controller:
-    IETF
-Specification Document(s):
-    Section X.Y of this document
+   Claim Name:
+   : `gty`
 
-### Client Authentication Methods
-Claim Name:
-    cmr
-Claim Description:
-    Client Authentication Methods Reference
-Change Controller:
-    IETF
-Specification Document(s):
-    Section X.Y of this document
+   Claim Description:
+   : OAuth2 Grant Type used
+
+   Change Controller:
+   : IETF
+
+   Specification Document(s):
+      Section X.Y of this document
+
+### `cxt` claim definition
+
+   Claim Name:
+   : `cxt`
+
+   Claim Description:
+   : Client Extensions used on top of the OAuth2 Grant Type
+
+   Change Controller:
+   : IETF
+
+   Specification Document(s):
+   : Section X.Y of this document
+
+### `ccr` claim definition
+
+   Claim Name:
+   : `ccr`
+
+   Claim Description:
+   : Client Authentication Class Reference
+
+   Change Controller:
+   : IETF
+
+   Specification Document(s):
+   : Section X.Y of this document
+
+### `cmr` claim definition
+
+   Claim Name:
+   : `cmr`
+
+   Claim Description:
+   : Client Authentication Methods Reference
+
+   Change Controller:
+   : IETF
+
+   Specification Document(s):
+   : Section X.Y of this document
 
 --- back
 
