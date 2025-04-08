@@ -39,7 +39,7 @@ normative:
   RFC7591: # DCR
   RFC8693: # Token Exchange
   RFC8628: # Device Code
-  OpenID.CIBA: #CIBA
+  OpenID.CIBA: https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html #CIBA
   RFC8414: # OAuth 2.0 Authorization Server Metadata
   IANA.OAuth.Parameters: # IANA Registry
 
