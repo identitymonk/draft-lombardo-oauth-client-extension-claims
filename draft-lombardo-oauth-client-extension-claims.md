@@ -54,7 +54,7 @@ informative:
   RFC9101: # JAR
   RFC9449: # DPOP
   RFC8705: # mTLS client
-  RFC9421: # HTTP Message Signature
+  RFC9421: # HTTP Message Signaturenano /etc/update-manager/release-upgrades
   RFC9700: # OAuth BCP
   I-D.parecki-oauth-identity-assertion-authz-grant-02: # Assertion grant
   I-D.ietf-winse-s2s-protocol-03: # WIMSE W2W
@@ -114,7 +114,7 @@ ccr
     OPTIONAL - defines the authentication context class reference the client satisfied when authenticating to the authorization server. An absolute URI or registered name from furture RFC SHOULD be used as the `ccr` value; registered names MUST NOT be used with a different meaning than that which is registered. Parties using this claim will need to agree upon the meanings of the values used, which may be context specific.
 
 cmr
-    OPTIONAL - defines the authentication methods the client used when authenticating to the authorization server. String that is an identifier for an authentication method used in the authentication of the client. For instance, a value might indicate the usage of private JWT as defined in {{RFC7521}} and {{RFC7523}} or HTTP message signature as defined in {{RFC9421}} . The `cmr` value is a case-sensitive string. Values used in the `cmr` Claim SHOULD be from those registered in the IANA OAuth Token Endpoint Authentication Methods Values registry {{IANA.OAuth.Parameters}} defined by {{RFC7591}}; parties using this claim will need to agree upon the meanings of any unregistered values used, which may be context specific. 
+    OPTIONAL - defines the authentication methods the client used when authenticating to the authorization server. String that is an identifier for an authentication method used in the authentication of the client. For instance, a value might indicate the usage of private JWT as defined in {{RFC7521}} and {{RFC7523}} or HTTP message signature as defined in {{RFC9421}} . The `cmr` value is a case-sensitive string. Values used in the `cmr` Claim SHOULD be from those registered in the IANA OAuth Token Endpoint Authentication Methods Values registry {{IANA.OAuth.Parameters}} defined by {{RFC7591}}; parties using this claim will need to agree upon the meanings of any unregistered values used, which may be context specific.
 
 # Authorization Server Metadata
 
@@ -123,7 +123,7 @@ The following authorization server metadata parameters {{RFC8414}} are introduce
 support_client_extentison_claims
     Boolean parameter indicating whether the authorization server will return the extension claimns described in this RFC.
 
-Note that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC. 
+> Note that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC.
 
 # Requesting a JWT Access Token with Client Extensions
 
@@ -131,19 +131,19 @@ An authorization server MUST issue a JWT access token with client extensions cla
 
 # Validating JWT Access Tokens with Client Extensions
 
-This specification follows the requirements of the section 4. of [RFC9068].
+This specification follows the requirements of the section 4. of {{RFC9068}}.
 
 # Security Considerations
 
-The JWT access token data layout described here is very similar to that of JWT access token as defined by [RFC9068].
+The JWT access token data layout described here is very similar to that of JWT access token as defined by {{RFC9068}}.
 
-The security current best practices described in [RFC9700] are applicable.
+The security current best practices described in {{RFC9700}} are applicable.
 
 # IANA Considerations
 
 ## OAuth Grant Type Registration
 
-This specification registers the following grant type in the [IANA.OAuth.Parameters] OAuth Grant Type registry.
+This specification registers the following grant type in the {{IANA.OAuth.Parameters}} OAuth Grant Type registry.
 
 ### 'authorization_code' grant type
 
@@ -154,7 +154,7 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       IETF
 
    Specification document(s):
-      section 2. of [RFC7591]
+      section 2. of {{RFC7591}}
 
 ### 'implicit' grant type
 
@@ -165,7 +165,7 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       IETF
 
    Specification document(s):
-      section 2. of [RFC7591]
+      section 2. of {{RFC7591}}
 
 ### 'password' grant type
 
@@ -176,7 +176,7 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       IETF
 
    Specification document(s):
-      section 2. of [RFC7591]
+      section 2. of {{RFC7591}}
 
 ### 'client_credentials' grant type
 
@@ -187,7 +187,7 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       IETF
 
    Specification document(s):
-      section 2. of [RFC7591]
+      section 2. of {{RFC7591}}
 
 ### 'refresh_token' grant type
 
@@ -198,7 +198,7 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       IETF
 
    Specification document(s):
-      section 2. of [RFC7591]
+      section 2. of {{RFC7591}}
 
 ### 'urn:ietf:params:oauth:grant-type:jwt-bearer' grant type
 
