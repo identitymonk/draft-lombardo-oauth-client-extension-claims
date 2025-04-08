@@ -204,7 +204,7 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       IETF
 
    Specification document(s):
-      section 2. of [RFC7591]
+      section 2. of {{RFC7591}}
 
 ### 'urn:ietf:params:oauth:grant-type:saml2-bearer' grant type
 
@@ -215,7 +215,7 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       IETF
 
    Specification document(s):
-      section 2. of [RFC7591]
+      section 2. of {{RFC7591}}
 
 ### 'urn:ietf:params:oauth:grant-type:token-exchange' grant type
 
@@ -226,7 +226,7 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       IETF
 
    Specification document(s):
-      section 2.1. of [RFC8693]
+      section 2.1. of {{RFC8693}}
 
 ### 'urn:ietf:params:oauth:grant-type:device_code' grant type
 
@@ -237,7 +237,7 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       IETF
 
    Specification document(s):
-      section 3.4. of [RFC8628]
+      section 3.4. of {{RFC8628}}
 
 ### 'urn:openid:params:grant-type:ciba' grant type
 
@@ -248,10 +248,10 @@ This specification registers the following grant type in the [IANA.OAuth.Paramet
       IETF
 
    Specification document(s):
-      section 4. of [OpenID.CIBA]
+      section 4. of {{OpenID.CIBA}}
 
 ## OAuth Grant Extension Type Registration
-This specification registers the following grant extension type in the [IANA.OAuth.Parameters] OAuth Grant Extension Type registry.
+This specification registers the following grant extension type in the {{IANA.OAuth.Parameters}} OAuth Grant Extension Type registry.
 
 ### 'pkce' grant extension type
 
@@ -262,7 +262,7 @@ This specification registers the following grant extension type in the [IANA.OAu
       IETF
 
    Specification document(s):
-      This RFC as a reference to [RFC7636]
+      This RFC as a reference to {{RFC7636}}
 
 ### 'dpop' grant extension type
 
@@ -273,7 +273,7 @@ This specification registers the following grant extension type in the [IANA.OAu
       IETF
 
    Specification document(s):
-      This RFC as a reference to [RFC9449]
+      This RFC as a reference to {{RFC9449}}
 
 ### 'rar' grant extension type
 
@@ -284,7 +284,7 @@ This specification registers the following grant extension type in the [IANA.OAu
       IETF
 
    Specification document(s):
-      This RFC as a reference to [RFC9396]
+      This RFC as a reference to  {{RFC9396}}
 
 ### 'par' grant extension type
 
@@ -295,7 +295,7 @@ This specification registers the following grant extension type in the [IANA.OAu
       IETF
 
    Specification document(s):
-      This RFC as a reference to [RFC9126]
+      This RFC as a reference to {{RFC9126}}
 
 ### 'jar' grant extension type
 
@@ -306,10 +306,10 @@ This specification registers the following grant extension type in the [IANA.OAu
       IETF
 
    Specification document(s):
-      This RFC as a reference to [RFC9101]
+      This RFC as a reference to {{RFC9101}}
 
 ## OAuth Token Endpoint Authentication Methods Registration
-This specification registers additional token endpoint authentication methods in the [IANA.OAuth.Parameters] OAuth Token Endpoint Authentication Methods registry.
+This specification registers additional token endpoint authentication methods in the {{[IANA.OAuth.Parameters}} OAuth Token Endpoint Authentication Methods registry.
 
 ### 'jwt-bearer' authentication method type
 
@@ -320,7 +320,7 @@ This specification registers additional token endpoint authentication methods in
       IETF
 
    Specification document(s):
-      This RFC as a reference to [RFC7591] and [I-D.ietf-oauth-identity-assertion-authz-grant]
+      This RFC as a reference to {{RFC7591}} and {{I-D.ietf-oauth-identity-assertion-authz-grant}}
 
 ### 'jwt_svid' authentication method type
 
