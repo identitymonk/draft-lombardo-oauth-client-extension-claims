@@ -5,7 +5,7 @@
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
 <title>OAuth 2.0 client extension claims</title>
-<meta content="Jeff Lombardo" name="author">
+<meta content='Jean-François "Jeff" Lombardo' name="author">
 <meta content="Alexandre Babeanu" name="author">
 <meta content="
        This specification defines new claims for JWT profiled access tokens   so that resource providers can benefit from more granular information about the client to make better informed access decisions. The proposed new claims include: the client authentication methods, the client OAuth grant flow used as well as the OAuth grant flow extensions used as part of the issuance of the associated tokens. 
@@ -1072,7 +1072,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
-      <div class="author-name">J. Lombardo</div>
+      <div class="author-name">J. ". Lombardo</div>
 <div class="org">AWS</div>
 </div>
 <div class="author">
@@ -1228,13 +1228,16 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.8.2.2.2.2.1"><a href="#section-8.2.2" class="auto internal xref">8.2.2</a>.  <a href="#name-dpop-grant-extension-type" class="internal xref"><code>dpop</code> grant extension type</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.3">
-                    <p id="section-toc.1-1.8.2.2.2.3.1"><a href="#section-8.2.3" class="auto internal xref">8.2.3</a>.  <a href="#name-rar-grant-extension-type" class="internal xref"><code>rar</code> grant extension type</a></p>
+                    <p id="section-toc.1-1.8.2.2.2.3.1"><a href="#section-8.2.3" class="auto internal xref">8.2.3</a>.  <a href="#name-wpt-grant-extension-type" class="internal xref"><code>wpt</code> grant extension type</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.4">
-                    <p id="section-toc.1-1.8.2.2.2.4.1"><a href="#section-8.2.4" class="auto internal xref">8.2.4</a>.  <a href="#name-par-grant-extension-type" class="internal xref"><code>par</code> grant extension type</a></p>
+                    <p id="section-toc.1-1.8.2.2.2.4.1"><a href="#section-8.2.4" class="auto internal xref">8.2.4</a>.  <a href="#name-rar-grant-extension-type" class="internal xref"><code>rar</code> grant extension type</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.5">
-                    <p id="section-toc.1-1.8.2.2.2.5.1"><a href="#section-8.2.5" class="auto internal xref">8.2.5</a>.  <a href="#name-jar-grant-extension-type" class="internal xref"><code>jar</code> grant extension type</a></p>
+                    <p id="section-toc.1-1.8.2.2.2.5.1"><a href="#section-8.2.5" class="auto internal xref">8.2.5</a>.  <a href="#name-par-grant-extension-type" class="internal xref"><code>par</code> grant extension type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.6">
+                    <p id="section-toc.1-1.8.2.2.2.6.1"><a href="#section-8.2.6" class="auto internal xref">8.2.6</a>.  <a href="#name-jar-grant-extension-type" class="internal xref"><code>jar</code> grant extension type</a></p>
 </li>
                 </ul>
 </li>
@@ -1311,7 +1314,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-5">The process by which the client interacts with the authorization server is out of scope.<a href="#section-1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="conventions-and-definitions">
+<div id="conventions-definitions">
 <section id="section-2">
       <h2 id="name-conventions-and-definitions">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
@@ -1331,13 +1334,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-2-3">This specification uses the terms "access token", "authorization server", "authorization endpoint", "authorization request", "client", "protected resource", and "resource server" defined by "The OAuth 2.0 Authorization Framework" <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="jwt-access-token-client-extensions-data-structure">
+<div id="client-ext-data-structure">
 <section id="section-3">
       <h2 id="name-jwt-access-token-client-ext">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-jwt-access-token-client-ext" class="section-name selfRef">JWT Access Token Client Extensions Data Structure</a>
       </h2>
 <p id="section-3-1">The following claims extend the <span>[<a href="#RFC9068" class="cite xref">RFC9068</a>]</span> access token payload data structure:<a href="#section-3-1" class="pilcrow">¶</a></p>
-<div id="client-flow-information-claims">
+<div id="client-flow-info">
 <section id="section-3.1">
         <h3 id="name-client-flow-information-cla">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-client-flow-information-cla" class="section-name selfRef">Client Flow Information Claims</a>
@@ -1359,7 +1362,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="client-authentication-information-claims">
+<div id="client-authn-info">
 <section id="section-3.2">
         <h3 id="name-client-authentication-infor">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-client-authentication-infor" class="section-name selfRef">Client Authentication Information Claims</a>
@@ -1383,12 +1386,12 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </section>
 </div>
-<div id="authorization-server-metadata">
+<div id="as-metadata">
 <section id="section-4">
       <h2 id="name-authorization-server-metada">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-authorization-server-metada" class="section-name selfRef">Authorization Server Metadata</a>
       </h2>
-<p id="section-4-1">Not all Authorizartion Servers (AS) may support the claims described in this document. It is therefore necessary to provide a way for an OAuth Resource Server to determine whether it can rely on the claims described here. This document therefore proposes the following extension to the OAuth2.0 Authorization Server Metadata <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span> specification; i.e., the following metadata value is to be considered an extension to the values described in section 2 of the OAuth2.0 Authorization Server Metadata <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span> specification:<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">Not all Authorizartion Servers (AS) may support the claims described in this specification. It is therefore necessary to provide a way for an OAuth Resource Server to determine whether it can rely on the claims described here. This document therefore extends the OAuth2.0 Authorization Server Metadata <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span> specification by adding the following metadata value :<a href="#section-4-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-4-2">
         <dt id="section-4-2.1">
 <code>support_client_extentison_claims</code>:</dt>
@@ -1400,7 +1403,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-4-3">Note that the non presence of <code>support_client_extentison_claims</code> is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC. This ensures backward compatibility with all existing AS implementations.<a href="#section-4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="requesting-a-jwt-access-token-with-client-extensions">
+<div id="request-jwt-client-ext">
 <section id="section-5">
       <h2 id="name-requesting-a-jwt-access-tok">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-requesting-a-jwt-access-tok" class="section-name selfRef">Requesting a JWT Access Token with Client Extensions</a>
@@ -1408,7 +1411,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-5-1">An authorization server supporting the claims described in this document <span class="bcp14">MUST</span> issue a JWT access token with client extensions claims described in this RFC in response to any authorization grant defined by <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>, as well as subsequent extensions meant to result in an access token.<a href="#section-5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="validating-jwt-access-tokens-with-client-extensions">
+<div id="validate-jwt-client-ext">
 <section id="section-6">
       <h2 id="name-validating-jwt-access-token">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-validating-jwt-access-token" class="section-name selfRef">Validating JWT Access Tokens with Client Extensions</a>
@@ -1416,7 +1419,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-6-1">This specification does not change any of the requirements for validating access tokens, as defined in section 4 of the JSON Web Token (JWT) Profile for OAuth 2.0 Access Tokens specification <span>[<a href="#RFC9068" class="cite xref">RFC9068</a>]</span>.<a href="#section-6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="security-considerations">
+<div id="security">
 <section id="section-7">
       <h2 id="name-security-considerations">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
@@ -1425,18 +1428,18 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-7-2">The Best Current Practice for OAuth 2.0 Security <span>[<a href="#RFC9700" class="cite xref">RFC9700</a>]</span> is still applicable.<a href="#section-7-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="iana-considerations">
+<div id="iana">
 <section id="section-8">
       <h2 id="name-iana-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<div id="oauth-grant-type-registration">
+<div id="iana-grant-type-reg">
 <section id="section-8.1">
         <h3 id="name-oauth-grant-type-registrati">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-oauth-grant-type-registrati" class="section-name selfRef">OAuth Grant Type Registration</a>
         </h3>
 <p id="section-8.1-1">This specification registers the following grant type in the <span>[<a href="#IANA.oauth-parameters" class="cite xref">IANA.oauth-parameters</a>]</span> OAuth Grant Type registry.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<div id="authorizationcode-grant-type">
+<div id="iana-grant-type-reg-ac">
 <section id="section-8.1.1">
           <h4 id="name-authorization_code-grant-ty">
 <a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-authorization_code-grant-ty" class="section-name selfRef"><code>authorization_code</code> grant type</a>
@@ -1460,7 +1463,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="implicit-grant-type">
+<div id="iana-grant-type-implicit">
 <section id="section-8.1.2">
           <h4 id="name-implicit-grant-type">
 <a href="#section-8.1.2" class="section-number selfRef">8.1.2. </a><a href="#name-implicit-grant-type" class="section-name selfRef"><code>implicit</code> grant type</a>
@@ -1484,7 +1487,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="password-grant-type">
+<div id="iana-grant-type-reg-pwd">
 <section id="section-8.1.3">
           <h4 id="name-password-grant-type">
 <a href="#section-8.1.3" class="section-number selfRef">8.1.3. </a><a href="#name-password-grant-type" class="section-name selfRef"><code>password</code> grant type</a>
@@ -1508,7 +1511,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="clientcredentials-grant-type">
+<div id="iana-grant-type-reg-cc">
 <section id="section-8.1.4">
           <h4 id="name-client_credentials-grant-ty">
 <a href="#section-8.1.4" class="section-number selfRef">8.1.4. </a><a href="#name-client_credentials-grant-ty" class="section-name selfRef"><code>client_credentials</code> grant type</a>
@@ -1532,7 +1535,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="refreshtoken-grant-type">
+<div id="iana-grant-type-rt">
 <section id="section-8.1.5">
           <h4 id="name-refresh_token-grant-type">
 <a href="#section-8.1.5" class="section-number selfRef">8.1.5. </a><a href="#name-refresh_token-grant-type" class="section-name selfRef"><code>refresh_token</code> grant type</a>
@@ -1556,7 +1559,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="jwt-bearer-grant-type">
+<div id="iana-grant-type-jwt">
 <section id="section-8.1.6">
           <h4 id="name-jwt-bearer-grant-type">
 <a href="#section-8.1.6" class="section-number selfRef">8.1.6. </a><a href="#name-jwt-bearer-grant-type" class="section-name selfRef"><code>jwt-bearer</code> grant type</a>
@@ -1574,13 +1577,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
             <dd class="break"></dd>
 <dt id="section-8.1.6-1.5">Specification document(s):</dt>
             <dd style="margin-left: 1.5em" id="section-8.1.6-1.6">
-              <p id="section-8.1.6-1.6.1">section 2. of <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span><a href="#section-8.1.6-1.6.1" class="pilcrow">¶</a></p>
+              <p id="section-8.1.6-1.6.1">section 2. of <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span> and section 6 of <span>[<a href="#I-D.parecki-oauth-identity-assertion-authz-grant" class="cite xref">I-D.parecki-oauth-identity-assertion-authz-grant</a>]</span><a href="#section-8.1.6-1.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 </dl>
 </section>
 </div>
-<div id="saml2-bearer-grant-type">
+<div id="iana-grant-type-reg-saml2">
 <section id="section-8.1.7">
           <h4 id="name-saml2-bearer-grant-type">
 <a href="#section-8.1.7" class="section-number selfRef">8.1.7. </a><a href="#name-saml2-bearer-grant-type" class="section-name selfRef"><code>saml2-bearer</code> grant type</a>
@@ -1604,7 +1607,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="token-exchange-grant-type">
+<div id="iana-grant-type-reg-te">
 <section id="section-8.1.8">
           <h4 id="name-token-exchange-grant-type">
 <a href="#section-8.1.8" class="section-number selfRef">8.1.8. </a><a href="#name-token-exchange-grant-type" class="section-name selfRef"><code>token-exchange</code> grant type</a>
@@ -1628,7 +1631,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="devicecode-grant-type">
+<div id="iana-grant-type-reg-dc">
 <section id="section-8.1.9">
           <h4 id="name-device_code-grant-type">
 <a href="#section-8.1.9" class="section-number selfRef">8.1.9. </a><a href="#name-device_code-grant-type" class="section-name selfRef"><code>device_code</code> grant type</a>
@@ -1652,7 +1655,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="ciba-grant-type">
+<div id="iana-grant-type-reg-ciba">
 <section id="section-8.1.10">
           <h4 id="name-ciba-grant-type">
 <a href="#section-8.1.10" class="section-number selfRef">8.1.10. </a><a href="#name-ciba-grant-type" class="section-name selfRef"><code>ciba</code> grant type</a>
@@ -1678,13 +1681,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </section>
 </div>
-<div id="oauth-grant-extension-type-registration">
+<div id="iana-grant-ext-reg">
 <section id="section-8.2">
         <h3 id="name-oauth-grant-extension-type-">
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-oauth-grant-extension-type-" class="section-name selfRef">OAuth Grant Extension Type Registration</a>
         </h3>
 <p id="section-8.2-1">This specification registers the following grant extension type in the <span>[<a href="#IANA.oauth-parameters" class="cite xref">IANA.oauth-parameters</a>]</span> OAuth Grant Extension Type registry.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<div id="pkce-grant-extension-type">
+<div id="iana-grant-ext-reg-pkce">
 <section id="section-8.2.1">
           <h4 id="name-pkce-grant-extension-type">
 <a href="#section-8.2.1" class="section-number selfRef">8.2.1. </a><a href="#name-pkce-grant-extension-type" class="section-name selfRef"><code>pkce</code> grant extension type</a>
@@ -1708,7 +1711,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="dpop-grant-extension-type">
+<div id="iana-grant-ext-reg-dpop">
 <section id="section-8.2.2">
           <h4 id="name-dpop-grant-extension-type">
 <a href="#section-8.2.2" class="section-number selfRef">8.2.2. </a><a href="#name-dpop-grant-extension-type" class="section-name selfRef"><code>dpop</code> grant extension type</a>
@@ -1732,15 +1735,15 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="rar-grant-extension-type">
+<div id="iana-grant-ext-reg-wpt">
 <section id="section-8.2.3">
-          <h4 id="name-rar-grant-extension-type">
-<a href="#section-8.2.3" class="section-number selfRef">8.2.3. </a><a href="#name-rar-grant-extension-type" class="section-name selfRef"><code>rar</code> grant extension type</a>
+          <h4 id="name-wpt-grant-extension-type">
+<a href="#section-8.2.3" class="section-number selfRef">8.2.3. </a><a href="#name-wpt-grant-extension-type" class="section-name selfRef"><code>wpt</code> grant extension type</a>
           </h4>
 <span class="break"></span><dl class="dlParallel" id="section-8.2.3-1">
             <dt id="section-8.2.3-1.1">Type name:</dt>
             <dd style="margin-left: 1.5em" id="section-8.2.3-1.2">
-              <p id="section-8.2.3-1.2.1"><code>rar</code><a href="#section-8.2.3-1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-8.2.3-1.2.1"><code>wpt</code><a href="#section-8.2.3-1.2.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
 <dt id="section-8.2.3-1.3">Change controller:</dt>
@@ -1750,21 +1753,21 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
             <dd class="break"></dd>
 <dt id="section-8.2.3-1.5">Specification document(s):</dt>
             <dd style="margin-left: 1.5em" id="section-8.2.3-1.6">
-              <p id="section-8.2.3-1.6.1">This RFC as a reference to  <span>[<a href="#RFC9396" class="cite xref">RFC9396</a>]</span><a href="#section-8.2.3-1.6.1" class="pilcrow">¶</a></p>
+              <p id="section-8.2.3-1.6.1">This RFC as a reference to section 4.2 of <span>[<a href="#I-D.ietf-wimse-s2s-protocol" class="cite xref">I-D.ietf-wimse-s2s-protocol</a>]</span><a href="#section-8.2.3-1.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 </dl>
 </section>
 </div>
-<div id="par-grant-extension-type">
+<div id="iana-grant-ext-rar">
 <section id="section-8.2.4">
-          <h4 id="name-par-grant-extension-type">
-<a href="#section-8.2.4" class="section-number selfRef">8.2.4. </a><a href="#name-par-grant-extension-type" class="section-name selfRef"><code>par</code> grant extension type</a>
+          <h4 id="name-rar-grant-extension-type">
+<a href="#section-8.2.4" class="section-number selfRef">8.2.4. </a><a href="#name-rar-grant-extension-type" class="section-name selfRef"><code>rar</code> grant extension type</a>
           </h4>
 <span class="break"></span><dl class="dlParallel" id="section-8.2.4-1">
             <dt id="section-8.2.4-1.1">Type name:</dt>
             <dd style="margin-left: 1.5em" id="section-8.2.4-1.2">
-              <p id="section-8.2.4-1.2.1"><code>par</code><a href="#section-8.2.4-1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-8.2.4-1.2.1"><code>rar</code><a href="#section-8.2.4-1.2.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
 <dt id="section-8.2.4-1.3">Change controller:</dt>
@@ -1774,21 +1777,21 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
             <dd class="break"></dd>
 <dt id="section-8.2.4-1.5">Specification document(s):</dt>
             <dd style="margin-left: 1.5em" id="section-8.2.4-1.6">
-              <p id="section-8.2.4-1.6.1">This RFC as a reference to <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span><a href="#section-8.2.4-1.6.1" class="pilcrow">¶</a></p>
+              <p id="section-8.2.4-1.6.1">This RFC as a reference to <span>[<a href="#RFC9396" class="cite xref">RFC9396</a>]</span><a href="#section-8.2.4-1.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 </dl>
 </section>
 </div>
-<div id="jar-grant-extension-type">
+<div id="iana-grant-ext-reg-par">
 <section id="section-8.2.5">
-          <h4 id="name-jar-grant-extension-type">
-<a href="#section-8.2.5" class="section-number selfRef">8.2.5. </a><a href="#name-jar-grant-extension-type" class="section-name selfRef"><code>jar</code> grant extension type</a>
+          <h4 id="name-par-grant-extension-type">
+<a href="#section-8.2.5" class="section-number selfRef">8.2.5. </a><a href="#name-par-grant-extension-type" class="section-name selfRef"><code>par</code> grant extension type</a>
           </h4>
 <span class="break"></span><dl class="dlParallel" id="section-8.2.5-1">
             <dt id="section-8.2.5-1.1">Type name:</dt>
             <dd style="margin-left: 1.5em" id="section-8.2.5-1.2">
-              <p id="section-8.2.5-1.2.1"><code>jar</code><a href="#section-8.2.5-1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-8.2.5-1.2.1"><code>par</code><a href="#section-8.2.5-1.2.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
 <dt id="section-8.2.5-1.3">Change controller:</dt>
@@ -1798,7 +1801,31 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
             <dd class="break"></dd>
 <dt id="section-8.2.5-1.5">Specification document(s):</dt>
             <dd style="margin-left: 1.5em" id="section-8.2.5-1.6">
-              <p id="section-8.2.5-1.6.1">This RFC as a reference to <span>[<a href="#RFC9101" class="cite xref">RFC9101</a>]</span><a href="#section-8.2.5-1.6.1" class="pilcrow">¶</a></p>
+              <p id="section-8.2.5-1.6.1">This RFC as a reference to <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span><a href="#section-8.2.5-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-ext-reg-jar">
+<section id="section-8.2.6">
+          <h4 id="name-jar-grant-extension-type">
+<a href="#section-8.2.6" class="section-number selfRef">8.2.6. </a><a href="#name-jar-grant-extension-type" class="section-name selfRef"><code>jar</code> grant extension type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.2.6-1">
+            <dt id="section-8.2.6-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.6-1.2">
+              <p id="section-8.2.6-1.2.1"><code>jar</code><a href="#section-8.2.6-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.6-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.6-1.4">
+              <p id="section-8.2.6-1.4.1">IETF<a href="#section-8.2.6-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.6-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.6-1.6">
+              <p id="section-8.2.6-1.6.1">This RFC as a reference to <span>[<a href="#RFC9101" class="cite xref">RFC9101</a>]</span><a href="#section-8.2.6-1.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 </dl>
@@ -1806,13 +1833,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </section>
 </div>
-<div id="oauth-token-endpoint-authentication-methods-registration">
+<div id="iana-token-authn-reg">
 <section id="section-8.3">
         <h3 id="name-oauth-token-endpoint-authen">
 <a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-oauth-token-endpoint-authen" class="section-name selfRef">OAuth Token Endpoint Authentication Methods Registration</a>
         </h3>
 <p id="section-8.3-1">This specification registers additional token endpoint authentication methods in the <span>[<a href="#IANA.oauth-parameters" class="cite xref">IANA.oauth-parameters</a>]</span> OAuth Token Endpoint Authentication Methods registry.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
-<div id="jwt-bearer-token-endpoint-authentication-method">
+<div id="iana-token-authn-reg-jwt">
 <section id="section-8.3.1">
           <h4 id="name-jwt-bearer-token-endpoint-a">
 <a href="#section-8.3.1" class="section-number selfRef">8.3.1. </a><a href="#name-jwt-bearer-token-endpoint-a" class="section-name selfRef"><code>jwt-bearer</code> token endpoint authentication method</a>
@@ -1836,7 +1863,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="jwt-svid-token-endpoint-authentication-method">
+<div id="iana-token-authn-reg-jwt-svid">
 <section id="section-8.3.2">
           <h4 id="name-jwt-svid-token-endpoint-aut">
 <a href="#section-8.3.2" class="section-number selfRef">8.3.2. </a><a href="#name-jwt-svid-token-endpoint-aut" class="section-name selfRef"><code>jwt-svid</code> token endpoint authentication method</a>
@@ -1860,7 +1887,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="wit-token-endpoint-authentication-method">
+<div id="iana-token-authn-reg-wit">
 <section id="section-8.3.3">
           <h4 id="name-wit-token-endpoint-authenti">
 <a href="#section-8.3.3" class="section-number selfRef">8.3.3. </a><a href="#name-wit-token-endpoint-authenti" class="section-name selfRef"><code>wit</code> token endpoint authentication method</a>
@@ -1884,7 +1911,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="txntoken-token-endpoint-authentication-method">
+<div id="iana-token-authn-reg-txntoken">
 <section id="section-8.3.4">
           <h4 id="name-txn_token-token-endpoint-au">
 <a href="#section-8.3.4" class="section-number selfRef">8.3.4. </a><a href="#name-txn_token-token-endpoint-au" class="section-name selfRef"><code>txn_token</code> token endpoint authentication method</a>
@@ -1910,13 +1937,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </section>
 </div>
-<div id="claims-registration">
+<div id="iana-claims-reg">
 <section id="section-8.4">
         <h3 id="name-claims-registration">
 <a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-claims-registration" class="section-name selfRef">Claims Registration</a>
         </h3>
 <p id="section-8.4-1">Section X.Y of this specification refers to the attributes <code>gty</code>, <code>cxt</code>, <code>ccr</code>, and <code>cmr</code> to express client metadata JWT access tokens. This section registers those attributes as claims in the <span>[<a href="#IANA.jwt" class="cite xref">IANA.jwt</a>]</span> registry introduced in <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
-<div id="gty-claim-definition">
+<div id="iana-claims-reg-gty">
 <section id="section-8.4.1">
           <h4 id="name-gty-claim-definition">
 <a href="#section-8.4.1" class="section-number selfRef">8.4.1. </a><a href="#name-gty-claim-definition" class="section-name selfRef"><code>gty</code> claim definition</a>
@@ -1942,7 +1969,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       Section X.Y of this document<a href="#section-8.4.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="cxt-claim-definition">
+<div id="iana-claims-cxt">
 <section id="section-8.4.2">
           <h4 id="name-cxt-claim-definition">
 <a href="#section-8.4.2" class="section-number selfRef">8.4.2. </a><a href="#name-cxt-claim-definition" class="section-name selfRef"><code>cxt</code> claim definition</a>
@@ -1971,7 +1998,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="ccr-claim-definition">
+<div id="iana-claims-ccr">
 <section id="section-8.4.3">
           <h4 id="name-ccr-claim-definition">
 <a href="#section-8.4.3" class="section-number selfRef">8.4.3. </a><a href="#name-ccr-claim-definition" class="section-name selfRef"><code>ccr</code> claim definition</a>
@@ -2000,7 +2027,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 </section>
 </div>
-<div id="cmr-claim-definition">
+<div id="iana-claims-cmr">
 <section id="section-8.4.4">
           <h4 id="name-cmr-claim-definition">
 <a href="#section-8.4.4" class="section-number selfRef">8.4.4. </a><a href="#name-cmr-claim-definition" class="section-name selfRef"><code>cmr</code> claim definition</a>
@@ -2170,7 +2197,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </section>
 </div>
-<div id="acknowledgments">
+<div id="ack">
 <section id="appendix-A">
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
@@ -2184,12 +2211,12 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
 <address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Jeff Lombardo</span></div>
+        <div dir="auto" class="left"><span class="fn nameRole">Jean-François "Jeff" Lombardo</span></div>
 <div dir="auto" class="left"><span class="org">AWS</span></div>
 <div dir="auto" class="left"><span class="country-name">Canada</span></div>
 <div class="email">
 <span>Email:</span>
-<a href="mailto:jeff@authnopuz.xyz" class="email">jeff@authnopuz.xyz</a>
+<a href="mailto:jeffsec@amazon.com" class="email">jeffsec@amazon.com</a>
 </div>
 </address>
 <address class="vcard">
