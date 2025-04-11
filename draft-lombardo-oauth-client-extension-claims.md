@@ -137,7 +137,7 @@ The claims listed in this section MAY be issued and reflect strength of the mech
 
 # Authorization Server Metadata {#as-metadata}
 
-Not all Authorizartion Servers (AS) may support the claims described in this document. It is therefore necessary to provide a way for an OAuth Resource Server to determine whether it can rely on the claims described here. This document therefore proposes the following extension to the OAuth2.0 Authorization Server Metadata {{RFC8414}} specification; i.e., the following metadata value is to be considered an extension to the values described in section 2 of the OAuth2.0 Authorization Server Metadata {{RFC8414}} specification:
+Not all Authorizartion Servers (AS) may support the claims described in this specification. It is therefore necessary to provide a way for an OAuth Resource Server to determine whether it can rely on the claims described here. This document therefore extends the OAuth2.0 Authorization Server Metadata {{RFC8414}} specification by adding the following metadata value :
 
 `support_client_extentison_claims`:
 : Boolean parameter indicating whether the authorization server will return the extension claims described in this RFC.
