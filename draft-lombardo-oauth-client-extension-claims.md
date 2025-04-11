@@ -24,10 +24,10 @@ venue:
 
 author:
  -
-    fullname: Jeff Lombardo
+    fullname: Jean-François "Jeff" Lombardo
     organization: AWS
     country: Canada
-    email: jeff@authnopuz.xyz
+    email: jeffsec@amazon.com
 
  -
     fullname: Alexandre Babeanu
@@ -86,7 +86,7 @@ This specification defines new claims for JWT profiled access tokens {{RFC9068}}
 
 --- middle
 
-# Introduction
+# Introduction {#introduction}
 
 Resource providers need information about the subject, the action, the resource, and the context involved in the request in order to be able to determine properly if a resource can be disclosed. This decision may also involve the help of a Policy Decision Point (PDP).
 
@@ -102,7 +102,7 @@ This document defines 4 new claims for the JWT profile of OAuth access tokens, w
 
 The process by which the client interacts with the authorization server is out of scope.
 
-# Conventions and Definitions
+# Conventions and Definitions {#conventions-definitions}
 
 {::boilerplate bcp14-tagged}
 
@@ -111,11 +111,11 @@ _JWT access token_:
 
 This specification uses the terms "access token", "authorization server", "authorization endpoint", "authorization request", "client", "protected resource", and "resource server" defined by "The OAuth 2.0 Authorization Framework" {{RFC6749}}.
 
-# JWT Access Token Client Extensions Data Structure
+# JWT Access Token Client Extensions Data Structure {#client-ext-data-structure}
 
 The following claims extend the {{RFC9068}} access token payload data structure:
 
-## Client Flow Information Claims
+## Client Flow Information Claims {#client-flow-info}
 
 The claims listed below reflect the grant type and extensions used by the OAuth client with the Authorization Server during the authorization request. Their values are generated dynamically and consistent across all the tokens generated for the given authorization request.
 
@@ -125,7 +125,7 @@ The claims listed below reflect the grant type and extensions used by the OAuth 
 `cxt`:
 : _REQUIRED_ - defines the list of extensions the client used in conjonction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in {{RFC7636}}, Demonstrating Proof of Possession (or DPoP) as defined in {{RFC9449}}. The claim value is an array of strings that lists the identifiers of extensions used. Values used in the `cxt` Claim MUST be valid values registered with the IANA OAuth Parameters registry @TODO. These values reference, without being limited to, values established through section 2 of {{RFC8414}}, and Section 5.1 of {{RFC9449}}. Non-normative example: "`[dpop,pkce]`".
 
-## Client Authentication Information Claims
+## Client Authentication Information Claims {#client-authn-info}
 
 The claims listed in this section MAY be issued and reflect strength of the mechanism used to authenticate the OAuth2 Client client itself as part of the  access token issuance flow. Their values are fixed and remain the same across all access tokens that derive from a given authorization response, whether the access token was obtained directly in the response (e.g., via the implicit flow) or after obtaining a new access token using a refresh token. Those values may change if an access token is exchanged for another through the Token Exchange {{RFC8693}} procedure, in that case these claims will reflect the details of this new request.
 
@@ -135,7 +135,7 @@ The claims listed in this section MAY be issued and reflect strength of the mech
 `cmr`:
 : _OPTIONAL_ - an Identifier String that defines the authentication methods the client used when authenticating to the authorization server. The claim may indicate the usage of private JWT as defined in {{RFC7521}} and {{RFC7523}} or HTTP message signature as defined in {{RFC9421}}, or simple client secret as defined in {{RFC6749}} . The `cmr` value is a case-sensitive string, which values SHOULD be registered with the IANA OAuth Token Endpoint Authentication Methods Values registry {{IANA.oauth-parameters_token-endpoint-auth-method}} defined by {{RFC7591}}; parties using this claim will need to agree upon the meanings of any unregistered values used, which may be context specific.
 
-# Authorization Server Metadata
+# Authorization Server Metadata {#as-metadata}
 
 Not all Authorizartion Servers (AS) may support the claims described in this document. It is therefore necessary to provide a way for an OAuth Resource Server to determine whether it can rely on the claims described here. This document therefore proposes the following extension to the OAuth2.0 Authorization Server Metadata {{RFC8414}} specification; i.e., the following metadata value is to be considered an extension to the values described in section 2 of the OAuth2.0 Authorization Server Metadata {{RFC8414}} specification:
 
@@ -144,27 +144,27 @@ Not all Authorizartion Servers (AS) may support the claims described in this doc
 
 Note that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC. This ensures backward compatibility with all existing AS implementations.
 
-# Requesting a JWT Access Token with Client Extensions
+# Requesting a JWT Access Token with Client Extensions {#request-jwt-client-ext}
 
 An authorization server supporting the claims described in this document MUST issue a JWT access token with client extensions claims described in this RFC in response to any authorization grant defined by [RFC6749], as well as subsequent extensions meant to result in an access token.
 
-# Validating JWT Access Tokens with Client Extensions
+# Validating JWT Access Tokens with Client Extensions {#validate-jwt-client-ext}
 
 This specification does not change any of the requirements for validating access tokens, as defined in section 4 of the JSON Web Token (JWT) Profile for OAuth 2.0 Access Tokens specification {{RFC9068}}.
 
-# Security Considerations
+# Security Considerations {#security}
 
 The JWT access token data layout described here is the same as the struture of the JWT access token as defined by the JSON Web Token (JWT) Profile for OAuth 2.0 Access Tokens specification {{RFC9068}}.
 
 The Best Current Practice for OAuth 2.0 Security {{RFC9700}} is still applicable.
 
-# IANA Considerations
+# IANA Considerations {#iana}
 
-## OAuth Grant Type Registration
+## OAuth Grant Type Registration {#iana-grant-type-reg}
 
 This specification registers the following grant type in the {{IANA.oauth-parameters}} OAuth Grant Type registry.
 
-### `authorization_code` grant type
+### `authorization_code` grant type {#iana-grant-type-reg-ac}
 
    Type name:
    : `authorization_code`
@@ -175,7 +175,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    Specification document(s):
    : section 2. of {{RFC7591}}
 
-### `implicit` grant type
+### `implicit` grant type {#iana-grant-type-implicit}
 
    Type name:
    : `implicit`
@@ -186,7 +186,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    Specification document(s):
    : section 2. of {{RFC7591}}
 
-### `password` grant type
+### `password` grant type {#iana-grant-type-reg-pwd}
 
    Type name:
    : `password`
@@ -197,7 +197,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    Specification document(s):
    : section 2. of {{RFC7591}}
 
-### `client_credentials` grant type
+### `client_credentials` grant type {#iana-grant-type-reg-cc}
 
    Type name:
    : `client_credentials`
@@ -208,7 +208,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    Specification document(s):
    : section 2. of {{RFC7591}}
 
-### `refresh_token` grant type
+### `refresh_token` grant type {#iana-grant-type-rt}
 
    Type name:
    : `refresh_token`
@@ -219,7 +219,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    Specification document(s):
    : section 2. of {{RFC7591}}
 
-### `jwt-bearer` grant type
+### `jwt-bearer` grant type {#iana-grant-type-jwt}
 
    Type name:
    : `urn:ietf:params:oauth:grant-type:jwt-bearer`
@@ -228,9 +228,9 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 2. of {{RFC7591}}
+   : section 2. of {{RFC7591}} and section 6 of {{I-D.parecki-oauth-identity-assertion-authz-grant}}
 
-### `saml2-bearer` grant type
+### `saml2-bearer` grant type {#iana-grant-type-reg-saml2}
 
    Type name:
    : `urn:ietf:params:oauth:grant-type:saml2-bearer`
@@ -241,7 +241,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    Specification document(s):
    : section 2. of {{RFC7591}}
 
-### `token-exchange` grant type
+### `token-exchange` grant type {#iana-grant-type-reg-te}
 
    Type name:
    : `urn:ietf:params:oauth:grant-type:token-exchange`
@@ -252,7 +252,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    Specification document(s):
    : section 2.1. of {{RFC8693}}
 
-### `device_code` grant type
+### `device_code` grant type {#iana-grant-type-reg-dc}
 
    Type name:
    : `urn:ietf:params:oauth:grant-type:device_code`
@@ -263,7 +263,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    Specification document(s):
    : section 3.4. of {{RFC8628}}
 
-### `ciba` grant type
+### `ciba` grant type {#iana-grant-type-reg-ciba}
 
    Type name:
    : `urn:openid:params:grant-type:ciba`
@@ -274,11 +274,11 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    Specification document(s):
    : section 4. of {{OpenID.CIBA}}
 
-## OAuth Grant Extension Type Registration
+## OAuth Grant Extension Type Registration {#iana-grant-ext-reg}
 
 This specification registers the following grant extension type in the {{IANA.oauth-parameters}} OAuth Grant Extension Type registry.
 
-### `pkce` grant extension type
+### `pkce` grant extension type {#iana-grant-ext-reg-pkce}
 
    Type name:
    : `pkce`
@@ -289,7 +289,7 @@ This specification registers the following grant extension type in the {{IANA.oa
    Specification document(s):
    : This RFC as a reference to {{RFC7636}}
 
-### `dpop` grant extension type
+### `dpop` grant extension type {#iana-grant-ext-reg-dpop}
 
    Type name:
    : `dpop`
@@ -300,7 +300,18 @@ This specification registers the following grant extension type in the {{IANA.oa
    Specification document(s):
    : This RFC as a reference to {{RFC9449}}
 
-### `rar` grant extension type
+### `wpt` grant extension type {#iana-grant-ext-reg-wpt}
+
+   Type name:
+   : `wpt`
+
+   Change controller:
+   : IETF
+
+   Specification document(s):
+   : This RFC as a reference to section 4.2 of {{I-D.ietf-wimse-s2s-protocol}}
+
+### `rar` grant extension type {#iana-grant-ext-rar}
 
    Type name:
    : `rar`
@@ -309,9 +320,9 @@ This specification registers the following grant extension type in the {{IANA.oa
    : IETF
 
    Specification document(s):
-   : This RFC as a reference to  {{RFC9396}}
+   : This RFC as a reference to {{RFC9396}}
 
-### `par` grant extension type
+### `par` grant extension type {#iana-grant-ext-reg-par}
 
    Type name:
    : `par`
@@ -322,7 +333,7 @@ This specification registers the following grant extension type in the {{IANA.oa
    Specification document(s):
    : This RFC as a reference to {{RFC9126}}
 
-### `jar` grant extension type
+### `jar` grant extension type {#iana-grant-ext-reg-jar}
 
    Type name:
    : `jar`
@@ -333,11 +344,11 @@ This specification registers the following grant extension type in the {{IANA.oa
    Specification document(s):
    : This RFC as a reference to {{RFC9101}}
 
-## OAuth Token Endpoint Authentication Methods Registration
+## OAuth Token Endpoint Authentication Methods Registration {#iana-token-authn-reg}
 
 This specification registers additional token endpoint authentication methods in the {{IANA.oauth-parameters}} OAuth Token Endpoint Authentication Methods registry.
 
-### `jwt-bearer` token endpoint authentication method
+### `jwt-bearer` token endpoint authentication method {#iana-token-authn-reg-jwt}
 
    Type name:
    : `jwt-bearer`
@@ -348,7 +359,7 @@ This specification registers additional token endpoint authentication methods in
    Specification document(s):
    : This RFC as a reference to {{RFC7591}} and {{I-D.parecki-oauth-identity-assertion-authz-grant}}
 
-### `jwt-svid` token endpoint authentication method
+### `jwt-svid` token endpoint authentication method {#iana-token-authn-reg-jwt-svid}
 
    Type name:
    : `jwt-svid`
@@ -359,7 +370,7 @@ This specification registers additional token endpoint authentication methods in
    Specification document(s):
    : This RFC as a reference to [SPIFFE JWT-SVID](https://github.com/spiffe/spiffe/blob/main/standards/JWT-SVID.md)
 
-### `wit` token endpoint authentication method
+### `wit` token endpoint authentication method {#iana-token-authn-reg-wit}
 
    Type name:
    : `wit`
@@ -370,7 +381,7 @@ This specification registers additional token endpoint authentication methods in
    Specification document(s):
    : This RFC as a reference to {{I-D.ietf-wimse-s2s-protocol}}
 
-### `txn_token` token endpoint authentication method
+### `txn_token` token endpoint authentication method {#iana-token-authn-reg-txntoken}
 
    Type name:
    : `txn_token`
@@ -381,11 +392,11 @@ This specification registers additional token endpoint authentication methods in
    Specification document(s):
    : This RFC as a reference to {{I-D.ietf-oauth-transaction-tokens}}
 
-## Claims Registration
+## Claims Registration {#iana-claims-reg}
 
 Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, and `cmr` to express client metadata JWT access tokens. This section registers those attributes as claims in the {{IANA.jwt}} registry introduced in {{RFC7519}}.
 
-### `gty` claim definition
+### `gty` claim definition {#iana-claims-reg-gty}
 
    Claim Name:
    : `gty`
@@ -399,7 +410,7 @@ Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, 
    Specification Document(s):
       Section X.Y of this document
 
-### `cxt` claim definition
+### `cxt` claim definition {#iana-claims-cxt}
 
    Claim Name:
    : `cxt`
@@ -413,7 +424,7 @@ Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, 
    Specification Document(s):
    : Section X.Y of this document
 
-### `ccr` claim definition
+### `ccr` claim definition {#iana-claims-ccr}
 
    Claim Name:
    : `ccr`
@@ -427,7 +438,7 @@ Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, 
    Specification Document(s):
    : Section X.Y of this document
 
-### `cmr` claim definition
+### `cmr` claim definition {#iana-claims-cmr}
 
    Claim Name:
    : `cmr`
@@ -443,7 +454,7 @@ Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, 
 
 --- back
 
-# Acknowledgments
+# Acknowledgments {#ack}
 {:numbered="false"}
 
 TODO acknowledge.
