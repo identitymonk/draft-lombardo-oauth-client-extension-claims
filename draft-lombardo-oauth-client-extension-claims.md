@@ -142,6 +142,7 @@ Not all Authorizartion Servers (AS) may support the claims described in this spe
 `support_client_extentison_claims`:
 : Boolean parameter indicating whether the authorization server will return the extension claims described in this RFC.
 
+
 Note that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC. This ensures backward compatibility with all existing AS implementations.
 
 # Requesting a JWT Access Token with Client Extensions {#request-jwt-client-ext}
