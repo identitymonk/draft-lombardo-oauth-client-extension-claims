@@ -139,7 +139,7 @@ The claims listed in this section MAY be issued and reflect the types and streng
 
 The following authorization server metadata parameters {{RFC8414}} are introduced to signal the server's capability
 
-`support_client_extentison_claims`:
+`support_client_extension_claims`:
 : Boolean parameter indicating whether the authorization server will return the extension claimns described in this RFC.
 
 Note that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC.
