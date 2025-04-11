@@ -1,0 +1,679 @@
+
+
+
+
+Web Authorization Protocol                                J. ". Lombardo
+Internet-Draft                                                       AWS
+Intended status: Informational                                A. Babeanu
+Expires: 13 October 2025                                        IndyKite
+                                                           11 April 2025
+
+
+                   OAuth 2.0 client extension claims
+          draft-lombardo-oauth-client-extension-claims-latest
+
+Abstract
+
+   This specification defines new claims for JWT profiled access tokens
+   [RFC9068] so that resource providers can benefit from more granular
+   information about the client to make better informed access
+   decisions.  The proposed new claims include: the client
+   authentication methods, the client OAuth grant flow used as well as
+   the OAuth grant flow extensions used as part of the issuance of the
+   associated tokens.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at
+   https://identitymonk.github.io/draft-lombardo-oauth-client-extension-
+   claims/draft-lombardo-oauth-client-extension-claims.html.  Status
+   information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-lombardo-oauth-client-
+   extension-claims/.
+
+   Discussion of this document takes place on the Web Authorization
+   Protocol mailing list (mailto:oauth@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/oauth/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/oauth/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/identitymonk/draft-lombardo-oauth-client-
+   extension-claims.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 13 October 2025.
+
+Copyright Notice
+
+   Copyright (c) 2025 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  JWT Access Token Client Extensions Data Structure
+     3.1.  Client Flow Information Claims
+     3.2.  Client Authentication Information Claims
+   4.  Authorization Server Metadata
+   5.  Requesting a JWT Access Token with Client Extensions
+   6.  Validating JWT Access Tokens with Client Extensions
+   7.  Security Considerations
+   8.  IANA Considerations
+     8.1.  OAuth Grant Type Registration
+       8.1.1.  authorization_code grant type
+       8.1.2.  implicit grant type
+       8.1.3.  password grant type
+       8.1.4.  client_credentials grant type
+       8.1.5.  refresh_token grant type
+       8.1.6.  jwt-bearer grant type
+       8.1.7.  saml2-bearer grant type
+       8.1.8.  token-exchange grant type
+       8.1.9.  device_code grant type
+       8.1.10. ciba grant type
+     8.2.  OAuth Grant Extension Type Registration
+       8.2.1.  pkce grant extension type
+       8.2.2.  dpop grant extension type
+       8.2.3.  wpt grant extension type
+       8.2.4.  rar grant extension type
+       8.2.5.  par grant extension type
+       8.2.6.  jar grant extension type
+     8.3.  OAuth Token Endpoint Authentication Methods Registration
+       8.3.1.  jwt-bearer token endpoint authentication method
+       8.3.2.  jwt-svid token endpoint authentication method
+       8.3.3.  wit token endpoint authentication method
+       8.3.4.  txn_token token endpoint authentication method
+     8.4.  Claims Registration
+       8.4.1.  gty claim definition
+       8.4.2.  cxt claim definition
+       8.4.3.  ccr claim definition
+       8.4.4.  cmr claim definition
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
+   Acknowledgments
+   Authors' Addresses
+
+1.  Introduction
+
+   Resource providers need information about the subject, the action,
+   the resource, and the context involved in the request in order to be
+   able to determine properly if a resource can be disclosed.  This
+   decision may also involve the help of a Policy Decision Point (PDP).
+
+   When accessed with a JWT profiled OAuth2 Access Token [RFC9068]
+   presented as a bearer token [RFC6750], a Resource Server (RS)
+   receives information about the subject as claims, such as: - The
+   subject, sub, - Any user profile claim set by the Authorization
+   Server if applicable, - Authenticaton Information claims like the
+   user class of authentication (acrclaim) or user methord of
+   authentication (claim amr [RFC8176]) - Any Authorization Information
+   if applicable
+
+   On the other hand, the RS has very little information about the
+   client, often only a client_id [RFC8693] claim.  In particular, the
+   RS lacks any insight about the type of authorization grant flow that
+   the client itself went through, the level of assurance that the
+   client itself may have reached during its own authentication, and in
+   general, lacks any information that would enable it to determine if
+   the client itself can be trusted at all.
+
+   This document defines 4 new claims for the JWT profile of OAuth
+   access tokens, which describe in detail the interaction between the
+   OAuth client and the Authorization Server (AS) during the flow that
+   resulted in the issuance of the token.
+
+   The process by which the client interacts with the authorization
+   server is out of scope.
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+   _JWT access token_:  An OAuth 2.0 access token encoded in JWT format
+      and complying with the requirements described in [RFC9068].
+
+   This specification uses the terms "access token", "authorization
+   server", "authorization endpoint", "authorization request", "client",
+   "protected resource", and "resource server" defined by "The OAuth 2.0
+   Authorization Framework" [RFC6749].
+
+3.  JWT Access Token Client Extensions Data Structure
+
+   The following claims extend the [RFC9068] access token payload data
+   structure:
+
+3.1.  Client Flow Information Claims
+
+   The claims listed below reflect the grant type and extensions used by
+   the OAuth client with the Authorization Server during the
+   authorization request.  Their values are generated dynamically and
+   consistent across all the tokens generated for the given
+   authorization request.
+
+   gty:  _REQUIRED_ - a string that describes the OAuth2 authorization
+      grant type the client requested for the issuance of the access
+      token.  The value used as the gty claim MUST comply to existing
+      grant flows described in the following specifications: section 1.3
+      of [RFC6749], section 2. of [RFC7591], section 2.1 of [RFC8693],
+      and section 4 of [OpenID.CIBA].  Furthermore since future grants
+      may also be developped, this claim is not limited to existing
+      flows, but should also encompass future innovations.  The possible
+      values of this claim are registered with IANA (see below).  Non-
+      normative example value: "client_credentials".
+
+   cxt:  _REQUIRED_ - defines the list of extensions the client used in
+      conjonction with the OAuth2 authorization grant type used for the
+      issuance of the access token.  For example but not limited to:
+      Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as
+      defined in [RFC7636], Demonstrating Proof of Possession (or DPoP)
+      as defined in [RFC9449].  The claim value is an array of strings
+      that lists the identifiers of extensions used.  Values used in the
+      cxt Claim MUST be valid values registered with the IANA OAuth
+      Parameters registry @TODO.  These values reference, without being
+      limited to, values established through section 2 of [RFC8414], and
+      Section 5.1 of [RFC9449].  Non-normative example: "[dpop,pkce]".
+
+3.2.  Client Authentication Information Claims
+
+   The claims listed in this section MAY be issued and reflect strength
+   of the mechanism used to authenticate the OAuth2 Client client itself
+   as part of the access token issuance flow.  Their values are fixed
+   and remain the same across all access tokens that derive from a given
+   authorization response, whether the access token was obtained
+   directly in the response (e.g., via the implicit flow) or after
+   obtaining a new access token using a refresh token.  Those values may
+   change if an access token is exchanged for another through the Token
+   Exchange [RFC8693] procedure, in that case these claims will reflect
+   the details of this new request.
+
+   ccr:  _OPTIONAL_ - refers to the authentication context class that
+      the Oauth client achieved with the AS during the authorization
+      flow.  The value of this claim must be an absolute URI that can be
+      registered with IANA.  It should support present, future or custom
+      values.  If IANA registered URIs are used, then their meaning and
+      semantics should be respected and used as defined in the registry.
+      Parties using this custom claim values need to agree upon the
+      semantics of the values used, which may be context specific.  Non-
+      normative example: "urn:org:iana:client:assurance:level_1".
+
+   cmr:  _OPTIONAL_ - an Identifier String that defines the
+      authentication methods the client used when authenticating to the
+      authorization server.  The claim may indicate the usage of private
+      JWT as defined in [RFC7521] and [RFC7523] or HTTP message
+      signature as defined in [RFC9421], or simple client secret as
+      defined in [RFC6749] . The cmr value is a case-sensitive string,
+      which values SHOULD be registered with the IANA OAuth Token
+      Endpoint Authentication Methods Values registry
+      [IANA.oauth-parameters_token-endpoint-auth-method] defined by
+      [RFC7591]; parties using this claim will need to agree upon the
+      meanings of any unregistered values used, which may be context
+      specific.
+
+4.  Authorization Server Metadata
+
+   Not all Authorizartion Servers (AS) may support the claims described
+   in this specification.  It is therefore necessary to provide a way
+   for an OAuth Resource Server to determine whether it can rely on the
+   claims described here.  This document therefore extends the OAuth2.0
+   Authorization Server Metadata [RFC8414] specification by adding the
+   following metadata value :
+
+   support_client_extentison_claims:  Boolean parameter indicating
+      whether the authorization server will return the extension claims
+      described in this RFC.
+
+   Note that the non presence of support_client_extentison_claims is
+   sufficient for the client to determine that the server is not capable
+   and therefore will not return the extension claimns described in this
+   RFC.  This ensures backward compatibility with all existing AS
+   implementations.
+
+5.  Requesting a JWT Access Token with Client Extensions
+
+   An authorization server supporting the claims described in this
+   document MUST issue a JWT access token with client extensions claims
+   described in this RFC in response to any authorization grant defined
+   by [RFC6749], as well as subsequent extensions meant to result in an
+   access token.
+
+6.  Validating JWT Access Tokens with Client Extensions
+
+   This specification does not change any of the requirements for
+   validating access tokens, as defined in section 4 of the JSON Web
+   Token (JWT) Profile for OAuth 2.0 Access Tokens specification
+   [RFC9068].
+
+7.  Security Considerations
+
+   The JWT access token data layout described here is the same as the
+   struture of the JWT access token as defined by the JSON Web Token
+   (JWT) Profile for OAuth 2.0 Access Tokens specification [RFC9068].
+
+   The Best Current Practice for OAuth 2.0 Security [RFC9700] is still
+   applicable.
+
+8.  IANA Considerations
+
+8.1.  OAuth Grant Type Registration
+
+   This specification registers the following grant type in the
+   [IANA.oauth-parameters] OAuth Grant Type registry.
+
+8.1.1.  authorization_code grant type
+
+   Type name:  authorization_code
+
+   Change controller:  IETF
+
+   Specification document(s):  section 2. of [RFC7591]
+
+8.1.2.  implicit grant type
+
+   Type name:  implicit
+
+   Change controller:  IETF
+
+   Specification document(s):  section 2. of [RFC7591]
+
+8.1.3.  password grant type
+
+   Type name:  password
+
+   Change controller:  IETF
+
+   Specification document(s):  section 2. of [RFC7591]
+
+8.1.4.  client_credentials grant type
+
+   Type name:  client_credentials
+
+   Change controller:  IETF
+
+   Specification document(s):  section 2. of [RFC7591]
+
+8.1.5.  refresh_token grant type
+
+   Type name:  refresh_token
+
+   Change controller:  IETF
+
+   Specification document(s):  section 2. of [RFC7591]
+
+8.1.6.  jwt-bearer grant type
+
+   Type name:  urn:ietf:params:oauth:grant-type:jwt-bearer
+
+   Change controller:  IETF
+
+   Specification document(s):  section 2. of [RFC7591] and section 6 of 
+      [I-D.parecki-oauth-identity-assertion-authz-grant]
+
+8.1.7.  saml2-bearer grant type
+
+   Type name:  urn:ietf:params:oauth:grant-type:saml2-bearer
+
+   Change controller:  IETF
+
+   Specification document(s):  section 2. of [RFC7591]
+
+8.1.8.  token-exchange grant type
+
+   Type name:  urn:ietf:params:oauth:grant-type:token-exchange
+
+   Change controller:  IETF
+
+   Specification document(s):  section 2.1. of [RFC8693]
+
+8.1.9.  device_code grant type
+
+   Type name:  urn:ietf:params:oauth:grant-type:device_code
+
+   Change controller:  IETF
+
+   Specification document(s):  section 3.4. of [RFC8628]
+
+8.1.10.  ciba grant type
+
+   Type name:  urn:openid:params:grant-type:ciba
+
+   Change controller:  IETF
+
+   Specification document(s):  section 4. of [OpenID.CIBA]
+
+8.2.  OAuth Grant Extension Type Registration
+
+   This specification registers the following grant extension type in
+   the [IANA.oauth-parameters] OAuth Grant Extension Type registry.
+
+8.2.1.  pkce grant extension type
+
+   Type name:  pkce
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to [RFC7636]
+
+8.2.2.  dpop grant extension type
+
+   Type name:  dpop
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to [RFC9449]
+
+8.2.3.  wpt grant extension type
+
+   Type name:  wpt
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to section 4.2 of
+      [I-D.ietf-wimse-s2s-protocol]
+
+8.2.4.  rar grant extension type
+
+   Type name:  rar
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to [RFC9396]
+
+8.2.5.  par grant extension type
+
+   Type name:  par
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to [RFC9126]
+
+8.2.6.  jar grant extension type
+
+   Type name:  jar
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to [RFC9101]
+
+8.3.  OAuth Token Endpoint Authentication Methods Registration
+
+   This specification registers additional token endpoint authentication
+   methods in the [IANA.oauth-parameters] OAuth Token Endpoint
+   Authentication Methods registry.
+
+8.3.1.  jwt-bearer token endpoint authentication method
+
+   Type name:  jwt-bearer
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to [RFC7591] and 
+      [I-D.parecki-oauth-identity-assertion-authz-grant]
+
+8.3.2.  jwt-svid token endpoint authentication method
+
+   Type name:  jwt-svid
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to SPIFFE JWT-
+      SVID (https://github.com/spiffe/spiffe/blob/main/standards/JWT-
+      SVID.md)
+
+8.3.3.  wit token endpoint authentication method
+
+   Type name:  wit
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to
+      [I-D.ietf-wimse-s2s-protocol]
+
+8.3.4.  txn_token token endpoint authentication method
+
+   Type name:  txn_token
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to
+      [I-D.ietf-oauth-transaction-tokens]
+
+8.4.  Claims Registration
+
+   Section X.Y of this specification refers to the attributes gty, cxt,
+   ccr, and cmr to express client metadata JWT access tokens.  This
+   section registers those attributes as claims in the [IANA.jwt]
+   registry introduced in [RFC7519].
+
+8.4.1.  gty claim definition
+
+   Claim Name:  gty
+
+   Claim Description:  OAuth2 Grant Type used
+
+   Change Controller:  IETF
+
+   Specification Document(s): Section X.Y of this document
+
+8.4.2.  cxt claim definition
+
+   Claim Name:  cxt
+
+   Claim Description:  Client Extensions used on top of the OAuth2 Grant
+      Type
+
+   Change Controller:  IETF
+
+   Specification Document(s):  Section X.Y of this document
+
+8.4.3.  ccr claim definition
+
+   Claim Name:  ccr
+
+   Claim Description:  Client Authentication Class Reference
+
+   Change Controller:  IETF
+
+   Specification Document(s):  Section X.Y of this document
+
+8.4.4.  cmr claim definition
+
+   Claim Name:  cmr
+
+   Claim Description:  Client Authentication Methods Reference
+
+   Change Controller:  IETF
+
+   Specification Document(s):  Section X.Y of this document
+
+9.  References
+
+9.1.  Normative References
+
+   [IANA.oauth-parameters]
+              IANA, "OAuth Parameters",
+              <https://www.iana.org/assignments/oauth-parameters>.
+
+   [OpenID.CIBA]
+              Fernandez, G., Walter, F., Nennker, A., Tonge, D., and B.
+              Campbell, "OpenID Connect Client-Initiated Backchannel
+              Authentication Flow - Core 1.0", September 2021,
+              <https://openid.net/specs/openid-client-initiated-
+              backchannel-authentication-core-1_0.html>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
+              RFC 6749, DOI 10.17487/RFC6749, October 2012,
+              <https://www.rfc-editor.org/rfc/rfc6749>.
+
+   [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
+              (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
+              <https://www.rfc-editor.org/rfc/rfc7519>.
+
+   [RFC7591]  Richer, J., Ed., Jones, M., Bradley, J., Machulak, M., and
+              P. Hunt, "OAuth 2.0 Dynamic Client Registration Protocol",
+              RFC 7591, DOI 10.17487/RFC7591, July 2015,
+              <https://www.rfc-editor.org/rfc/rfc7591>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8414]  Jones, M., Sakimura, N., and J. Bradley, "OAuth 2.0
+              Authorization Server Metadata", RFC 8414,
+              DOI 10.17487/RFC8414, June 2018,
+              <https://www.rfc-editor.org/rfc/rfc8414>.
+
+   [RFC8628]  Denniss, W., Bradley, J., Jones, M., and H. Tschofenig,
+              "OAuth 2.0 Device Authorization Grant", RFC 8628,
+              DOI 10.17487/RFC8628, August 2019,
+              <https://www.rfc-editor.org/rfc/rfc8628>.
+
+   [RFC8693]  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
+              and C. Mortimore, "OAuth 2.0 Token Exchange", RFC 8693,
+              DOI 10.17487/RFC8693, January 2020,
+              <https://www.rfc-editor.org/rfc/rfc8693>.
+
+   [RFC9068]  Bertocci, V., "JSON Web Token (JWT) Profile for OAuth 2.0
+              Access Tokens", RFC 9068, DOI 10.17487/RFC9068, October
+              2021, <https://www.rfc-editor.org/rfc/rfc9068>.
+
+9.2.  Informative References
+
+   [I-D.ietf-oauth-transaction-tokens]
+              Tulshibagwale, A., Fletcher, G., and P. Kasselman,
+              "Transaction Tokens", Work in Progress, Internet-Draft,
+              draft-ietf-oauth-transaction-tokens-05, 3 March 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-oauth-
+              transaction-tokens-05>.
+
+   [I-D.ietf-wimse-s2s-protocol]
+              Campbell, B., Salowey, J., Schwenkschuster, A., and Y.
+              Sheffer, "WIMSE Workload to Workload Authentication", Work
+              in Progress, Internet-Draft, draft-ietf-wimse-s2s-
+              protocol-03, 3 March 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-wimse-
+              s2s-protocol-03>.
+
+   [I-D.parecki-oauth-identity-assertion-authz-grant]
+              Parecki, A. and K. McGuinness, "Identity Assertion
+              Authorization Grant", Work in Progress, Internet-Draft,
+              draft-parecki-oauth-identity-assertion-authz-grant-02, 20
+              October 2024, <https://datatracker.ietf.org/doc/html/
+              draft-parecki-oauth-identity-assertion-authz-grant-02>.
+
+   [IANA.jwt] IANA, "JSON Web Token (JWT)",
+              <https://www.iana.org/assignments/jwt>.
+
+   [IANA.oauth-parameters_token-endpoint-auth-method]
+              IANA, "OAuth Token Endpoint Authentication Methods",
+              <https://www.iana.org/assignments/oauth-parameters>.
+
+   [RFC6750]  Jones, M. and D. Hardt, "The OAuth 2.0 Authorization
+              Framework: Bearer Token Usage", RFC 6750,
+              DOI 10.17487/RFC6750, October 2012,
+              <https://www.rfc-editor.org/rfc/rfc6750>.
+
+   [RFC7521]  Campbell, B., Mortimore, C., Jones, M., and Y. Goland,
+              "Assertion Framework for OAuth 2.0 Client Authentication
+              and Authorization Grants", RFC 7521, DOI 10.17487/RFC7521,
+              May 2015, <https://www.rfc-editor.org/rfc/rfc7521>.
+
+   [RFC7523]  Jones, M., Campbell, B., and C. Mortimore, "JSON Web Token
+              (JWT) Profile for OAuth 2.0 Client Authentication and
+              Authorization Grants", RFC 7523, DOI 10.17487/RFC7523, May
+              2015, <https://www.rfc-editor.org/rfc/rfc7523>.
+
+   [RFC7636]  Sakimura, N., Ed., Bradley, J., and N. Agarwal, "Proof Key
+              for Code Exchange by OAuth Public Clients", RFC 7636,
+              DOI 10.17487/RFC7636, September 2015,
+              <https://www.rfc-editor.org/rfc/rfc7636>.
+
+   [RFC8176]  Jones, M., Hunt, P., and A. Nadalin, "Authentication
+              Method Reference Values", RFC 8176, DOI 10.17487/RFC8176,
+              June 2017, <https://www.rfc-editor.org/rfc/rfc8176>.
+
+   [RFC8705]  Campbell, B., Bradley, J., Sakimura, N., and T.
+              Lodderstedt, "OAuth 2.0 Mutual-TLS Client Authentication
+              and Certificate-Bound Access Tokens", RFC 8705,
+              DOI 10.17487/RFC8705, February 2020,
+              <https://www.rfc-editor.org/rfc/rfc8705>.
+
+   [RFC9101]  Sakimura, N., Bradley, J., and M. Jones, "The OAuth 2.0
+              Authorization Framework: JWT-Secured Authorization Request
+              (JAR)", RFC 9101, DOI 10.17487/RFC9101, August 2021,
+              <https://www.rfc-editor.org/rfc/rfc9101>.
+
+   [RFC9126]  Lodderstedt, T., Campbell, B., Sakimura, N., Tonge, D.,
+              and F. Skokan, "OAuth 2.0 Pushed Authorization Requests",
+              RFC 9126, DOI 10.17487/RFC9126, September 2021,
+              <https://www.rfc-editor.org/rfc/rfc9126>.
+
+   [RFC9396]  Lodderstedt, T., Richer, J., and B. Campbell, "OAuth 2.0
+              Rich Authorization Requests", RFC 9396,
+              DOI 10.17487/RFC9396, May 2023,
+              <https://www.rfc-editor.org/rfc/rfc9396>.
+
+   [RFC9421]  Backman, A., Ed., Richer, J., Ed., and M. Sporny, "HTTP
+              Message Signatures", RFC 9421, DOI 10.17487/RFC9421,
+              February 2024, <https://www.rfc-editor.org/rfc/rfc9421>.
+
+   [RFC9449]  Fett, D., Campbell, B., Bradley, J., Lodderstedt, T.,
+              Jones, M., and D. Waite, "OAuth 2.0 Demonstrating Proof of
+              Possession (DPoP)", RFC 9449, DOI 10.17487/RFC9449,
+              September 2023, <https://www.rfc-editor.org/rfc/rfc9449>.
+
+   [RFC9700]  Lodderstedt, T., Bradley, J., Labunets, A., and D. Fett,
+              "Best Current Practice for OAuth 2.0 Security", BCP 240,
+              RFC 9700, DOI 10.17487/RFC9700, January 2025,
+              <https://www.rfc-editor.org/rfc/rfc9700>.
+
+Acknowledgments
+
+   TODO acknowledge.
+
+Authors' Addresses
+
+   Jean-François "Jeff" Lombardo
+   AWS
+   Canada
+   Email: jeffsec@amazon.com
+
+
+   Alexandre Babeanu
+   IndyKite
+   Canada
+   Email: alex.babeanu@indykite.com
