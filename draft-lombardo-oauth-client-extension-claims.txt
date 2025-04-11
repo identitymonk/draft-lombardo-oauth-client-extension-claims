@@ -5,7 +5,7 @@
 Web Authorization Protocol                                J. ". Lombardo
 Internet-Draft                                                       AWS
 Intended status: Informational                                A. Babeanu
-Expires: 13 October 2025                                       IndieKite
+Expires: 13 October 2025                                        IndyKite
                                                            11 April 2025
 
 
@@ -16,9 +16,11 @@ Abstract
 
    This specification defines new claims for JWT profiled access tokens
    [RFC9068] so that resource providers can benefit from more granular
-   information about the client: its authentication methods as long as
-   the grant flow and the grant flow extensions used as part of the
-   issuance of the associated tokens.
+   information about the client to make better informed access
+   decisions.  The proposed new claims include: the client
+   authentication methods, the client OAuth grant flow used as well as
+   the OAuth grant flow extensions used as part of the issuance of the
+   associated tokens.
 
 About This Document
 
@@ -120,25 +122,31 @@ Table of Contents
 1.  Introduction
 
    Resource providers need information about the subject, the action,
-   the resource, and the context involved in the request to be able to
-   determine properly, with the help of a Policy Decision Point (PDP) or
-   not, if a resource must be disclosed.
+   the resource, and the context involved in the request in order to be
+   able to determine properly if a resource can be disclosed.  This
+   decision may also involve the help of a Policy Decision Point (PDP).
 
    When accessed with a JWT profiled OAuth2 Access Token [RFC9068]
-   presented as a bearer token [RFC6750], a resource provider receives
-   mainly information about the subject in the form of: - The sub claim,
-   - Any user profile claim set by the Authorization Server if
-   applicable, - Any Authenticaiton Information claims like the user
-   class of authentication (acrclaim) or user methord of authentication
-   (claim amr [RFC8176]) - Any Authorization Information if applicable
+   presented as a bearer token [RFC6750], a Resource Server (RS)
+   receives information about the subject as claims, such as: - The
+   subject, sub, - Any user profile claim set by the Authorization
+   Server if applicable, - Authenticaton Information claims like the
+   user class of authentication (acrclaim) or user methord of
+   authentication (claim amr [RFC8176]) - Any Authorization Information
+   if applicable
 
-   The resource provider has very few information about the client,
-   mainly in the form of the client_id [RFC8693] claim.
+   On the other hand, the RS has very little information about the
+   client, often only a client_id [RFC8693] claim.  In particular, the
+   RS lacks any insight about the type of authorization grant flow that
+   the client itself went through, the level of assurance that the
+   client itself may have reached during its own authentication, and in
+   general, lacks any information that would enable it to determine if
+   the client itself can be trusted at all.
 
-   This document defines 4 new claims allowing to describe with more
-   precise information the client and metadata on how it interacted with
-   the authorization server during the issuance of the access token.  It
-   respects description of how to encode access tokens in JWT format.
+   This document defines 4 new claims for the JWT profile of OAuth
+   access tokens, which describe in detail the interaction between the
+   OAuth client and the Authorization Server (AS) during the flow that
+   resulted in the issuance of the token.
 
    The process by which the client interacts with the authorization
    server is out of scope.
@@ -151,7 +159,7 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-   JWT access token:  An OAuth 2.0 access token encoded in JWT format
+   _JWT access token_:  An OAuth 2.0 access token encoded in JWT format
       and complying with the requirements described in [RFC9068].
 
    This specification uses the terms "access token", "authorization
@@ -166,63 +174,65 @@ Table of Contents
 
 3.1.  Client Flow Information Claims
 
-   The claims listed in this section MUST be issued and reflect grant
-   type and extensions used with authorization server as part of the
-   authorization request from the client.  Their values are dynamic
-   accros all access tokens that derive from a given authorization
-   response to reflect the elements used in the process that lead to
-   their issuance.
+   The claims listed below reflect the grant type and extensions used by
+   the OAuth client with the Authorization Server during the
+   authorization request.  Their values are generated dynamically and
+   consistent across all the tokens generated for the given
+   authorization request.
 
-   gty:  REQUIRED - defines the OAuth2 authorization grant type the
-      client used for the issuance of the access token.  String that is
-      an identifier for an OAuth2 Grant type.  Values used in the gty
-      Claim MUST be from those registered in the IANA Grant Type
-      Reference Values registry TODO established by this RFC and
-      referencing, without being limited to, values established through
-      section 2. of [RFC7591], section 2.1 of [RFC8693], and section 4
-      of [OpenID.CIBA].
+   gty:  _REQUIRED_ - a string that describes the OAuth2 authorization
+      grant type the client requested for the issuance of the access
+      token.  The value used as the gty claim MUST comply to existing
+      grant flows described in the following specifications: section 1.3
+      of [RFC6749], section 2. of [RFC7591], section 2.1 of [RFC8693],
+      and section 4 of [OpenID.CIBA].  Furthermore since future grants
+      may also be developped, this claim is not limited to existing
+      flows, but should also encompass future innovations.  The possible
+      values of this claim are registered with IANA (see below).  Non-
+      normative example value: "client_credentials".
 
-   cxt:  REQUIRED - defines the list of extensions the client used in
+   cxt:  _REQUIRED_ - defines the list of extensions the client used in
       conjonction with the OAuth2 authorization grant type used for the
       issuance of the access token.  For example but not limited to:
       Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as
       defined in [RFC7636], Demonstrating Proof of Possession (or DPoP)
-      as defined in [RFC9449].  JSON array of strings that are
-      identifiers for extensions used.  Values used in the cxt Claim
-      MUST be from those registered in the IANA Client Context Reference
-      Values registry TODO established by this RFC and referencing,
-      without being limited to, values established through section 2 of
-      [RFC8414], and Section 5.1 of [RFC9449].
+      as defined in [RFC9449].  The claim value is an array of strings
+      that lists the identifiers of extensions used.  Values used in the
+      cxt Claim MUST be valid values registered with the IANA OAuth
+      Parameters registry @TODO.  These values reference, without being
+      limited to, values established through section 2 of [RFC8414], and
+      Section 5.1 of [RFC9449].  Non-normative example: "[dpop,pkce]".
 
 3.2.  Client Authentication Information Claims
 
-   The claims listed in this section MAY be issued and reflect the types
-   and strength of client authentication in the access token that the
-   authentication server enforced prior to returning the authorization
-   response to the client.  Their values are fixed and remain the same
-   across all access tokens that derive from a given authorization
-   response, whether the access token was obtained directly in the
-   response (e.g., via the implicit flow) or after obtaining a fresh
-   access token using a refresh token.  Those values may change if an
-   access tokenis exchanged for another via an [RFC8693] procedure in
-   order to reflect the specifities of this request.
+   The claims listed in this section MAY be issued and reflect strength
+   of the mechanism used to authenticate the OAuth2 Client client itself
+   as part of the access token issuance flow.  Their values are fixed
+   and remain the same across all access tokens that derive from a given
+   authorization response, whether the access token was obtained
+   directly in the response (e.g., via the implicit flow) or after
+   obtaining a new access token using a refresh token.  Those values may
+   change if an access token is exchanged for another through the Token
+   Exchange [RFC8693] procedure, in that case these claims will reflect
+   the details of this new request.
 
-   ccr:  OPTIONAL - defines the authentication context class reference
-      the client satisfied when authenticating to the authorization
-      server.  An absolute URI or registered name from furture RFC
-      SHOULD be used as the ccr value; registered names MUST NOT be used
-      with a different meaning than that which is registered.  Parties
-      using this claim will need to agree upon the meanings of the
-      values used, which may be context specific.
+   ccr:  _OPTIONAL_ - refers to the authentication context class that
+      the Oauth client achieved with the AS during the authorization
+      flow.  The value of this claim must be an absolute URI that can be
+      registered with IANA.  It should support present, future or custom
+      values.  If IANA registered URIs are used, then their meaning and
+      semantics should be respected and used as defined in the registry.
+      Parties using this custom claim values need to agree upon the
+      semantics of the values used, which may be context specific.  Non-
+      normative example: "urn:org:iana:client:assurance:level_1".
 
-   cmr:  OPTIONAL - defines the authentication methods the client used
-      when authenticating to the authorization server.  String that is
-      an identifier for an authentication method used in the
-      authentication of the client.  For instance, a value might
-      indicate the usage of private JWT as defined in [RFC7521] and
-      [RFC7523] or HTTP message signature as defined in [RFC9421] . The
-      cmr value is a case-sensitive string.  Values used in the cmr
-      Claim SHOULD be from those registered in the IANA OAuth Token
+   cmr:  _OPTIONAL_ - an Identifier String that defines the
+      authentication methods the client used when authenticating to the
+      authorization server.  The claim may indicate the usage of private
+      JWT as defined in [RFC7521] and [RFC7523] or HTTP message
+      signature as defined in [RFC9421], or simple client secret as
+      defined in [RFC6749] . The cmr value is a case-sensitive string,
+      which values SHOULD be registered with the IANA OAuth Token
       Endpoint Authentication Methods Values registry
       [IANA.oauth-parameters_token-endpoint-auth-method] defined by
       [RFC7591]; parties using this claim will need to agree upon the
@@ -231,37 +241,45 @@ Table of Contents
 
 4.  Authorization Server Metadata
 
-   The following authorization server metadata parameters [RFC8414] are
-   introduced to signal the server's capability
+   Not all Authorizartion Servers (AS) may support the claims described
+   in this specification.  It is therefore necessary to provide a way
+   for an OAuth Resource Server to determine whether it can rely on the
+   claims described here.  This document therefore extends the OAuth2.0
+   Authorization Server Metadata [RFC8414] specification by adding the
+   following metadata value :
 
-   support_client_extension_claims:  Boolean parameter indicating
-      whether the authorization server will return the extension claimns
+   support_client_extentison_claims:  Boolean parameter indicating
+      whether the authorization server will return the extension claims
       described in this RFC.
 
    Note that the non presence of support_client_extentison_claims is
    sufficient for the client to determine that the server is not capable
    and therefore will not return the extension claimns described in this
-   RFC.
+   RFC.  This ensures backward compatibility with all existing AS
+   implementations.
 
 5.  Requesting a JWT Access Token with Client Extensions
 
-   An authorization server MUST issue a JWT access token with client
-   extensions claims described in this RFC in response to any
-   authorization grant defined by [RFC6749] and subsequent extensions
-   meant to result in an access token and as along as the server support
-   this capability.
+   An authorization server supporting the claims described in this
+   document MUST issue a JWT access token with client extensions claims
+   described in this RFC in response to any authorization grant defined
+   by [RFC6749], as well as subsequent extensions meant to result in an
+   access token.
 
 6.  Validating JWT Access Tokens with Client Extensions
 
-   This specification follows the requirements of the section 4. of
+   This specification does not change any of the requirements for
+   validating access tokens, as defined in section 4 of the JSON Web
+   Token (JWT) Profile for OAuth 2.0 Access Tokens specification
    [RFC9068].
 
 7.  Security Considerations
 
-   The JWT access token data layout described here is very similar to
-   that of JWT access token as defined by [RFC9068].
+   The JWT access token data layout described here is the same as the
+   struture of the JWT access token as defined by the JSON Web Token
+   (JWT) Profile for OAuth 2.0 Access Tokens specification [RFC9068].
 
-   The security current best practices described in [RFC9700] are
+   The Best Current Practice for OAuth 2.0 Security [RFC9700] is still
    applicable.
 
 8.  IANA Considerations
@@ -655,7 +673,7 @@ Authors' Addresses
    Email: jeffsec@amazon.com
 
 
-   Alex Babeanu
-   IndieKite
+   Alexandre Babeanu
+   IndyKite
    Canada
    Email: alex.babeanu@indykite.com
