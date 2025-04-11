@@ -2,11 +2,11 @@
 
 
 
-Web Authorization Protocol                                   J. Lombardo
+Web Authorization Protocol                                J. ". Lombardo
 Internet-Draft                                                       AWS
 Intended status: Informational                                A. Babeanu
-Expires: 10 October 2025                                       IndieKite
-                                                            8 April 2025
+Expires: 13 October 2025                                       IndieKite
+                                                           11 April 2025
 
 
                    OAuth 2.0 client extension claims
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 October 2025.
+   This Internet-Draft will expire on 13 October 2025.
 
 Copyright Notice
 
@@ -97,9 +97,10 @@ Table of Contents
      8.2.  OAuth Grant Extension Type Registration
        8.2.1.  pkce grant extension type
        8.2.2.  dpop grant extension type
-       8.2.3.  rar grant extension type
-       8.2.4.  par grant extension type
-       8.2.5.  jar grant extension type
+       8.2.3.  wpt grant extension type
+       8.2.4.  rar grant extension type
+       8.2.5.  par grant extension type
+       8.2.6.  jar grant extension type
      8.3.  OAuth Token Endpoint Authentication Methods Registration
        8.3.1.  jwt-bearer token endpoint authentication method
        8.3.2.  jwt-svid token endpoint authentication method
@@ -316,7 +317,8 @@ Table of Contents
 
    Change controller:  IETF
 
-   Specification document(s):  section 2. of [RFC7591]
+   Specification document(s):  section 2. of [RFC7591] and section 6 of 
+      [I-D.parecki-oauth-identity-assertion-authz-grant]
 
 8.1.7.  saml2-bearer grant type
 
@@ -371,15 +373,24 @@ Table of Contents
 
    Specification document(s):  This RFC as a reference to [RFC9449]
 
-8.2.3.  rar grant extension type
+8.2.3.  wpt grant extension type
+
+   Type name:  wpt
+
+   Change controller:  IETF
+
+   Specification document(s):  This RFC as a reference to section 4.2 of
+      [I-D.ietf-wimse-s2s-protocol]
+
+8.2.4.  rar grant extension type
 
    Type name:  rar
 
    Change controller:  IETF
 
-   Specification document(s):  This RFC as a reference to  [RFC9396]
+   Specification document(s):  This RFC as a reference to [RFC9396]
 
-8.2.4.  par grant extension type
+8.2.5.  par grant extension type
 
    Type name:  par
 
@@ -387,7 +398,7 @@ Table of Contents
 
    Specification document(s):  This RFC as a reference to [RFC9126]
 
-8.2.5.  jar grant extension type
+8.2.6.  jar grant extension type
 
    Type name:  jar
 
@@ -638,10 +649,10 @@ Acknowledgments
 
 Authors' Addresses
 
-   Jeff Lombardo
+   Jean-François "Jeff" Lombardo
    AWS
    Canada
-   Email: jeff@authnopuz.xyz
+   Email: jeffsec@amazon.com
 
 
    Alex Babeanu
