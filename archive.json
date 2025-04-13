@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-10T01:01:10.818339+00:00",
+  "timestamp": "2025-04-13T02:30:23.362611+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -49,7 +49,143 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 8,
+      "id": "I_kwDOOEwV6s6yOy1u",
+      "title": "Backwards compatibility",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/8",
+      "state": "OPEN",
+      "author": "0x73746F66",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The specification assumes backward compatibility won't be an issue, but doesn't address how existing resource servers might misinterpret these new claims",
+      "createdAt": "2025-04-12T05:09:16Z",
+      "updatedAt": "2025-04-12T12:08:52Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "0x73746F66",
+          "authorAssociation": "NONE",
+          "body": "The draft contains only one explicit mention of backward compatibility, but there are several implied references or considerations throughout the document\n\nSection 4\n> Note that the non presence of support_client_extentison_claims is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC. This ensures backward compatibility with all existing AS implementations.\n\nThis is the only explicit mention of backward compatibility in the document. It specifies that the absence of the metadata parameter means the server doesn't support the new claims, allowing older authorisation servers to operate without changes. Seemingly. However, this assumption may not address all potential compatibility problems that arise when the introduced extensions are encountered by these older servers in unintended ways such as conflicting claims.\n\nPotential Issues\n\n- Older authorisation servers might encounter requests that include parameters related to the new claims, potentially causing parser failures if they strictly validate input parameters\n- Even if older servers don't crash, they might process requests with extension-related parameters in unexpected ways\n-  Proxy servers, API gateways, or token transformation services might incorrectly process or strip these claims if they're unaware of the extension semantics (The current approach relies on the `support_client_extension_claims` metadata parameter and is a semantic combination)\n\nSuggestions\n\n- Prefix new claims with a namespace to reduce collision risk with custom implementations and make them more easily identifiable `\"ext:cxt\": [\"pkce\", \"dpop\"]`\n- Take a progressive enhancement approach, a discovery mechanism that allows clients to query authorization servers about supported features before making an initial request that depend on these extensions\n- Specify how clients should degrade gracefully when they encounter servers that don't support these extensions, including explicit fallback behaviors\n- Require clients to explicitly request these claims using a parameter, ensuring servers that don't understand this parameter won't receive unexpected inputs\n",
+          "createdAt": "2025-04-12T12:01:19Z",
+          "updatedAt": "2025-04-12T12:01:19Z"
+        },
+        {
+          "author": "0x73746F66",
+          "authorAssociation": "NONE",
+          "body": "I acknowledge Section 6 indicates that existing validation processes remain unchanged, suggesting backward compatibility for token validation\n\nBut section 4 mentions clearly that absence of the parameter ensures backward compatibility, it doesn't address how clients should behave when discovering a non-supporting server when using the extension.\n\nSection 3.2 ambiguity bothers me, he optional nature of these claims could lead to inconsistent implementation behaviors, there's no guidance on how these claims affect token validation in mixed-version environments\n\nThe draft would benefit from a dedicated backward compatibility section",
+          "createdAt": "2025-04-12T12:08:51Z",
+          "updatedAt": "2025-04-12T12:08:51Z"
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "id": "I_kwDOOEwV6s6yOy8h",
+      "title": "clarify the order of extensions",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/9",
+      "state": "OPEN",
+      "author": "0x73746F66",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The cxt claim is an array, but the specification doesn't clarify if the order of extensions has semantic significance, potentially leading to inconsistent interpretations",
+      "createdAt": "2025-04-12T05:10:11Z",
+      "updatedAt": "2025-04-12T05:10:11Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 10,
+      "id": "I_kwDOOEwV6s6yOzCb",
+      "title": "Resilience mechanisms for spoofed parameters",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/10",
+      "state": "OPEN",
+      "author": "0x73746F66",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "support_client_extension_claims metadata parameter can be spoofed, and is a fundamental flaw to rely on it for metadata discovery, which I lack the required intelligence to imagine a mitigation",
+      "createdAt": "2025-04-12T05:11:06Z",
+      "updatedAt": "2025-04-12T05:11:06Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 11,
+      "id": "I_kwDOOEwV6s6yOzI4",
+      "title": "Revocation?",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/11",
+      "state": "OPEN",
+      "author": "0x73746F66",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "There's no discussion of how client credential revocation affects tokens containing these claims, potentially allowing compromised clients to retain access",
+      "createdAt": "2025-04-12T05:11:43Z",
+      "updatedAt": "2025-04-12T05:11:43Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 12,
+      "id": "I_kwDOOEwV6s6yOzOr",
+      "title": "token replay resilience mechanisms",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/12",
+      "state": "OPEN",
+      "author": "0x73746F66",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The specification doesn't address how these claims interact with token replay protection measures, especially when tokens include client authentication details",
+      "createdAt": "2025-04-12T05:12:25Z",
+      "updatedAt": "2025-04-12T05:12:25Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 13,
+      "id": "I_kwDOOEwV6s6yOzSY",
+      "title": "validation requirements for resource servers",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/13",
+      "state": "OPEN",
+      "author": "0x73746F66",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The gty and cxt claims lack explicit validation requirements for resource servers",
+      "createdAt": "2025-04-12T05:13:00Z",
+      "updatedAt": "2025-04-12T05:13:00Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 14,
+      "id": "I_kwDOOEwV6s6yOzWg",
+      "title": "Risk when allowing arbitrary URIs",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/14",
+      "state": "OPEN",
+      "author": "0x73746F66",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The ccr claim allows arbitrary URIs leading to inconsistent interpretation of client authentication strength across different systems at best, SSRF at worst ",
+      "createdAt": "2025-04-12T05:13:43Z",
+      "updatedAt": "2025-04-12T12:20:23Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "0x73746F66",
+          "authorAssociation": "NONE",
+          "body": "I suggest avoid ambiguous \"absolute Uri\" as this may lead to SSRF, instead define a core set of standard URNs in the `urn:ietf:params:oauth:client-acr` namespace with precise security characteristics\n\nWhen custom values are needed, require use of URNs rather than URLs to prevent SSRF\n\nAnd always include validation requirements for processors, like encourage the resource servers to pre-validated (allow listing) a domain used to validate the URN segment before calling",
+          "createdAt": "2025-04-12T12:20:21Z",
+          "updatedAt": "2025-04-12T12:20:21Z"
+        }
+      ]
+    }
+  ],
   "pulls": [
     {
       "number": 1,
@@ -97,6 +233,242 @@
           "body": "",
           "createdAt": "2025-04-08T19:40:22Z",
           "updatedAt": "2025-04-08T19:40:22Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOOEwV6s6SR2_z",
+      "title": "update to Draft-00",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/pull/2",
+      "state": "MERGED",
+      "author": "identitymonk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Latest changes for author, and references ",
+      "createdAt": "2025-04-11T15:43:31Z",
+      "updatedAt": "2025-04-11T16:22:48Z",
+      "baseRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "baseRefName": "main",
+      "baseRefOid": "3236b2ba758a0529c8731880d1e151aefeff568d",
+      "headRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "headRefName": "Draft-00",
+      "headRefOid": "2c33d3138865f4dd74db646d8c9aa1596ef12473",
+      "closedAt": "2025-04-11T16:22:48Z",
+      "mergedAt": "2025-04-11T16:22:47Z",
+      "mergedBy": "identitymonk",
+      "mergeCommit": {
+        "oid": "9177ef748d41d64b24066aa0413b9df0c4c93359"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOOEwV6s6kjxVx",
+          "commit": {
+            "abbreviatedOid": "2c33d31"
+          },
+          "author": "baboulebou",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-04-11T16:02:33Z",
+          "updatedAt": "2025-04-11T16:02:33Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOOEwV6s6SSSIq",
+      "title": "Last update from Jeff",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/pull/3",
+      "state": "MERGED",
+      "author": "identitymonk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "- add WPT\r\n- change email for Jeff",
+      "createdAt": "2025-04-11T16:32:00Z",
+      "updatedAt": "2025-04-11T16:59:04Z",
+      "baseRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "baseRefName": "main",
+      "baseRefOid": "9177ef748d41d64b24066aa0413b9df0c4c93359",
+      "headRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "headRefName": "Draft-00",
+      "headRefOid": "e136a70f2c983f44077fc26d9983f8066ce33e59",
+      "closedAt": "2025-04-11T16:56:58Z",
+      "mergedAt": "2025-04-11T16:56:58Z",
+      "mergedBy": "identitymonk",
+      "mergeCommit": {
+        "oid": "b1f8d1e09dba2bc103560ef6f04b996953fdec50"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOOEwV6s6kkLUG",
+          "commit": {
+            "abbreviatedOid": "e136a70"
+          },
+          "author": "baboulebou",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-04-11T16:45:11Z",
+          "updatedAt": "2025-04-11T16:45:11Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOOEwV6s6SSfBk",
+      "title": "Draft 01",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/pull/4",
+      "state": "MERGED",
+      "author": "baboulebou",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "My changes and corrections to the initial draft...",
+      "createdAt": "2025-04-11T16:59:09Z",
+      "updatedAt": "2025-04-11T17:54:47Z",
+      "baseRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "baseRefName": "main",
+      "baseRefOid": "b1f8d1e09dba2bc103560ef6f04b996953fdec50",
+      "headRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "headRefName": "Draft-01",
+      "headRefOid": "d8d3063b3b29fc008427805da5f5d387fa726045",
+      "closedAt": "2025-04-11T17:54:36Z",
+      "mergedAt": "2025-04-11T17:54:36Z",
+      "mergedBy": "identitymonk",
+      "mergeCommit": {
+        "oid": "cfdeac3e47a5659d796c0d5542f15f192c0a8436"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOOEwV6s6kkZQB",
+          "commit": {
+            "abbreviatedOid": "d8d3063"
+          },
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "I approve those changes",
+          "createdAt": "2025-04-11T17:09:42Z",
+          "updatedAt": "2025-04-11T17:09:42Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOOEwV6s6STCq0",
+      "title": "Update publish.yml",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/pull/5",
+      "state": "MERGED",
+      "author": "identitymonk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Try too fix upload of Draft-00",
+      "createdAt": "2025-04-11T18:07:43Z",
+      "updatedAt": "2025-04-11T18:10:32Z",
+      "baseRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "baseRefName": "main",
+      "baseRefOid": "cfdeac3e47a5659d796c0d5542f15f192c0a8436",
+      "headRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "headRefName": "identitymonk-patch-1-1",
+      "headRefOid": "78a5b56a217d2ca4d336b6a9f9b57904fea5731b",
+      "closedAt": "2025-04-11T18:10:17Z",
+      "mergedAt": "2025-04-11T18:10:17Z",
+      "mergedBy": "identitymonk",
+      "mergeCommit": {
+        "oid": "3f0ab196667ca3cb12e7d4a55a355549c83b0c74"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOOEwV6s6klGSx",
+          "commit": {
+            "abbreviatedOid": "78a5b56"
+          },
+          "author": "baboulebou",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-04-11T18:09:01Z",
+          "updatedAt": "2025-04-11T18:09:01Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOOEwV6s6STFF9",
+      "title": "Update publish.yml",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/pull/6",
+      "state": "CLOSED",
+      "author": "identitymonk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-11T18:12:49Z",
+      "updatedAt": "2025-04-11T18:17:27Z",
+      "baseRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "baseRefName": "main",
+      "baseRefOid": "3f0ab196667ca3cb12e7d4a55a355549c83b0c74",
+      "headRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "headRefName": "identitymonk-patch-1",
+      "headRefOid": "487e764326f536ebf85740756ff9ed3fa90be51b",
+      "closedAt": "2025-04-11T18:13:59Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOOEwV6s6STGTH",
+      "title": "Update publish.yml",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/pull/7",
+      "state": "MERGED",
+      "author": "identitymonk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-11T18:15:37Z",
+      "updatedAt": "2025-04-11T18:17:26Z",
+      "baseRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "baseRefName": "main",
+      "baseRefOid": "3f0ab196667ca3cb12e7d4a55a355549c83b0c74",
+      "headRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "headRefName": "identitymonk-patch-1",
+      "headRefOid": "487e764326f536ebf85740756ff9ed3fa90be51b",
+      "closedAt": "2025-04-11T18:17:12Z",
+      "mergedAt": "2025-04-11T18:17:12Z",
+      "mergedBy": "identitymonk",
+      "mergeCommit": {
+        "oid": "3eb9e0083c8e62219fc7fd03d6c25c34ffcb4f92"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOOEwV6s6klLS6",
+          "commit": {
+            "abbreviatedOid": "487e764"
+          },
+          "author": "baboulebou",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-04-11T18:17:00Z",
+          "updatedAt": "2025-04-11T18:17:00Z",
           "comments": []
         }
       ]
