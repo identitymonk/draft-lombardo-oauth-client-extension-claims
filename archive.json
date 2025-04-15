@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-13T02:30:23.362611+00:00",
+  "timestamp": "2025-04-15T01:02:52.635899+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -62,7 +62,7 @@
       "labels": [],
       "body": "The specification assumes backward compatibility won't be an issue, but doesn't address how existing resource servers might misinterpret these new claims",
       "createdAt": "2025-04-12T05:09:16Z",
-      "updatedAt": "2025-04-12T12:08:52Z",
+      "updatedAt": "2025-04-14T01:54:25Z",
       "closedAt": null,
       "comments": [
         {
@@ -78,6 +78,34 @@
           "body": "I acknowledge Section 6 indicates that existing validation processes remain unchanged, suggesting backward compatibility for token validation\n\nBut section 4 mentions clearly that absence of the parameter ensures backward compatibility, it doesn't address how clients should behave when discovering a non-supporting server when using the extension.\n\nSection 3.2 ambiguity bothers me, he optional nature of these claims could lead to inconsistent implementation behaviors, there's no guidance on how these claims affect token validation in mixed-version environments\n\nThe draft would benefit from a dedicated backward compatibility section",
           "createdAt": "2025-04-12T12:08:51Z",
           "updatedAt": "2025-04-12T12:08:51Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "There are multiple elements raised through this issue for which, it seems, you mistake Query String Parameters when talking to the AS vs the proposal for claims to be inserted in JWT at issuance by AS.\n\n- **Older authorisation servers might encounter requests that include parameters related to the new claims, potentially causing parser failures if they strictly validate input parameters**\n\nI think you misread the specification proposal. The specification DOES NOT require any additional parameter at the time Authorization request or at the time at the Token request. The only thing that this specification is saying is that the AS, if respecting this specification when GA, issues JWT profiled OAuth2 Access Token it MUST express what was used for client authentication through 2 mandatory claims, and SHOULD  express what was used for client authentication through 2 optional claims to help Resource Providers take an access control decision. Therefore Client cannot confuse AS.\n\n- **Even if older servers don't crash, they might process requests with extension-related parameters in unexpected ways**\n\nAS do not process any additional parameter therefore there no unexpected processing and results. Also Clients are related to AS through either proactive and static client registration or [dynamic client registration (RFC7591)](https://datatracker.ietf.org/doc/html/rfc7591). Therefore they have credentials, need to use a grant flow to interact with the AS, which my require extensions. All of those are described in existing official RFC. This specification proposal just require to express the mean used explicitly in the issued JWT profile OAuth2 Access Token for the benefice of the Resource Provider.\n\n- **Proxy servers, API gateways, or token transformation services might incorrectly process or strip these claims if they're unaware of the extension semantics**\n\nAgain those are not query string parameters expected by the AS, therefore nothing is asked to be provided by Proxy servers and API gateways.\n\nAs we are talking about claims of JWT profiled OAuth2 Access Tokens, Proxy servers  and API Gateway cannot strip those from the tokens without breaking the JWS signature. Globally Proxy servers and API Gateways have no interest in doing this and SHALL NOT attempt to do it.\n\n- **The current approach relies on the support_client_extension_claims metadata parameter and is a semantic combination**\n\nI realized that I need to put more details in the purpose of `support_client_extension_claims`. \n\nThis metadata claim is here to indicate to Resource Provider (as it is the case for the document that will bear it, the [Authorization Server Metadata (RFC8414)](https://datatracker.ietf.org/doc/html/rfc8414), as it made to guide the Resource Provider into making a more dynamic access control decision. If the AS has `support_client_extension_claims ` set to `true`, the RP knows it can send a 401/403 with an explicit request for those claims to be provided as a guidance to the Client if the Client wants to make a second attempt with a new token issued by the AS.\n\n",
+          "createdAt": "2025-04-13T19:50:14Z",
+          "updatedAt": "2025-04-13T20:01:33Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "Therefore on the suggestions:\n\n- Prefix new claims with a namespace to reduce collision risk with custom implementations and make them more easily identifiable \"ext:cxt\": [\"pkce\", \"dpop\"]\n  - I understand the ask, but here we want to define new official OAuth2 Claims that we will register with IANA. As many RFC beyond the intinal Core Framework of OAuth2 defined. We will stick with this state of the proposal until discussed within the IETF working Group.\n- Take a progressive enhancement approach, a discovery mechanism that allows clients to query authorization servers about supported features before making an initial request that depend on these extensions\n  - This is not a specification that changes how the Authorization nor the Token request are made and which parameter they need based on the grant flow selected. Threrefore this is not applicable here. Therefore there is no need for the proposed suggestion.\n- Specify how clients should degrade gracefully when they encounter servers that don't support these extensions, including explicit fallback behaviors\n  - Again this is not a specification that changes how the Authorization nor the Token request are made and which parameter they need based on the grant flow selected. Therefore there is no action to take from the client perspective, and there is no downgrade option to plan. AS supports the proposed specification and issue the mandatory claim and, if capable applicable, the optional claims as part of the issued JWT profiled OAuth2 Access Token.\n- Require clients to explicitly request these claims using a parameter, ensuring servers that don't understand this parameter won't receive unexpected inputs\n  - Again, this is about something the client has to express, Therefore there is no need for an explicit Authorization not Token request parameter.",
+          "createdAt": "2025-04-13T19:57:49Z",
+          "updatedAt": "2025-04-13T19:57:49Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "If you agree on those then, I propose to make:\n\n- [4. ](https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html#section-4)[Authorization Server Metadata](https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html#name-authorization-server-metada) clearer by indicating that `support_client_extentison_claims` is made to guide Resource Provider\n- [5. ](https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html#section-5)[Requesting a JWT Access Token with Client Extensions](https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html#name-requesting-a-jwt-access-tok) clearer on the fact that nothing is changed from how the Authorization and Token requests are made for the grant flow selected. Therefore no specific additional parameter is introduced in the proposed specification",
+          "createdAt": "2025-04-13T20:02:55Z",
+          "updatedAt": "2025-04-13T20:02:55Z"
+        },
+        {
+          "author": "0x73746F66",
+          "authorAssociation": "NONE",
+          "body": "These are great actions to take, I'll not have time for a few days to agree that these are the only take aways from the thread because just a first read I feel a lot of assumptions were made and I am not confident the core concerns were understood or addressed with these kinds of responses ",
+          "createdAt": "2025-04-14T01:54:24Z",
+          "updatedAt": "2025-04-14T01:54:24Z"
         }
       ]
     },
@@ -86,16 +114,31 @@
       "id": "I_kwDOOEwV6s6yOy8h",
       "title": "clarify the order of extensions",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/9",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "0x73746F66",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The cxt claim is an array, but the specification doesn't clarify if the order of extensions has semantic significance, potentially leading to inconsistent interpretations",
       "createdAt": "2025-04-12T05:10:11Z",
-      "updatedAt": "2025-04-12T05:10:11Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-04-14T01:47:38Z",
+      "closedAt": "2025-04-13T20:38:33Z",
+      "comments": [
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "Order has no bearing here, order is not important, therefore the willingful choice of JSON array.\n\nDPoP over PKCE vs PKCE over DPoP does not change anything for example. What is expected here is to understand what grant type extensions as been used as part of the process for issuance of the JWT profiled OAuth2 Access Token. The different RFC of PKCE, DPoP, and others are dealing with how those different extensions need to be approached to be secure.",
+          "createdAt": "2025-04-13T20:38:27Z",
+          "updatedAt": "2025-04-13T20:38:27Z"
+        },
+        {
+          "author": "0x73746F66",
+          "authorAssociation": "NONE",
+          "body": "I see you have well articulated arguments for beliefs, but there's almost nothing in there that addresses the concern.\n\nReopen if you have curiosity about this concern and interested in discussing why this order of evaluation can lead to unexpected results ",
+          "createdAt": "2025-04-14T01:47:37Z",
+          "updatedAt": "2025-04-14T01:47:37Z"
+        }
+      ]
     },
     {
       "number": 10,
@@ -109,9 +152,38 @@
       "labels": [],
       "body": "support_client_extension_claims metadata parameter can be spoofed, and is a fundamental flaw to rely on it for metadata discovery, which I lack the required intelligence to imagine a mitigation",
       "createdAt": "2025-04-12T05:11:06Z",
-      "updatedAt": "2025-04-12T05:11:06Z",
+      "updatedAt": "2025-04-14T14:14:14Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "Can be spoofed is network level risk for which we provide two elements of guidance:\n- By extending [RFC8414 - Authorization Server Metadata](https://www.rfc-editor.org/rfc/rfc8414) and especially section [3](https://www.rfc-editor.org/rfc/rfc8414#section-3) which itself is bound by [RFC5785 - Defining Well-Known Uniform Resource Identifiers (URIs)](https://www.rfc-editor.org/rfc/rfc5785) which address part of the question here by assuring the `.well-known` is composed from the `issuer` identifier value configured client side. I recognize that there is a missing link with the OpenID Connect Core which defines it as a:\n> case-sensitive URL using the https scheme that contains scheme, host, and optionally, port number and path components and no query or fragment components. \n  - This means that `https` is used which should assure a certain level of origin guarantee through control of TLS termination by Server Certificate authentication.\n- By disposing of the ability, by extension of [RFC8414 - Authorization Server Metadata](https://www.rfc-editor.org/rfc/rfc8414) , to benefit from section [2.1](https://www.rfc-editor.org/rfc/rfc8414#section-2.1).  Signed Authorization Server Metadata for higher assurance use cases.\n\nDo you think this is sufficient?",
+          "createdAt": "2025-04-13T20:35:51Z",
+          "updatedAt": "2025-04-13T20:35:51Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "Overall if you think that this parameter is at risk of spoofing, then the whole ecosystem of OAuth2 / OpenID Connect is spoofable. If you think that OAuth2 / OpenID Connect provide proper spoofing protection mechanisms and guidance for higher assurance use-cases, then this specification is as it builds on top of it.",
+          "createdAt": "2025-04-13T20:41:12Z",
+          "updatedAt": "2025-04-13T20:41:12Z"
+        },
+        {
+          "author": "0x73746F66",
+          "authorAssociation": "NONE",
+          "body": "> Overall if you think that this parameter is at risk of spoofing, then the whole ecosystem of OAuth2 / OpenID Connect is spoofable. If you think that OAuth2 / OpenID Connect provide proper spoofing protection mechanisms and guidance for higher assurance use-cases, then this specification is as it builds on top of it.\n\nThat's quite a hyperbolic dismissal there, just because something can be misused and abused in discrete ways doesn't discount an entire ecosystem.\n\nPerhaps think more critically about read before verification, and canonicalisation of vectors for signatures, or interpretation of the 'plain text' JSON in advance of security operations (like using a payload digest supplied in the request as a mistake vs having reproducing the digest independently on the server because vectors are expected and the digest includes idempotent characteristics - which was a fatal flaw in hawkauth that was never resolved and led to hawkauth being abandoned entirely in a broken state\n\nDon't let the baby get thrown out with the bath water - let's think more critically \n",
+          "createdAt": "2025-04-14T02:01:06Z",
+          "updatedAt": "2025-04-14T02:01:06Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "I don't disagree with the critical thinking here. I am only looking at the applicability of it to this specification proposal.\n\nWhat I get out of your point is that what i described at https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/10#issuecomment-2800113846 should be a dedicated sub section of the [Security section](https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html#name-security-considerations)",
+          "createdAt": "2025-04-14T14:14:13Z",
+          "updatedAt": "2025-04-14T14:14:13Z"
+        }
+      ]
     },
     {
       "number": 11,
@@ -125,9 +197,17 @@
       "labels": [],
       "body": "There's no discussion of how client credential revocation affects tokens containing these claims, potentially allowing compromised clients to retain access",
       "createdAt": "2025-04-12T05:11:43Z",
-      "updatedAt": "2025-04-12T05:11:43Z",
+      "updatedAt": "2025-04-13T20:17:24Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "JWT are stateless unless Token Introspection or Token Status List are implemented. What should happen when you revoke a token or a client is outside the scope of this proposal.\n\nRevocation does not change that, at the time of issuance, a client (identified by client_id) was authenticated following a dedicated method (that we ask to be described in the `ccm` claim) as part of an OAuth2 grant flow type (that we ask to be described in the `gty` claim) with potentially some extension like PKCE, DPoP, ect. (that we ask to be described in the `cext` claim) and that this mechanism might have a business client authentication assurance level (that we ask to be described in the `ccr` claim).\n\nIf someone wants to described the influence of client credential revocation over the revocation of the tokens, it should be done as a distinct internet draft as it is an important topic. But this topic exists whatever our proposal makes it to an RFC or not. I would recommend anyone wanting to dive into this to look at [OpenID Foundation Shared Signals Framwork WG](https://openid.net/wg/sharedsignals/)\n",
+          "createdAt": "2025-04-13T20:17:22Z",
+          "updatedAt": "2025-04-13T20:17:22Z"
+        }
+      ]
     },
     {
       "number": 12,
@@ -141,9 +221,17 @@
       "labels": [],
       "body": "The specification doesn't address how these claims interact with token replay protection measures, especially when tokens include client authentication details",
       "createdAt": "2025-04-12T05:12:25Z",
-      "updatedAt": "2025-04-12T05:12:25Z",
+      "updatedAt": "2025-04-13T20:09:10Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "I am not sure to follow. Here we are just specifying that a JWT profile OAuth2 Access Token will have more claims inside them and their purpose.\nAs this extends the [JWT profile for OAuth2 Access Token (RFC9068)](https://datatracker.ietf.org/doc/html/rfc9068) all the guidance for replay protection as issuance and usage applies.\n\nWhat new risk do you foresee here that is not covered?",
+          "createdAt": "2025-04-13T20:09:09Z",
+          "updatedAt": "2025-04-13T20:09:09Z"
+        }
+      ]
     },
     {
       "number": 13,
@@ -157,9 +245,24 @@
       "labels": [],
       "body": "The gty and cxt claims lack explicit validation requirements for resource servers",
       "createdAt": "2025-04-12T05:13:00Z",
-      "updatedAt": "2025-04-12T05:13:00Z",
+      "updatedAt": "2025-04-13T20:51:52Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "I am sorry, I am not sure to follow. The IANA section [8. ](https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html#section-8)[IANA Considerations](https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html#name-iana-considerations) describes the values that will registered and expected out of the claims.\n\nCan you describe what you would propose as additional information please?",
+          "createdAt": "2025-04-13T20:04:44Z",
+          "updatedAt": "2025-04-13T20:04:44Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "Thinking adding a section about `Processing Rules`",
+          "createdAt": "2025-04-13T20:51:52Z",
+          "updatedAt": "2025-04-13T20:51:52Z"
+        }
+      ]
     },
     {
       "number": 14,
@@ -173,7 +276,7 @@
       "labels": [],
       "body": "The ccr claim allows arbitrary URIs leading to inconsistent interpretation of client authentication strength across different systems at best, SSRF at worst ",
       "createdAt": "2025-04-12T05:13:43Z",
-      "updatedAt": "2025-04-12T12:20:23Z",
+      "updatedAt": "2025-04-14T14:20:53Z",
       "closedAt": null,
       "comments": [
         {
@@ -182,8 +285,47 @@
           "body": "I suggest avoid ambiguous \"absolute Uri\" as this may lead to SSRF, instead define a core set of standard URNs in the `urn:ietf:params:oauth:client-acr` namespace with precise security characteristics\n\nWhen custom values are needed, require use of URNs rather than URLs to prevent SSRF\n\nAnd always include validation requirements for processors, like encourage the resource servers to pre-validated (allow listing) a domain used to validate the URN segment before calling",
           "createdAt": "2025-04-12T12:20:21Z",
           "updatedAt": "2025-04-12T12:20:21Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "Though more about that. I think your point is covered with the description already provided:\n- The value of this claim must be an absolute URI that can be registered with IANA. \n  - We can replace the `can` with a true \u00a0`SHOULD` keyword.\n- If IANA registered URIs are used, then their meaning and semantics should be respected and used as defined in the registry.\n  - This constrains both the AS and the RP\n-  Parties using this custom claim values need to agree upon the semantics of the values used, which may be context specific.\n  - This allows for URI not in IANA / not governed by IETF spaces like FAPI and NIST SP-800-63 based definitions to exist. It allows reinforce the legitimacy of any RP to have the final word on access control. It they don't know what the value means, then it should  be discarded.",
+          "createdAt": "2025-04-14T14:20:51Z",
+          "updatedAt": "2025-04-14T14:20:51Z"
         }
       ]
+    },
+    {
+      "number": 15,
+      "id": "I_kwDOOEwV6s6yTkEB",
+      "title": "Describing the relations to the requirements of FAPI 2.0 Security Profiles and SMART on FHIR v5",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/15",
+      "state": "OPEN",
+      "author": "identitymonk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Those two frameworks require some explicit type of authentication for clients when they request OAuth2 tokens from the AS.\n\nThis specification proposal aims to provide actionable information in the tokens about those elements for the resource providers to assure, as part of their access control evaluation, that the basic framework requirements are met.\n\nThis should be described in the Introduction.",
+      "createdAt": "2025-04-13T20:44:31Z",
+      "updatedAt": "2025-04-13T20:44:31Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 16,
+      "id": "I_kwDOOEwV6s6yTktz",
+      "title": "IANA value registration process description",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/16",
+      "state": "OPEN",
+      "author": "identitymonk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Need to add the following text in the IANA section:\n\n--------- beginning ---------\nThe following registration procedure is used for the registry established by this specification.\n\nValues are registered on a Specification Required [RFC8126] basis after a two-week review period on the [oauth-ext-review@ietf.org](mailto:oauth-ext-review@ietf.org) mailing list, on the advice of one or more Designated Experts. However, to allow for the allocation of values prior to publication of the final version of a specification, the Designated Experts may approve registration once they are satisfied that the specification will be completed and published. However, if the specification is not completed and published in a timely manner, as determined by the Designated Experts, the Designated Experts may request that IANA withdraw the registration.\n\nRegistration requests sent to the mailing list for review should use an appropriate subject (e.g., \"Request to register JWT profiled OAuth2 Access Token client extensions: example\").\n\nWithin the review period, the Designated Experts will either approve or deny the registration request, communicating this decision to the review list and IANA. Denials should include an explanation and, if applicable, suggestions as to how to make the request successful. The IANA escalation process is followed when the Designated Experts are not responsive within 14 days.\n\nCriteria that should be applied by the Designated Experts includes determining whether the proposed registration duplicates existing functionality, determining whether it is likely to be of general applicability or whether it is useful only for a single application, and whether the registration makes sense.\n\nIANA must only accept registry updates from the Designated Experts and should direct all requests for registration to the review mailing list.\n\nIt is suggested that multiple Designated Experts be appointed who are able to represent the perspectives of different applications using this specification, in order to enable broadly-informed review of registration decisions. In cases where a registration decision could be perceived as creating a conflict of interest for a particular Expert, that Expert should defer to the judgment of the other Experts.\n\nThe reason for the use of the mailing list is to enable public review of registration requests, enabling both Designated Experts and other interested parties to provide feedback on proposed registrations. The reason to allow the Designated Experts to allocate values prior to publication as a final specification is to enable giving authors of specifications proposing registrations the benefit of review by the Designated Experts before the specification is completely done, so that if problems are identified, the authors can iterate and fix them before publication of the final specification.\n--------- end ---------",
+      "createdAt": "2025-04-13T20:50:39Z",
+      "updatedAt": "2025-04-13T20:50:39Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
