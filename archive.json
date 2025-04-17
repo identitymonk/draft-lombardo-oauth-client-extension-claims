@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-15T01:02:52.635899+00:00",
+  "timestamp": "2025-04-17T01:01:53.978646+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -276,7 +276,7 @@
       "labels": [],
       "body": "The ccr claim allows arbitrary URIs leading to inconsistent interpretation of client authentication strength across different systems at best, SSRF at worst ",
       "createdAt": "2025-04-12T05:13:43Z",
-      "updatedAt": "2025-04-14T14:20:53Z",
+      "updatedAt": "2025-04-15T14:19:21Z",
       "closedAt": null,
       "comments": [
         {
@@ -289,9 +289,9 @@
         {
           "author": "identitymonk",
           "authorAssociation": "OWNER",
-          "body": "Though more about that. I think your point is covered with the description already provided:\n- The value of this claim must be an absolute URI that can be registered with IANA. \n  - We can replace the `can` with a true \u00a0`SHOULD` keyword.\n- If IANA registered URIs are used, then their meaning and semantics should be respected and used as defined in the registry.\n  - This constrains both the AS and the RP\n-  Parties using this custom claim values need to agree upon the semantics of the values used, which may be context specific.\n  - This allows for URI not in IANA / not governed by IETF spaces like FAPI and NIST SP-800-63 based definitions to exist. It allows reinforce the legitimacy of any RP to have the final word on access control. It they don't know what the value means, then it should  be discarded.",
+          "body": "Though more about that. I think your point is covered with the description already provided:\n- The value of this claim must be an absolute URI that can be registered with IANA. \n  - We can replace the `can` with a true \u00a0`SHOULD` keyword.\n- If IANA registered URIs are used, then their meaning and semantics should be respected and used as defined in the registry.\n  - This constrains both the AS and the RP\n-  Parties using this custom claim values need to agree upon the semantics of the values used, which may be context specific.\n   - This allows for URI not in IANA / not governed by IETF spaces like FAPI and NIST SP-800-63 based definitions to exist. It allows reinforce the legitimacy of any RP to have the final word on access control. It they don't know what the value means, then it should  be discarded.",
           "createdAt": "2025-04-14T14:20:51Z",
-          "updatedAt": "2025-04-14T14:20:51Z"
+          "updatedAt": "2025-04-15T14:19:20Z"
         }
       ]
     },
