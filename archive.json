@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-27T01:06:34.133726+00:00",
+  "timestamp": "2025-04-29T01:02:46.689498+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -197,7 +197,7 @@
       "labels": [],
       "body": "There's no discussion of how client credential revocation affects tokens containing these claims, potentially allowing compromised clients to retain access",
       "createdAt": "2025-04-12T05:11:43Z",
-      "updatedAt": "2025-04-25T13:55:16Z",
+      "updatedAt": "2025-04-28T20:43:55Z",
       "closedAt": null,
       "comments": [
         {
@@ -213,6 +213,13 @@
           "body": "With a flaw in your thought procvess, early on, the rest needs to be rethought\n\n> JWT are stateless unless Token Introspection or Token Status List are implemented. What should happen when you revoke a token or a client is outside the scope of this proposal.\n\nCan be stateless, not \"are\" stateless/\n\nIn a system, the jwt is a intrinsic to the signature, which is extended to PKI in most implementations - which can have revoked public key and thus a JWT signature verification check should fail (this is described clearly on the jwt.io introduction page), a lot of devs _want_ a stateless jwt, and think that it is on hopes and wishes but never read the intro page to understand them correctly.\n\nNot sure where client credential came into this, maybe start again with the new knowledge of JWT workings?",
           "createdAt": "2025-04-25T13:55:14Z",
           "updatedAt": "2025-04-25T13:55:14Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "You mistake PKI for Cryptography. There is no PKI in OAuth2 nor OIDC. Public keys (which are not certificates) are published as JWK in JWKS Endpoint and token are stateless <period>\n\nIn OAuth2, revocation is not core, it is an extension therefore my comments on Status List and Introspection.\n\nI brought Client authentication credential revocation as a mean to try to understand where you were going to.",
+          "createdAt": "2025-04-28T20:43:54Z",
+          "updatedAt": "2025-04-28T20:43:54Z"
         }
       ]
     },
@@ -228,7 +235,7 @@
       "labels": [],
       "body": "The specification doesn't address how these claims interact with token replay protection measures, especially when tokens include client authentication details",
       "createdAt": "2025-04-12T05:12:25Z",
-      "updatedAt": "2025-04-25T14:02:26Z",
+      "updatedAt": "2025-04-28T21:03:16Z",
       "closedAt": null,
       "comments": [
         {
@@ -244,6 +251,20 @@
           "body": "A bearer token, by definition, grants access to whoever possesses it, regardless of how it was originally obtained.\nThe fundamental issue is that adding these new claims (gty, cxt, ccr, and cmr) to a bearer token doesn't actually achive their intended function..\n\nIf a Resource Server implements authorization policies based on these claims (e.g., \"only allow access if PKCE was used\"), an attacker who obtains a token through a replay attack would benefit from these claims despite never having actually used PKCE.\n\nWe see this with JWT+MFA, an attacker with the bearer token benefits fromteh owner having done MFA and is not impeded at all.",
           "createdAt": "2025-04-25T14:02:25Z",
           "updatedAt": "2025-04-25T14:02:25Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "You are at the wrong place pal. This spec is not a sender constraint mechanism. This is to provide more information on what happened at the AS so that the RS can have more data to take a decision. Nothing more, nothing less. \n\nWe (the authors) try to force for more metadata.\n\nIf you want token replay mechanism please go look at [DPoP / RFC9449](https://datatracker.ietf.org/doc/html/rfc9449) or [HTTP Message Signature / RFC9421](https://datatracker.ietf.org/doc/html/rfc9421) which can be used conjointly to what we propose as long as to any [JWT profiled Access Tokens](https://datatracker.ietf.org/doc/html/rfc9068) currently specified.\n\nI think you over read the proposal to something this is not. And while your comments, threats you described, or features you are looking for are interesting, this is not the RFC you are looking for.",
+          "createdAt": "2025-04-28T20:50:51Z",
+          "updatedAt": "2025-04-28T20:50:51Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "On your example:\n> only allow access if PKCE was used\n\nI will re-read how we express it. But the mean was to express a guardrail, in the sense of \"if PKCE was not use don't even look at it, fail fast\" not as a finite requirement. For sure, \"do you have the right scope?\", \"does the claim `project` equal to `phoenix`?\" or any other rule of access will still applies.\n\nThe problem we are describing in fact the contrary. Actually FAPI requires that clients are client certificate authenticated, SMART on FHIR requires that clients are Private JWT authenticated... but the RP has no meaningful way to know if this was effectively the case. The RP only sees that `scope contains the right value` and `claim project has a value of phoenix`.\n\nThis proposal is here to allow the RP to conditions as stated in frameworks that govern the disclosure of associated resources.",
+          "createdAt": "2025-04-28T21:03:16Z",
+          "updatedAt": "2025-04-28T21:03:16Z"
         }
       ]
     },
@@ -290,7 +311,7 @@
       "labels": [],
       "body": "The ccr claim allows arbitrary URIs leading to inconsistent interpretation of client authentication strength across different systems at best, SSRF at worst ",
       "createdAt": "2025-04-12T05:13:43Z",
-      "updatedAt": "2025-04-25T13:31:14Z",
+      "updatedAt": "2025-04-28T20:39:06Z",
       "closedAt": null,
       "comments": [
         {
@@ -313,6 +334,13 @@
           "body": "So, we just tell attackers not to use SSRS when the spec allows SSRS by design? IANA can't design a URI that resists SSRS, the spec has to be clear about what acceptable URI varients are safe to use for this protocol )other protocols can use all or other varients of a URI than this accepts), and have a security best practice section that would specify anti-patters and to avoid those by describing what good looks like.",
           "createdAt": "2025-04-25T13:31:13Z",
           "updatedAt": "2025-04-25T13:31:13Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "What do you mean as attackers, can you elaborate the threat with a flow? SSRS is a famility of attack vector, I need a flow to understand what you want me to mitigate.\n\n Client does not send any of those values. It is the AS that set the values based on how the Client authentication was performed and the AS way to size it.\n\n- If your point is that a malicious AS can issue tokens with a bad SSRS value, then they can do that with any claims of the token.\n- If your point is that the Client might replace the value of the token by one of malicious own, then it will break the signature.",
+          "createdAt": "2025-04-28T20:39:05Z",
+          "updatedAt": "2025-04-28T20:39:05Z"
         }
       ]
     },
