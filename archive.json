@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-29T01:02:46.689498+00:00",
+  "timestamp": "2025-05-04T01:09:51.217048+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -197,7 +197,7 @@
       "labels": [],
       "body": "There's no discussion of how client credential revocation affects tokens containing these claims, potentially allowing compromised clients to retain access",
       "createdAt": "2025-04-12T05:11:43Z",
-      "updatedAt": "2025-04-28T20:43:55Z",
+      "updatedAt": "2025-05-03T02:15:44Z",
       "closedAt": null,
       "comments": [
         {
@@ -220,6 +220,13 @@
           "body": "You mistake PKI for Cryptography. There is no PKI in OAuth2 nor OIDC. Public keys (which are not certificates) are published as JWK in JWKS Endpoint and token are stateless <period>\n\nIn OAuth2, revocation is not core, it is an extension therefore my comments on Status List and Introspection.\n\nI brought Client authentication credential revocation as a mean to try to understand where you were going to.",
           "createdAt": "2025-04-28T20:43:54Z",
           "updatedAt": "2025-04-28T20:43:54Z"
+        },
+        {
+          "author": "0x73746F66",
+          "authorAssociation": "NONE",
+          "body": "> You mistake PKI for Cryptography. There is no PKI in OAuth2 nor OIDC. Public keys (which are not certificates) are published as JWK in JWKS Endpoint and token are stateless <period>\n> \n> In OAuth2, revocation is not core, it is an extension therefore my comments on Status List and Introspection.\n> \n> I brought Client authentication credential revocation as a mean to try to understand where you were going to.\n\nI'll explain \ud83d\udc4d\n\n> and token are stateless <period>\n\nThat is dogma, period.\n\nI already described inherent dynamic dependencies, you even specified one yourself (JWKS). I'd like to avoid this digression to keep this discussion on topic, however dogma will only serve to further confuse matters.. Allow me to explain how stateless is not the same as declarative - signed things, like claims with dynamic dependencies in a JWT are best described as a declaration, making the token declarative rather than 'stateless'. If it were to be defined as 'stateless', that would require the claims 'meaning' to never change. When using the signed information for decisions, it must remain unaffected by external dependencies like a JWKS, to be stateless.\n\nLet's avoid using 'stateless' because words like that matter (or you wouldn't emphasize the dogma), it's clearly declarative, by definition, ans it has dynamic dependencies that can effect decisions when evaluating its declared claims.\n\n> There is no PKI in OAuth2 nor OIDC\n\nJWKS is, inherently, PKI\n\n> Public keys (which are not certificates) \n\nSince you're referring to 'certificates' you might want to explain why you are introducing the certificate concept I to this discussion?\nX.509 Certificates?\nA digital certificate of some other kind?\n\nI have absolutely no clue as to why you introduced the word 'certificate'\n\nSometimes people who read 'PKI', 'think' that it is about certificates, for some mental model where X.509 was the first time they learned about PKI\n\nBut PKI is not about certificates - certificates can be an implementation details related to PKI\n\nPublic key infrastructure, is about, at its core, solving the assurance problems that arise when entity A and entity B have no prior means of secure public key exchange, therefore they need to establish trustworthy (verifiable) infrastructure to securely share the public keys\n\nSometimes, due to the mental model this confusion may arise\n\nLet's just stick to public keys and I'll ignore any introduction of certificates from now on unless you are specific as to how certificates apply here (because I have no idea why anyone would discuss certificates here at all)\n\nBut going back to your point, for clarity \n\n> Public keys (which are not certificates) \n\nCertificates are inherently public keys, with extensions and extra meta data. So a public key is what I said, and a public key can be a certificate too (but not in this context, so I can understand your confusion)\n\nA public key, specifically JWS if you prefer to focus on one at a time. So, one no longer presented in the JWKS is as the jwt.io Introduction page describes - would make it no longer verifiable and therefore inherently revoked\n\nThis reply was far too long, but I feel it really helps with education on some fundamentals of JWT that are being missed in this discussion. Hopefully you can now reread the OP and address this productively.",
+          "createdAt": "2025-05-03T01:56:44Z",
+          "updatedAt": "2025-05-03T02:15:43Z"
         }
       ]
     },
@@ -235,7 +242,7 @@
       "labels": [],
       "body": "The specification doesn't address how these claims interact with token replay protection measures, especially when tokens include client authentication details",
       "createdAt": "2025-04-12T05:12:25Z",
-      "updatedAt": "2025-04-28T21:03:16Z",
+      "updatedAt": "2025-05-03T01:22:02Z",
       "closedAt": null,
       "comments": [
         {
@@ -265,6 +272,13 @@
           "body": "On your example:\n> only allow access if PKCE was used\n\nI will re-read how we express it. But the mean was to express a guardrail, in the sense of \"if PKCE was not use don't even look at it, fail fast\" not as a finite requirement. For sure, \"do you have the right scope?\", \"does the claim `project` equal to `phoenix`?\" or any other rule of access will still applies.\n\nThe problem we are describing in fact the contrary. Actually FAPI requires that clients are client certificate authenticated, SMART on FHIR requires that clients are Private JWT authenticated... but the RP has no meaningful way to know if this was effectively the case. The RP only sees that `scope contains the right value` and `claim project has a value of phoenix`.\n\nThis proposal is here to allow the RP to conditions as stated in frameworks that govern the disclosure of associated resources.",
           "createdAt": "2025-04-28T21:03:16Z",
           "updatedAt": "2025-04-28T21:03:16Z"
+        },
+        {
+          "author": "0x73746F66",
+          "authorAssociation": "NONE",
+          "body": "> You are at the wrong place pal. This spec is not a sender constraint mechanism. This is to provide more information on what happened at the AS so that the RS can have more data to take a decision. Nothing more, nothing less. \n> \n> We (the authors) try to force for more metadata.\n> \n> If you want token replay mechanism please go look at [DPoP / RFC9449](https://datatracker.ietf.org/doc/html/rfc9449) or [HTTP Message Signature / RFC9421](https://datatracker.ietf.org/doc/html/rfc9421) which can be used conjointly to what we propose as long as to any [JWT profiled Access Tokens](https://datatracker.ietf.org/doc/html/rfc9068) currently specified.\n> \n> I think you over read the proposal to something this is not. And while your comments, threats you described, or features you are looking for are interesting, this is not the RFC you are looking for.\n\nAll of that is valid only if I was here looking for a spec update to provide replay resistance to all of JWT\n\nThat, is not what I said, not once.\n\nGiven I said what I did, let's get back on track. Your following reply is closer, we are adding more metadata here, and we'd really like to be assured on the RS side of the 'trustworthiness' of the AS provided metadata - ergo, we assume it was the AS we think it is because they used the public key to sign the data and we are able to verify they used the public key too. But who else can sign the metadata into a JWT using the public key? Anyone.\n\nSo, if this spec needs an RS to, as you say, decide... Would you not want assurance the provided metadata was... Trustworthy??? Are we talking about the same security mechanisms now? Please let me know if you require more information to understand these points of assurance and verifiable trust",
+          "createdAt": "2025-05-03T01:22:01Z",
+          "updatedAt": "2025-05-03T01:22:01Z"
         }
       ]
     },
@@ -311,7 +325,7 @@
       "labels": [],
       "body": "The ccr claim allows arbitrary URIs leading to inconsistent interpretation of client authentication strength across different systems at best, SSRF at worst ",
       "createdAt": "2025-04-12T05:13:43Z",
-      "updatedAt": "2025-04-28T20:39:06Z",
+      "updatedAt": "2025-05-03T04:46:05Z",
       "closedAt": null,
       "comments": [
         {
@@ -341,6 +355,13 @@
           "body": "What do you mean as attackers, can you elaborate the threat with a flow? SSRS is a famility of attack vector, I need a flow to understand what you want me to mitigate.\n\n Client does not send any of those values. It is the AS that set the values based on how the Client authentication was performed and the AS way to size it.\n\n- If your point is that a malicious AS can issue tokens with a bad SSRS value, then they can do that with any claims of the token.\n- If your point is that the Client might replace the value of the token by one of malicious own, then it will break the signature.",
           "createdAt": "2025-04-28T20:39:05Z",
           "updatedAt": "2025-04-28T20:39:05Z"
+        },
+        {
+          "author": "0x73746F66",
+          "authorAssociation": "NONE",
+          "body": "> What do you mean as attackers, can you elaborate the threat with a flow? SSRS is a famility of attack vector, I need a flow to understand what you want me to mitigate.\n> \n>  Client does not send any of those values. It is the AS that set the values based on how the Client authentication was performed and the AS way to size it.\n> \n> - If your point is that a malicious AS can issue tokens with a bad SSRS value, then they can do that with any claims of the token.\n> - If your point is that the Client might replace the value of the token by one of malicious own, then it will break the signature.\n\n\n> the Client might replace the value of the token by one of malicious own\n\nNo, it will break the signature - exactly \n\n> a malicious AS can issue tokens with a bad SSRS value, then they can do that with any claims of the token\n\nYes, and for the reason you said; they can do that with any claims of the token. But before this spec, those other claims are defined  by other specs and not being defined in this spec\n\nFor this spec, you should be providing assurances for the claims you are introducing - so, knowing these known knowns today (that previous specs not have known that the time, and are vulnerable with the knowledge we have today) knowing that this is a vector, for these claims, provide guidance in this spec, to ensure that verification of values is not vulnerable to such 'known' attack vectors - right?",
+          "createdAt": "2025-05-03T04:46:03Z",
+          "updatedAt": "2025-05-03T04:46:03Z"
         }
       ]
     },
