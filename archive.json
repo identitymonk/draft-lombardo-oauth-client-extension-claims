@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-04T01:09:51.217048+00:00",
+  "timestamp": "2025-05-06T01:03:52.670774+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -121,7 +121,7 @@
       "labels": [],
       "body": "The cxt claim is an array, but the specification doesn't clarify if the order of extensions has semantic significance, potentially leading to inconsistent interpretations",
       "createdAt": "2025-04-12T05:10:11Z",
-      "updatedAt": "2025-04-14T01:47:38Z",
+      "updatedAt": "2025-05-05T14:25:23Z",
       "closedAt": "2025-04-13T20:38:33Z",
       "comments": [
         {
@@ -137,6 +137,20 @@
           "body": "I see you have well articulated arguments for beliefs, but there's almost nothing in there that addresses the concern.\n\nReopen if you have curiosity about this concern and interested in discussing why this order of evaluation can lead to unexpected results ",
           "createdAt": "2025-04-14T01:47:37Z",
           "updatedAt": "2025-04-14T01:47:37Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "@0x73746F66 If you still feel that this proposal need to handle a part or the globality of the point you are making here, you are encouraged to propose a new / updated / corrected section through a PR on this repo, for which any contributor would be able to discuss the details before a possible merge.",
+          "createdAt": "2025-05-05T14:17:35Z",
+          "updatedAt": "2025-05-05T14:17:35Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "I looked very closely.... and I did not found any of your equivalent argument on the claim `scope` in RFC6749 for example. Therefore i am really intrigued at 1/ what lead you here in the first place; 2/ why you have such a problem with this proposal and the `cxt` if it even matters; 3/ you use such an haughty tone - which is not even at the bottom of the pit for any expert to express himself, even less to contribute.\n\nInstead of blaming belief and dogma of others you should start by thinking that if you are not understood, it might be cause you don't express yourself intelligibly on the matter at stake.\n\nHere there is no order required as the resource provider will mainly do a `if token.cxt.contains('<some_value>)`.\n\nThat is why, the only possible next step is to propose a new / updated / corrected section through a PR on this repo, for which any contributor would be able to discuss the details before a possible merge.",
+          "createdAt": "2025-05-05T14:25:22Z",
+          "updatedAt": "2025-05-05T14:25:22Z"
         }
       ]
     },
@@ -145,15 +159,15 @@
       "id": "I_kwDOOEwV6s6yOzCb",
       "title": "Resilience mechanisms for spoofed parameters",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/10",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "0x73746F66",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "support_client_extension_claims metadata parameter can be spoofed, and is a fundamental flaw to rely on it for metadata discovery, which I lack the required intelligence to imagine a mitigation",
       "createdAt": "2025-04-12T05:11:06Z",
-      "updatedAt": "2025-04-14T14:14:14Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-05T13:40:23Z",
+      "closedAt": "2025-05-05T13:40:21Z",
       "comments": [
         {
           "author": "identitymonk",
@@ -182,6 +196,13 @@
           "body": "I don't disagree with the critical thinking here. I am only looking at the applicability of it to this specification proposal.\n\nWhat I get out of your point is that what i described at https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/10#issuecomment-2800113846 should be a dedicated sub section of the [Security section](https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html#name-security-considerations)",
           "createdAt": "2025-04-14T14:14:13Z",
           "updatedAt": "2025-04-14T14:14:13Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "@0x73746F66 as a conclusion, this proposal relies:\n- For the format, on the implementers to follow the [RFC7519 / JWT](https://datatracker.ietf.org/doc/html/rfc7519), [RFC7515 / JWS](https://www.rfc-editor.org/rfc/rfc7515.html), as long as [RFC9068 / JSON Web Token (JWT) Profile for OAuth 2.0 Access Tokens](https://datatracker.ietf.org/doc/html/rfc9068) specifications;\n- For flows, operations of AS, and any risks related to those, on the implementers to follow [RFC6749 / OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749) and [RFC9700 / its Security BCP](https://datatracker.ietf.org/doc/html/rfc9700) at least. Implementers will have to follow the required RFC based on the non core flow they want to use with their AS.\n\nFrom the point of view of the authors, this specification does not introduce any new risk, as the AS already performs the Client Authentication in accordance to RFC6749.\n\nIf you feel that you have identified a new risk, you are encouraged to contribute to each of those standard accordingly so that this proposal can benefit from your feedback through the discussions and iterations that will happen over there.\n\nIf you still feel that this proposal need to handle a part or the globality of the point you are making here, you are encouraged to propose a new / updated / corrected section through a PR on this repo, for which any contributor would be able to discuss the details before a possible merge.",
+          "createdAt": "2025-05-05T13:40:21Z",
+          "updatedAt": "2025-05-05T13:40:21Z"
         }
       ]
     },
@@ -190,15 +211,15 @@
       "id": "I_kwDOOEwV6s6yOzI4",
       "title": "Revocation?",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/11",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "0x73746F66",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "There's no discussion of how client credential revocation affects tokens containing these claims, potentially allowing compromised clients to retain access",
       "createdAt": "2025-04-12T05:11:43Z",
-      "updatedAt": "2025-05-03T02:15:44Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-05T13:59:30Z",
+      "closedAt": "2025-05-05T13:59:30Z",
       "comments": [
         {
           "author": "identitymonk",
@@ -227,6 +248,13 @@
           "body": "> You mistake PKI for Cryptography. There is no PKI in OAuth2 nor OIDC. Public keys (which are not certificates) are published as JWK in JWKS Endpoint and token are stateless <period>\n> \n> In OAuth2, revocation is not core, it is an extension therefore my comments on Status List and Introspection.\n> \n> I brought Client authentication credential revocation as a mean to try to understand where you were going to.\n\nI'll explain \ud83d\udc4d\n\n> and token are stateless <period>\n\nThat is dogma, period.\n\nI already described inherent dynamic dependencies, you even specified one yourself (JWKS). I'd like to avoid this digression to keep this discussion on topic, however dogma will only serve to further confuse matters.. Allow me to explain how stateless is not the same as declarative - signed things, like claims with dynamic dependencies in a JWT are best described as a declaration, making the token declarative rather than 'stateless'. If it were to be defined as 'stateless', that would require the claims 'meaning' to never change. When using the signed information for decisions, it must remain unaffected by external dependencies like a JWKS, to be stateless.\n\nLet's avoid using 'stateless' because words like that matter (or you wouldn't emphasize the dogma), it's clearly declarative, by definition, ans it has dynamic dependencies that can effect decisions when evaluating its declared claims.\n\n> There is no PKI in OAuth2 nor OIDC\n\nJWKS is, inherently, PKI\n\n> Public keys (which are not certificates) \n\nSince you're referring to 'certificates' you might want to explain why you are introducing the certificate concept I to this discussion?\nX.509 Certificates?\nA digital certificate of some other kind?\n\nI have absolutely no clue as to why you introduced the word 'certificate'\n\nSometimes people who read 'PKI', 'think' that it is about certificates, for some mental model where X.509 was the first time they learned about PKI\n\nBut PKI is not about certificates - certificates can be an implementation details related to PKI\n\nPublic key infrastructure, is about, at its core, solving the assurance problems that arise when entity A and entity B have no prior means of secure public key exchange, therefore they need to establish trustworthy (verifiable) infrastructure to securely share the public keys\n\nSometimes, due to the mental model this confusion may arise\n\nLet's just stick to public keys and I'll ignore any introduction of certificates from now on unless you are specific as to how certificates apply here (because I have no idea why anyone would discuss certificates here at all)\n\nBut going back to your point, for clarity \n\n> Public keys (which are not certificates) \n\nCertificates are inherently public keys, with extensions and extra meta data. So a public key is what I said, and a public key can be a certificate too (but not in this context, so I can understand your confusion)\n\nA public key, specifically JWS if you prefer to focus on one at a time. So, one no longer presented in the JWKS is as the jwt.io Introduction page describes - would make it no longer verifiable and therefore inherently revoked\n\nThis reply was far too long, but I feel it really helps with education on some fundamentals of JWT that are being missed in this discussion. Hopefully you can now reread the OP and address this productively.",
           "createdAt": "2025-05-03T01:56:44Z",
           "updatedAt": "2025-05-03T02:15:43Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "@0x73746F66 as explained:\n- Client authentication using client credentials as a method and there being described through a value does not change how client credentials authentication should work, works, will works. Revocation such Client Credentials is an interesting topic but out of scope here. \n- JWKS is a mechanism of formatting presentation of cryptographic keys - symmetric or asymmetric - but does not dive into any of sort of authority hierarchy, enrollment services, notion of subject, and signature of keys in a higher dimension container - which is what a certificate is. Side note, yes certificate encompass public key, but public key does not encompass certificate which was my point. A Chihuahua is a dog, not all dogs are Chihuahuas. You might want to call that a PKI, I am not. Like you said, this is a digression and out of scope here. You are encouraged to contribute to RFC6749 and new Draft about OAuth2 Token Status List if you feel like you have a point on that.\n- The retention (or not) of access is covered by all the standard literacy of the OAuth2 Framework if you feel that you have identified a new risk, you are encouraged to contribute to each of those standards accordingly so that this proposal can benefit from your feedback through the discussions and iterations that will happen over there.\n\nIf you still feel that this proposal need to handle a part or the globality of the point you are making here, you are encouraged to propose a new / updated / corrected section through a PR on this repo, for which any contributor would be able to discuss the details before a possible merge.\n\nI use the opportunity for thanking you on the time you spend educating any reader of this issue on such subjects.",
+          "createdAt": "2025-05-05T13:59:25Z",
+          "updatedAt": "2025-05-05T13:59:25Z"
         }
       ]
     },
@@ -235,15 +263,15 @@
       "id": "I_kwDOOEwV6s6yOzOr",
       "title": "token replay resilience mechanisms",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/12",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "0x73746F66",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The specification doesn't address how these claims interact with token replay protection measures, especially when tokens include client authentication details",
       "createdAt": "2025-04-12T05:12:25Z",
-      "updatedAt": "2025-05-03T01:22:02Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-05T14:02:59Z",
+      "closedAt": "2025-05-05T14:02:57Z",
       "comments": [
         {
           "author": "identitymonk",
@@ -279,6 +307,13 @@
           "body": "> You are at the wrong place pal. This spec is not a sender constraint mechanism. This is to provide more information on what happened at the AS so that the RS can have more data to take a decision. Nothing more, nothing less. \n> \n> We (the authors) try to force for more metadata.\n> \n> If you want token replay mechanism please go look at [DPoP / RFC9449](https://datatracker.ietf.org/doc/html/rfc9449) or [HTTP Message Signature / RFC9421](https://datatracker.ietf.org/doc/html/rfc9421) which can be used conjointly to what we propose as long as to any [JWT profiled Access Tokens](https://datatracker.ietf.org/doc/html/rfc9068) currently specified.\n> \n> I think you over read the proposal to something this is not. And while your comments, threats you described, or features you are looking for are interesting, this is not the RFC you are looking for.\n\nAll of that is valid only if I was here looking for a spec update to provide replay resistance to all of JWT\n\nThat, is not what I said, not once.\n\nGiven I said what I did, let's get back on track. Your following reply is closer, we are adding more metadata here, and we'd really like to be assured on the RS side of the 'trustworthiness' of the AS provided metadata - ergo, we assume it was the AS we think it is because they used the public key to sign the data and we are able to verify they used the public key too. But who else can sign the metadata into a JWT using the public key? Anyone.\n\nSo, if this spec needs an RS to, as you say, decide... Would you not want assurance the provided metadata was... Trustworthy??? Are we talking about the same security mechanisms now? Please let me know if you require more information to understand these points of assurance and verifiable trust",
           "createdAt": "2025-05-03T01:22:01Z",
           "updatedAt": "2025-05-03T01:22:01Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "@0x73746F66 this spec is not about token replay protection with is something covered by [DPoP / RFC9449](https://datatracker.ietf.org/doc/html/rfc9449) or [HTTP Message Signature / RFC9421](https://datatracker.ietf.org/doc/html/rfc9421) as this is not a new JWT format but extension to an existing format of data: JWT profiled OAuth2 Tokens.\n\nTherefore if you want Token Replay protection, you need to implement either [DPoP / RFC9449](https://datatracker.ietf.org/doc/html/rfc9449) or [HTTP Message Signature / RFC9421](https://datatracker.ietf.org/doc/html/rfc9421) as for example it is described in FAPI 2.0 Security Profiles.\n\nIf you feel that you have identified a new risk, you are encouraged to contribute to each of those standard accordingly so that this proposal can benefit from your feedback through the discussions and iterations that will happen over there. If you feel you want a new Token Replay protection mechanism, please submit your own RFC proposal.\n\nIf you still feel that this proposal need to handle a part or the globality of the point you are making here, you are encouraged to propose a new / updated / corrected section through a PR on this repo, for which any contributor would be able to discuss the details before a possible merge.",
+          "createdAt": "2025-05-05T14:02:57Z",
+          "updatedAt": "2025-05-05T14:02:57Z"
         }
       ]
     },
@@ -318,15 +353,15 @@
       "id": "I_kwDOOEwV6s6yOzWg",
       "title": "Risk when allowing arbitrary URIs",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/14",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "0x73746F66",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The ccr claim allows arbitrary URIs leading to inconsistent interpretation of client authentication strength across different systems at best, SSRF at worst ",
       "createdAt": "2025-04-12T05:13:43Z",
-      "updatedAt": "2025-05-03T04:46:05Z",
-      "closedAt": null,
+      "updatedAt": "2025-05-05T14:11:23Z",
+      "closedAt": "2025-05-05T14:11:22Z",
       "comments": [
         {
           "author": "0x73746F66",
@@ -362,6 +397,13 @@
           "body": "> What do you mean as attackers, can you elaborate the threat with a flow? SSRS is a famility of attack vector, I need a flow to understand what you want me to mitigate.\n> \n>  Client does not send any of those values. It is the AS that set the values based on how the Client authentication was performed and the AS way to size it.\n> \n> - If your point is that a malicious AS can issue tokens with a bad SSRS value, then they can do that with any claims of the token.\n> - If your point is that the Client might replace the value of the token by one of malicious own, then it will break the signature.\n\n\n> the Client might replace the value of the token by one of malicious own\n\nNo, it will break the signature - exactly \n\n> a malicious AS can issue tokens with a bad SSRS value, then they can do that with any claims of the token\n\nYes, and for the reason you said; they can do that with any claims of the token. But before this spec, those other claims are defined  by other specs and not being defined in this spec\n\nFor this spec, you should be providing assurances for the claims you are introducing - so, knowing these known knowns today (that previous specs not have known that the time, and are vulnerable with the knowledge we have today) knowing that this is a vector, for these claims, provide guidance in this spec, to ensure that verification of values is not vulnerable to such 'known' attack vectors - right?",
           "createdAt": "2025-05-03T04:46:03Z",
           "updatedAt": "2025-05-03T04:46:03Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "This proposal follows the path of the definition of `acr` and `amr` claims for subject authentication. The risks related to OAuth2 are well covered by the newly released RFC 9700 which talk about the Security BCP.\n\nAs you acknowledge that this will break the signature, it means that any party in the communication will be able to handle the risk raised.\n\nAs this proposal allows you to open your own registry to handle your own URN values, then it can cover your use case.\n\nI will point you to RFC7519:\n> \u201cAll claims that are not understood by implementations MUST be ignored.\u201d\n\nTo read more, please look at https://self-issued.info/presentations/OSW_2025_The_Cambrian_Explosion_of_OAuth_and_OpenID_Specifications.pdf\n\nIf you feel that you have identified a new risk, you are encouraged to contribute to each of those standard accordingly so that this proposal can benefit from your feedback through the discussions and iterations that will happen over there.\n\nIf you still feel that this proposal need to handle a part or the globality of the point you are making here, you are encouraged to propose a new / updated / corrected section through a PR on this repo, for which any contributor would be able to discuss the details before a possible merge.",
+          "createdAt": "2025-05-05T14:11:22Z",
+          "updatedAt": "2025-05-05T14:11:22Z"
         }
       ]
     },
