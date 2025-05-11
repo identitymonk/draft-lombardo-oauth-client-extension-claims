@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-06T01:03:52.670774+00:00",
+  "timestamp": "2025-05-11T01:08:33.191969+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -62,7 +62,7 @@
       "labels": [],
       "body": "The specification assumes backward compatibility won't be an issue, but doesn't address how existing resource servers might misinterpret these new claims",
       "createdAt": "2025-04-12T05:09:16Z",
-      "updatedAt": "2025-04-14T01:54:25Z",
+      "updatedAt": "2025-05-09T14:06:21Z",
       "closedAt": null,
       "comments": [
         {
@@ -106,6 +106,13 @@
           "body": "These are great actions to take, I'll not have time for a few days to agree that these are the only take aways from the thread because just a first read I feel a lot of assumptions were made and I am not confident the core concerns were understood or addressed with these kinds of responses ",
           "createdAt": "2025-04-14T01:54:24Z",
           "updatedAt": "2025-04-14T01:54:24Z"
+        },
+        {
+          "author": "baboulebou",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@0x73746F66 , so here's the thing: JWT access tokens are currently greatly abused in the field: companies left and right stuff all kinds on claims in JWTs, it's very common practice. I've seen clients explode token header sizes many times (that is a problem). But actual claims or claim names causing a problem to RS's... never seen. I hardly see how this could be a problem for an RS, a Client or an IdP.\n\nI'm not personally against adding more comments for backward compatibility, but given the \"JWT abuse\" I've seen in the wild, this would very much be a very unlikely edge case indeed.\n\nAs far as I know all parties in OAuth flows are supposed to ignore claims they don't understand.",
+          "createdAt": "2025-05-09T14:06:20Z",
+          "updatedAt": "2025-05-09T14:06:20Z"
         }
       ]
     },
