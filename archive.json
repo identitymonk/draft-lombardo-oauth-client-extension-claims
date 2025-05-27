@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-11T01:08:33.191969+00:00",
+  "timestamp": "2025-05-27T01:04:26.255899+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -443,6 +443,38 @@
       "body": "Need to add the following text in the IANA section:\n\n--------- beginning ---------\nThe following registration procedure is used for the registry established by this specification.\n\nValues are registered on a Specification Required [RFC8126] basis after a two-week review period on the [oauth-ext-review@ietf.org](mailto:oauth-ext-review@ietf.org) mailing list, on the advice of one or more Designated Experts. However, to allow for the allocation of values prior to publication of the final version of a specification, the Designated Experts may approve registration once they are satisfied that the specification will be completed and published. However, if the specification is not completed and published in a timely manner, as determined by the Designated Experts, the Designated Experts may request that IANA withdraw the registration.\n\nRegistration requests sent to the mailing list for review should use an appropriate subject (e.g., \"Request to register JWT profiled OAuth2 Access Token client extensions: example\").\n\nWithin the review period, the Designated Experts will either approve or deny the registration request, communicating this decision to the review list and IANA. Denials should include an explanation and, if applicable, suggestions as to how to make the request successful. The IANA escalation process is followed when the Designated Experts are not responsive within 14 days.\n\nCriteria that should be applied by the Designated Experts includes determining whether the proposed registration duplicates existing functionality, determining whether it is likely to be of general applicability or whether it is useful only for a single application, and whether the registration makes sense.\n\nIANA must only accept registry updates from the Designated Experts and should direct all requests for registration to the review mailing list.\n\nIt is suggested that multiple Designated Experts be appointed who are able to represent the perspectives of different applications using this specification, in order to enable broadly-informed review of registration decisions. In cases where a registration decision could be perceived as creating a conflict of interest for a particular Expert, that Expert should defer to the judgment of the other Experts.\n\nThe reason for the use of the mailing list is to enable public review of registration requests, enabling both Designated Experts and other interested parties to provide feedback on proposed registrations. The reason to allow the Designated Experts to allocate values prior to publication as a final specification is to enable giving authors of specifications proposing registrations the benefit of review by the Designated Experts before the specification is completely done, so that if problems are identified, the authors can iterate and fix them before publication of the final specification.\n--------- end ---------",
       "createdAt": "2025-04-13T20:50:39Z",
       "updatedAt": "2025-04-13T20:50:39Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 17,
+      "id": "I_kwDOOEwV6s64Qnfr",
+      "title": "Do sender constrained tokens help with the client trust issue",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/17",
+      "state": "OPEN",
+      "author": "gffletch",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "> On the other hand, the RS has very little information about the client, often only a client_id [[RFC8693](https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html#RFC8693)] claim. In particular, the RS lacks any insight about the type of authorization grant flow that the client itself went through, the level of assurance that the client itself may have reached during its own authentication, and in general, lacks any information that would enable it to determine if the client itself can be trusted at all.\n\nIt seems like a sender constrained token would provide authentication proof of the client making the request as well as the token is coming from the client to which the AS issued the token. Does the RS need more than this? Could the RS retrieve this state from the AS on an as needed basis so that it doesn't have to be in the token?",
+      "createdAt": "2025-05-26T14:17:09Z",
+      "updatedAt": "2025-05-26T14:17:09Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 18,
+      "id": "I_kwDOOEwV6s64QtEL",
+      "title": "Should `cxt` include other OAuth extensions like RAR",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/18",
+      "state": "OPEN",
+      "author": "gffletch",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Should the `cxt` array also include other OAuth extensions like PAR, RAR, Resource Indicators? \n\nShould the array values just be the RFC numbers which makes extending the array easier?\n\nWhat is the expected behavior if the RS does not understand one of the values in AS issued array?",
+      "createdAt": "2025-05-26T14:26:15Z",
+      "updatedAt": "2025-05-26T14:26:15Z",
       "closedAt": null,
       "comments": []
     }
