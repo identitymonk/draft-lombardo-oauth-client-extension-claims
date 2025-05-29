@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-27T01:04:26.255899+00:00",
+  "timestamp": "2025-05-29T01:05:39.627590+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -474,9 +474,17 @@
       "labels": [],
       "body": "Should the `cxt` array also include other OAuth extensions like PAR, RAR, Resource Indicators? \n\nShould the array values just be the RFC numbers which makes extending the array easier?\n\nWhat is the expected behavior if the RS does not understand one of the values in AS issued array?",
       "createdAt": "2025-05-26T14:26:15Z",
-      "updatedAt": "2025-05-26T14:26:15Z",
+      "updatedAt": "2025-05-28T02:04:02Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "There was a discussion on an adjacent argument in #14 \n\n- OAuth2 has pretty much aligned on using IANA registry which this proposal will follow. \n- We could had a mention like for CCR that your own values can be used as long as as Client and RP agrees on what it means\n- I would emphasis that OAuth2 has a clear rule of `if you don't understand a claim or parameter, ignore it`",
+          "createdAt": "2025-05-28T02:04:01Z",
+          "updatedAt": "2025-05-28T02:04:01Z"
+        }
+      ]
     }
   ],
   "pulls": [
