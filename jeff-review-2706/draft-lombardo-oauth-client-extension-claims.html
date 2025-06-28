@@ -6,7 +6,7 @@
 <meta content="initial-scale=1.0" name="viewport">
 <title>OAuth 2.0 client extension claims</title>
 <meta content="Jean-François Lombardo" name="author">
-<meta content="Alex Babeanu" name="author">
+<meta content="Alexandre Babeanu" name="author">
 <meta content="
        This specification defines new claims for JWT profiled access tokens   so that resource providers can benefit from more granular information about the client: its authentication methods as well as the grant flow and the grant flow extensions used as part of the issuance of the associated tokens. 
     " name="description">
@@ -1077,7 +1077,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </div>
 <div class="author">
       <div class="author-name">A. Babeanu</div>
-<div class="org">IndieKite</div>
+<div class="org">IndyKite</div>
 </div>
 </dd>
 </dl>
@@ -1314,7 +1314,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">Resource providers need information about the subject, the action, the resource, and the context involved in the request to be able to determine properly, with the help of a Policy Decision Point (PDP) or not, if a resource must be disclosed.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-1">Resource providers need information about the subject, the action, the resource, and the context involved in the request in order to be able to determine properly if a resource can be disclosed. This decision may also involve the help of a Policy Decision Point (PDP).<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">When accessed with a JWT profiled OAuth2 Access Token <span>[<a href="#RFC9068" class="cite xref">RFC9068</a>]</span> presented as a bearer token <span>[<a href="#RFC6750" class="cite xref">RFC6750</a>]</span>, a resource provider receives mainly information about the subject in the form of:
 - The <code>sub</code> claim,
 - Any user profile claim set by the Authorization Server if applicable,
@@ -2252,7 +2252,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">TODO acknowledge.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">The authors wants to acknowledge the support and work of the following indivisuals: George Fletcher (Pratical Identity), Christopher Langton (Vulnetix).<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">The authors wants also to recognize the trail blazers and thought leaders that created the ecosystem without which this draft proposal would not be able to solve customer pain points and secure usage of digital services, especially without being limited to: Vittorio Bertocci†, Brian Campbell (Ping Identity), Justin Richer (MongoDB), Aaron Parecki (Okta), Pieter Kasselman (SPRL), Dr Mike Jones (Self-Issued Consulting, LLC), Dr Daniel Fett (Authlete).<a href="#appendix-A-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
@@ -2270,8 +2271,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </address>
 <address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Alex Babeanu</span></div>
-<div dir="auto" class="left"><span class="org">IndieKite</span></div>
+        <div dir="auto" class="left"><span class="fn nameRole">Alexandre Babeanu</span></div>
+<div dir="auto" class="left"><span class="org">IndyKite</span></div>
 <div dir="auto" class="left"><span class="country-name">Canada</span></div>
 <div class="email">
 <span>Email:</span>
