@@ -31,8 +31,8 @@ author:
     email: jeffsec@amazon.com
 
  -
-    fullname: Alex Babeanu
-    organization: IndieKite
+    fullname: Alexandre Babeanu
+    organization: IndyKite
     country: Canada
     email: alex.babeanu@indykite.com
 
@@ -114,7 +114,7 @@ This specification defines new claims for JWT profiled access tokens [RFC9068] s
 
 # Introduction {#introduction}
 
-Resource providers need information about the subject, the action, the resource, and the context involved in the request to be able to determine properly, with the help of a Policy Decision Point (PDP) or not, if a resource must be disclosed.
+Resource providers need information about the subject, the action, the resource, and the context involved in the request in order to be able to determine properly if a resource can be disclosed. This decision may also involve the help of a Policy Decision Point (PDP).
 
 When accessed with a JWT profiled OAuth2 Access Token [RFC9068] presented as a bearer token [RFC6750], a resource provider receives mainly information about the subject in the form of:
 - The `sub` claim,
@@ -502,7 +502,7 @@ Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, 
 
    Change Controller:
    : IETF
-
+   
    Specification Document(s):
    : Section X.Y of this document
 
@@ -511,4 +511,7 @@ Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, 
 # Acknowledgments {#ack}
 {:numbered="false"}
 
-TODO acknowledge.
+
+The authors wants to acknowledge the support and work of the following indivisuals: George Fletcher (Pratical Identity), Christopher Langton (Vulnetix).
+
+The authors wants also to recognize the trail blazers and thought leaders that created the ecosystem without which this draft proposal would not be able to solve customer pain points and secure usage of digital services, especially without being limited to: Vittorio Bertocci†, Brian Campbell (Ping Identity), Justin Richer (MongoDB), Aaron Parecki (Okta), Pieter Kasselman (SPRL), Dr Mike Jones (Self-Issued Consulting, LLC), Dr Daniel Fett (Authlete).
