@@ -108,7 +108,7 @@ informative:
 
 --- abstract
 
-This specification defines new claims for JWT profiled access tokens [RFC9068] so that resource providers can benefit from more granular information about the client: its authentication methods as long as the grant flow and the grant flow extensions used as part of the issuance of the associated tokens.
+This specification defines new claims for JWT profiled access tokens [RFC9068] so that resource providers can benefit from more granular information about the client: its authentication methods as well as the grant flow and the grant flow extensions used as part of the issuance of the associated tokens.
 
 --- middle
 
@@ -119,10 +119,10 @@ Resource providers need information about the subject, the action, the resource,
 When accessed with a JWT profiled OAuth2 Access Token [RFC9068] presented as a bearer token [RFC6750], a resource provider receives mainly information about the subject in the form of:
 - The `sub` claim,
 - Any user profile claim set by the Authorization Server if applicable,
-- Any Authenticaiton Information claims like the user class of authentication (`acr`claim) or user methord of authentication (claim `amr` [RFC8176])
+- Any Authentication Information claims like the user class of authentication (`acr`claim) or user methord of authentication (claim `amr` [RFC8176])
 - Any Authorization Information if applicable
 
-The resource provider has very few information about the client, mainly in the form of the `client_id` [RFC8693] claim. It falls short in several important circumstances, for instance, in [FAPI2.0-Security-Profiles] or [hl7.fhir.uv.smart-app-launch] regulated APIs when they require peculiar client authentication mechanisms to be enforced or transaction specific details to be present in the token.
+The resource provider has very little information about the client, mainly in the form of the `client_id` [RFC8693] claim. It falls short in several important circumstances, for instance, in [FAPI2.0-Security-Profiles] or [hl7.fhir.uv.smart-app-launch] regulated APIs when they require peculiar client authentication mechanisms to be enforced or transaction specific details to be present in the token.
 
 This document defines 4 new claims allowing to describe with more precise information the client and metadata on how it interacted with the authorization server during the issuance of the access token. It respects description of how to encode access tokens in JWT format.
 
@@ -133,7 +133,7 @@ The process by which the client interacts with the authorization server is out o
 {::boilerplate bcp14-tagged}
 
 JWT access token:
-: An OAuth 2.0 access token encoded in JWT format and complying with the requirements described in [RFC9068].
+: An OAuth 2.0 access token encoded in JWT format and complying to the requirements described in [RFC9068].
 
 This specification uses the terms "access token", "authorization server", "authorization endpoint", "authorization request", "client", "protected resource", and "resource server" defined by "The OAuth 2.0 Authorization Framework" [RFC6749].
 
@@ -163,12 +163,12 @@ The claims listed in this section MAY be issued and reflect the types and streng
 
 # Authorization Server Metadata {#as-metadata}
 
-The following authorization server metadata parameters [RFC8414] are introduced to signal the server's capability
+The following authorization server metadata parameters are introduced as an extension of [RFC8414], in order to describe the server's capabilities.
 
 `support_client_extentison_claims`:
-: Boolean parameter indicating to clients and resource servers whether the authorization server will return the extension claimns described in this document.
+: Boolean parameter indicating to clients and resource servers whether the authorization server will return the extension claims described in this document.
 
-Note: that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC.
+Note: that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claims described in this RFC.
 
 # Requesting a JWT Access Token with Client Extensions {#request-jwt-client-ext}
 
@@ -178,13 +178,13 @@ An authorization server supporting this specification MUST issue a JWT access to
 
 # Validating JWT Access Tokens with Client Extensions {#validate-jwt-client-ext}
 
-This specification follows the requirements of the section 4. of [RFC9068].
+This specification follows the requirements of the section 4 of [RFC9068].
 
 # Security Considerations {#security}
 
 ## Validation Of Token
 
-The JWT access token data layout described here is the same as JWT access token defined by [RFC9068].
+The JWT access token data format described here is the same as JWT access token defined by [RFC9068].
 
 ## Processing Of Claims Defined By This Document
 
