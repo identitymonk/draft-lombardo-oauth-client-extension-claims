@@ -502,7 +502,7 @@ Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, 
 
    Change Controller:
    : IETF
-   
+
    Specification Document(s):
    : Section X.Y of this document
 
