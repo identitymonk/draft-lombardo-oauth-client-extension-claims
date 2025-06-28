@@ -24,7 +24,8 @@ venue:
 
 author:
  -
-    fullname: Jean-François "Jeff" Lombardo
+    fullname: Jean-François Lombardo
+    nickname: Jeff
     organization: AWS
     country: Canada
     email: jeffsec@amazon.com
@@ -49,21 +50,31 @@ normative:
     author:
       -
         name: G. Fernandez
+        role: editor
+        org: TElefonica
       -
         name: F. Walter
+        role: editor
+        org: Deutsche Telekom AG
       -
         name: A. Nennker
+        role: editor
+        org: Deutsche Telekom AG
       -
         name: D. Tonge
+        role: editor
+        org: Moneyhub
       -
         name: B. Campbell
+        role: editor
+        org: Ping Identity
   RFC8414: # OAuth 2.0 Authorization Server Metadata
   IANA.oauth-parameters: # IANA Registry
 
 informative:
   RFC6750: # OAuth2 Bearer Token Usage
   RFC7521: # Private JWT
-  RFC7523: # Private JWT
+  RFC7523: # JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants
   RFC8176: # AMR
   RFC7636: # PKCE
   RFC9396: # RAR
@@ -78,7 +89,22 @@ informative:
   I-D.ietf-oauth-transaction-tokens: # Transaction tokens
   IANA.oauth-parameters_token-endpoint-auth-method: # IANA Registry
   IANA.jwt: # IANA registry
-
+  FAPI2.0-Security-Profiles:
+    title: FAPI 2.0 Security Profile
+    target: https://openid.net/specs/fapi-2_0-security-02.html
+    author:
+    - name: Dr Daniel Fett
+      role: editor
+      org: Authlete
+    - name: Dave Tonge
+      role: editor
+      org: Moneyhub Financial Technology
+    - name: Joseph Heenan
+      role: editor
+      org: Authlete
+  hl7.fhir.uv.smart-app-launch:
+    title: HL7 FHIR SMART App Launch
+    target: https://www.hl7.org/fhir/smart-app-launch/app-launch.html#obtain-authorization-code
 
 --- abstract
 
@@ -96,7 +122,7 @@ When accessed with a JWT profiled OAuth2 Access Token {{RFC9068}} presented as a
 - Any Authenticaiton Information claims like the user class of authentication (`acr`claim) or user methord of authentication (claim `amr` {{RFC8176}})
 - Any Authorization Information if applicable
 
-The resource provider has very few information about the client, mainly in the form of the `client_id` {{RFC8693}} claim.
+The resource provider has very few information about the client, mainly in the form of the `client_id` {{RFC8693}} claim. It falls short in several important circumstances, for instance, in [FAPI2.0-Security-Profiles] or [hl7.fhir.uv.smart-app-launch] regulated APIs when they require peculiar client authentication mechanisms to be enforced or transaction specific details to be present in the token. 
 
 This document defines 4 new claims allowing to describe with more precise information the client and metadata on how it interacted with the authorization server during the issuance of the access token. It respects description of how to encode access tokens in JWT format.
 
@@ -140,13 +166,15 @@ The claims listed in this section MAY be issued and reflect the types and streng
 The following authorization server metadata parameters {{RFC8414}} are introduced to signal the server's capability
 
 `support_client_extentison_claims`:
-: Boolean parameter indicating whether the authorization server will return the extension claimns described in this RFC.
+: Boolean parameter indicating to clients and resource servers whether the authorization server will return the extension claimns described in this document.
 
-Note that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC.
+Note: that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC.
 
 # Requesting a JWT Access Token with Client Extensions {#request-jwt-client-ext}
 
-An authorization server MUST issue a JWT access token with client extensions claims described in this RFC in response to any authorization grant defined by [RFC6749] and subsequent extensions meant to result in an access token and as along as the server support this capability.
+This specification does not change how clients interacts with authorization servers.
+
+An authorization server supporting this specification MUST issue a JWT access token with client extensions claims described in this RFC in response to any authorization grant defined by [RFC6749] and subsequent extensions meant to result in an access token and as along as the authorization server support this capability.
 
 # Validating JWT Access Tokens with Client Extensions {#validate-jwt-client-ext}
 
@@ -154,11 +182,37 @@ This specification follows the requirements of the section 4. of {{RFC9068}}.
 
 # Security Considerations {#security}
 
-The JWT access token data layout described here is very similar to that of JWT access token as defined by {{RFC9068}}.
+## Validation Of Token
 
-The security current best practices described in {{RFC9700}} are applicable.
+The JWT access token data layout described here is the same as JWT access token defined by {{RFC9068}}.
+
+## Processing Of Claims Defined By This Document
+
+Any processor, client or resource server, MUST only process claims described in this document that it understands.
+
+If a processor does not understand a claim described in this document or its value, it SHOULD ignore it.
+
+## Security Best Practice
+
+The security current best practices described in [RFC9700] MUST be applied.
 
 # IANA Considerations {#iana}
+
+The following registration procedure is used for the registry established by this specification.
+
+Values are registered on a Specification Required [RFC8126] basis after a two-week review period on the oauth-ext-review@ietf.org mailing list, on the advice of one or more Designated Experts. However, to allow for the allocation of values prior to publication of the final version of a specification, the Designated Experts may approve registration once they are satisfied that the specification will be completed and published. However, if the specification is not completed and published in a timely manner, as determined by the Designated Experts, the Designated Experts may request that IANA withdraw the registration.
+
+Registration requests sent to the mailing list for review should use an appropriate subject (e.g., "Request to register JWT profiled OAuth2 Access Token client extensions: example").
+
+Within the review period, the Designated Experts will either approve or deny the registration request, communicating this decision to the review list and IANA. Denials should include an explanation and, if applicable, suggestions as to how to make the request successful. The IANA escalation process is followed when the Designated Experts are not responsive within 14 days.
+
+Criteria that should be applied by the Designated Experts includes determining whether the proposed registration duplicates existing functionality, determining whether it is likely to be of general applicability or whether it is useful only for a single application, and whether the registration makes sense.
+
+IANA must only accept registry updates from the Designated Experts and should direct all requests for registration to the review mailing list.
+
+It is suggested that multiple Designated Experts be appointed who are able to represent the perspectives of different applications using this specification, in order to enable broadly-informed review of registration decisions. In cases where a registration decision could be perceived as creating a conflict of interest for a particular Expert, that Expert should defer to the judgment of the other Experts.
+
+The reason for the use of the mailing list is to enable public review of registration requests, enabling both Designated Experts and other interested parties to provide feedback on proposed registrations. The reason to allow the Designated Experts to allocate values prior to publication as a final specification is to enable giving authors of specifications proposing registrations the benefit of review by the Designated Experts before the specification is completely done, so that if problems are identified, the authors can iterate and fix them before publication of the final specification.
 
 ## OAuth Grant Type Registration {#iana-grant-type-reg}
 
