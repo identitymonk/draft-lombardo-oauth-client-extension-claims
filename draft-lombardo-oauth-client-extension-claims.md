@@ -24,7 +24,8 @@ venue:
 
 author:
  -
-    fullname: Jean-François "Jeff" Lombardo
+    fullname: Jean-François Lombardo
+    nickname: Jeff
     organization: AWS
     country: Canada
     email: jeffsec@amazon.com
@@ -49,21 +50,31 @@ normative:
     author:
       -
         name: G. Fernandez
+        role: editor
+        org: TElefonica
       -
         name: F. Walter
+        role: editor
+        org: Deutsche Telekom AG
       -
         name: A. Nennker
+        role: editor
+        org: Deutsche Telekom AG
       -
         name: D. Tonge
+        role: editor
+        org: Moneyhub
       -
         name: B. Campbell
+        role: editor
+        org: Ping Identity
   RFC8414: # OAuth 2.0 Authorization Server Metadata
   IANA.oauth-parameters: # IANA Registry
 
 informative:
   RFC6750: # OAuth2 Bearer Token Usage
   RFC7521: # Private JWT
-  RFC7523: # Private JWT
+  RFC7523: # JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants
   RFC8176: # AMR
   RFC7636: # PKCE
   RFC9396: # RAR
@@ -78,11 +89,26 @@ informative:
   I-D.ietf-oauth-transaction-tokens: # Transaction tokens
   IANA.oauth-parameters_token-endpoint-auth-method: # IANA Registry
   IANA.jwt: # IANA registry
-
+  FAPI2.0-Security-Profiles:
+    title: FAPI 2.0 Security Profile
+    target: https://openid.net/specs/fapi-2_0-security-02.html
+    author:
+    - name: Dr Daniel Fett
+      role: editor
+      org: Authlete
+    - name: Dave Tonge
+      role: editor
+      org: Moneyhub Financial Technology
+    - name: Joseph Heenan
+      role: editor
+      org: Authlete
+  hl7.fhir.uv.smart-app-launch:
+    title: HL7 FHIR SMART App Launch
+    target: https://www.hl7.org/fhir/smart-app-launch/app-launch.html#obtain-authorization-code
 
 --- abstract
 
-This specification defines new claims for JWT profiled access tokens {{RFC9068}} so that resource providers can benefit from more granular information about the client to make better informed access decisions. The proposed new claims include: the client authentication methods, the client OAuth grant flow used as well as the OAuth grant flow extensions used as part of the issuance of the associated tokens.
+This specification defines new claims for JWT profiled access tokens [RFC9068] so that resource providers can benefit from more granular information about the client: its authentication methods as long as the grant flow and the grant flow extensions used as part of the issuance of the associated tokens.
 
 --- middle
 
@@ -90,15 +116,15 @@ This specification defines new claims for JWT profiled access tokens {{RFC9068}}
 
 Resource providers need information about the subject, the action, the resource, and the context involved in the request in order to be able to determine properly if a resource can be disclosed. This decision may also involve the help of a Policy Decision Point (PDP).
 
-When accessed with a JWT profiled OAuth2 Access Token {{RFC9068}} presented as a bearer token {{RFC6750}}, a Resource Server (RS) receives information about the subject as claims, such as:
-- The subject,  `sub`,
+When accessed with a JWT profiled OAuth2 Access Token [RFC9068] presented as a bearer token [RFC6750], a resource provider receives mainly information about the subject in the form of:
+- The `sub` claim,
 - Any user profile claim set by the Authorization Server if applicable,
-- Authenticaton Information claims like the user class of authentication (`acr`claim) or user methord of authentication (claim `amr` {{RFC8176}})
+- Any Authenticaiton Information claims like the user class of authentication (`acr`claim) or user methord of authentication (claim `amr` [RFC8176])
 - Any Authorization Information if applicable
 
-On the other hand, the RS has very little information about the client, often only a `client_id` {{RFC8693}} claim. In particular, the RS lacks any insight about the type of authorization grant flow that the client itself went through, the level of assurance that the client itself may have reached during its own authentication, and in general, lacks any information that would enable it to determine if the client itself can be trusted at all.
+The resource provider has very few information about the client, mainly in the form of the `client_id` [RFC8693] claim. It falls short in several important circumstances, for instance, in [FAPI2.0-Security-Profiles] or [hl7.fhir.uv.smart-app-launch] regulated APIs when they require peculiar client authentication mechanisms to be enforced or transaction specific details to be present in the token.
 
-This document defines 4 new claims for the JWT profile of OAuth access tokens, which describe in detail the interaction between the OAuth client and the Authorization Server (AS) during the flow that resulted in the issuance of the token.
+This document defines 4 new claims allowing to describe with more precise information the client and metadata on how it interacted with the authorization server during the issuance of the access token. It respects description of how to encode access tokens in JWT format.
 
 The process by which the client interacts with the authorization server is out of scope.
 
@@ -106,64 +132,91 @@ The process by which the client interacts with the authorization server is out o
 
 {::boilerplate bcp14-tagged}
 
-_JWT access token_:
-: An OAuth 2.0 access token encoded in JWT format and complying with the requirements described in {{RFC9068}}.
+JWT access token:
+: An OAuth 2.0 access token encoded in JWT format and complying with the requirements described in [RFC9068].
 
-This specification uses the terms "access token", "authorization server", "authorization endpoint", "authorization request", "client", "protected resource", and "resource server" defined by "The OAuth 2.0 Authorization Framework" {{RFC6749}}.
+This specification uses the terms "access token", "authorization server", "authorization endpoint", "authorization request", "client", "protected resource", and "resource server" defined by "The OAuth 2.0 Authorization Framework" [RFC6749].
 
 # JWT Access Token Client Extensions Data Structure {#client-ext-data-structure}
 
-The following claims extend the {{RFC9068}} access token payload data structure:
+The following claims extend the [RFC9068] access token payload data structure:
 
 ## Client Flow Information Claims {#client-flow-info}
 
-The claims listed below reflect the grant type and extensions used by the OAuth client with the Authorization Server during the authorization request. Their values are generated dynamically and consistent across all the tokens generated for the given authorization request.
+The claims listed in this section MUST be issued and reflect grant type and extensions used with authorization server as part of the authorization request from the client. Their values are dynamic accros all access tokens that derive from a given authorization response to reflect the elements used in the process that lead to their issuance.
 
 `gty`:
-: _REQUIRED_ - a string that describes the OAuth2 authorization grant type the client requested for the issuance of the access token. The value used as the `gty` claim MUST comply to existing grant flows described in the following specifications:  section 1.3 of {{RFC6749}}, section 2. of {{RFC7591}}, section 2.1 of {{RFC8693}}, and section 4 of {{OpenID.CIBA}}. Furthermore since future grants may also be developped, this claim is not limited to existing flows, but should also encompass future innovations. The possible values of this claim are registered with IANA (see below). Non-normative example value: "`client_credentials`".
+: REQUIRED - defines the OAuth2 authorization grant type the client used for the issuance of the access token. String that is an identifier for an OAuth2 Grant type. Values used in the `gty` Claim MUST be from those registered in the IANA Grant Type Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2. of [RFC7591], section 2.1 of [RFC8693], and section 4 of [OpenID.CIBA].
 
 `cxt`:
-: _REQUIRED_ - defines the list of extensions the client used in conjonction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in {{RFC7636}}, Demonstrating Proof of Possession (or DPoP) as defined in {{RFC9449}}. The claim value is an array of strings that lists the identifiers of extensions used. Values used in the `cxt` Claim MUST be valid values registered with the IANA OAuth Parameters registry @TODO. These values reference, without being limited to, values established through section 2 of {{RFC8414}}, and Section 5.1 of {{RFC9449}}. Non-normative example: "`[dpop,pkce]`".
+: REQUIRED - defines the list of extensions the client used in conjonction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in [RFC7636], Demonstrating Proof of Possession (or DPoP) as defined in [RFC9449]. JSON array of strings that are identifiers for extensions used. Values used in the `cxt` Claim MUST be from those registered in the IANA Client Context Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2 of [RFC8414], and Section 5.1 of [RFC9449].
 
 ## Client Authentication Information Claims {#client-authn-info}
 
-The claims listed in this section MAY be issued and reflect strength of the mechanism used to authenticate the OAuth2 Client client itself as part of the  access token issuance flow. Their values are fixed and remain the same across all access tokens that derive from a given authorization response, whether the access token was obtained directly in the response (e.g., via the implicit flow) or after obtaining a new access token using a refresh token. Those values may change if an access token is exchanged for another through the Token Exchange {{RFC8693}} procedure, in that case these claims will reflect the details of this new request.
+The claims listed in this section MAY be issued and reflect the types and strength of client authentication in the access token that the authentication server enforced prior to returning the authorization response to the client. Their values are fixed and remain the same across all access tokens that derive from a given authorization response, whether the access token was obtained directly in the response (e.g., via the implicit flow) or after obtaining a fresh access token using a refresh token. Those values may change if an access tokenis exchanged for another via an [RFC8693] procedure in order to reflect the specifities of this request.
 
 `ccr`:
-: _OPTIONAL_ - refers to the authentication context class that the Oauth client achieved with the AS during the authorization flow. The value of this claim must be an absolute URI that can be registered with IANA. It should support present, future or custom values. If IANA registered URIs are used, then their meaning and semantics should be respected and used as defined in the registry. Parties using this custom claim values need to agree upon the semantics of the values used, which may be context specific. Non-normative example: "`urn:org:iana:client:assurance:level_1`".
+: OPTIONAL - defines the authentication context class reference the client satisfied when authenticating to the authorization server. An absolute URI or registered name from furture RFC SHOULD be used as the `ccr` value; registered names MUST NOT be used with a different meaning than that which is registered. Parties using this claim will need to agree upon the meanings of the values used, which may be context specific.
 
 `cmr`:
-: _OPTIONAL_ - an Identifier String that defines the authentication methods the client used when authenticating to the authorization server. The claim may indicate the usage of private JWT as defined in {{RFC7521}} and {{RFC7523}} or HTTP message signature as defined in {{RFC9421}}, or simple client secret as defined in {{RFC6749}} . The `cmr` value is a case-sensitive string, which values SHOULD be registered with the IANA OAuth Token Endpoint Authentication Methods Values registry {{IANA.oauth-parameters_token-endpoint-auth-method}} defined by {{RFC7591}}; parties using this claim will need to agree upon the meanings of any unregistered values used, which may be context specific.
+: OPTIONAL - defines the authentication methods the client used when authenticating to the authorization server. String that is an identifier for an authentication method used in the authentication of the client. For instance, a value might indicate the usage of private JWT as defined in [RFC7521] and [RFC7523] or HTTP message signature as defined in [RFC9421] . The `cmr` value is a case-sensitive string. Values used in the `cmr` Claim SHOULD be from those registered in the IANA OAuth Token Endpoint Authentication Methods Values registry [IANA.oauth-parameters_token-endpoint-auth-method] defined by [RFC7591]; parties using this claim will need to agree upon the meanings of any unregistered values used, which may be context specific.
 
 # Authorization Server Metadata {#as-metadata}
 
-Not all Authorizartion Servers (AS) may support the claims described in this specification. It is therefore necessary to provide a way for an OAuth Resource Server to determine whether it can rely on the claims described here. This document therefore extends the OAuth2.0 Authorization Server Metadata {{RFC8414}} specification by adding the following metadata value :
+The following authorization server metadata parameters [RFC8414] are introduced to signal the server's capability
 
 `support_client_extentison_claims`:
-: Boolean parameter indicating whether the authorization server will return the extension claims described in this RFC.
+: Boolean parameter indicating to clients and resource servers whether the authorization server will return the extension claimns described in this document.
 
-
-Note that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC. This ensures backward compatibility with all existing AS implementations.
+Note: that the non presence of `support_client_extentison_claims` is sufficient for the client to determine that the server is not capable and therefore will not return the extension claimns described in this RFC.
 
 # Requesting a JWT Access Token with Client Extensions {#request-jwt-client-ext}
 
-An authorization server supporting the claims described in this document MUST issue a JWT access token with client extensions claims described in this RFC in response to any authorization grant defined by [RFC6749], as well as subsequent extensions meant to result in an access token.
+This specification does not change how clients interacts with authorization servers.
+
+An authorization server supporting this specification MUST issue a JWT access token with client extensions claims described in this RFC in response to any authorization grant defined by [RFC6749] and subsequent extensions meant to result in an access token and as along as the authorization server support this capability.
 
 # Validating JWT Access Tokens with Client Extensions {#validate-jwt-client-ext}
 
-This specification does not change any of the requirements for validating access tokens, as defined in section 4 of the JSON Web Token (JWT) Profile for OAuth 2.0 Access Tokens specification {{RFC9068}}.
+This specification follows the requirements of the section 4. of [RFC9068].
 
 # Security Considerations {#security}
 
-The JWT access token data layout described here is the same as the struture of the JWT access token as defined by the JSON Web Token (JWT) Profile for OAuth 2.0 Access Tokens specification {{RFC9068}}.
+## Validation Of Token
 
-The Best Current Practice for OAuth 2.0 Security {{RFC9700}} is still applicable.
+The JWT access token data layout described here is the same as JWT access token defined by [RFC9068].
+
+## Processing Of Claims Defined By This Document
+
+Any processor, client or resource server, MUST only process claims described in this document that it understands.
+
+If a processor does not understand a claim described in this document or its value, it SHOULD ignore it.
+
+## Security Best Practice
+
+The security current best practices described in [RFC9700] MUST be applied.
 
 # IANA Considerations {#iana}
 
+The following registration procedure is used for the registry established by this specification.
+
+Values are registered on a Specification Required [RFC8126] basis after a two-week review period on the oauth-ext-review@ietf.org mailing list, on the advice of one or more Designated Experts. However, to allow for the allocation of values prior to publication of the final version of a specification, the Designated Experts may approve registration once they are satisfied that the specification will be completed and published. However, if the specification is not completed and published in a timely manner, as determined by the Designated Experts, the Designated Experts may request that IANA withdraw the registration.
+
+Registration requests sent to the mailing list for review should use an appropriate subject (e.g., "Request to register JWT profiled OAuth2 Access Token client extensions: example").
+
+Within the review period, the Designated Experts will either approve or deny the registration request, communicating this decision to the review list and IANA. Denials should include an explanation and, if applicable, suggestions as to how to make the request successful. The IANA escalation process is followed when the Designated Experts are not responsive within 14 days.
+
+Criteria that should be applied by the Designated Experts includes determining whether the proposed registration duplicates existing functionality, determining whether it is likely to be of general applicability or whether it is useful only for a single application, and whether the registration makes sense.
+
+IANA must only accept registry updates from the Designated Experts and should direct all requests for registration to the review mailing list.
+
+It is suggested that multiple Designated Experts be appointed who are able to represent the perspectives of different applications using this specification, in order to enable broadly-informed review of registration decisions. In cases where a registration decision could be perceived as creating a conflict of interest for a particular Expert, that Expert should defer to the judgment of the other Experts.
+
+The reason for the use of the mailing list is to enable public review of registration requests, enabling both Designated Experts and other interested parties to provide feedback on proposed registrations. The reason to allow the Designated Experts to allocate values prior to publication as a final specification is to enable giving authors of specifications proposing registrations the benefit of review by the Designated Experts before the specification is completely done, so that if problems are identified, the authors can iterate and fix them before publication of the final specification.
+
 ## OAuth Grant Type Registration {#iana-grant-type-reg}
 
-This specification registers the following grant type in the {{IANA.oauth-parameters}} OAuth Grant Type registry.
+This specification registers the following grant type in the [IANA.oauth-parameters] OAuth Grant Type registry.
 
 ### `authorization_code` grant type {#iana-grant-type-reg-ac}
 
@@ -174,7 +227,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 2. of {{RFC7591}}
+   : section 2. of [RFC7591]
 
 ### `implicit` grant type {#iana-grant-type-implicit}
 
@@ -185,7 +238,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 2. of {{RFC7591}}
+   : section 2. of [RFC7591]
 
 ### `password` grant type {#iana-grant-type-reg-pwd}
 
@@ -196,7 +249,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 2. of {{RFC7591}}
+   : section 2. of [RFC7591]
 
 ### `client_credentials` grant type {#iana-grant-type-reg-cc}
 
@@ -207,7 +260,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 2. of {{RFC7591}}
+   : section 2. of [RFC7591]
 
 ### `refresh_token` grant type {#iana-grant-type-rt}
 
@@ -218,7 +271,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 2. of {{RFC7591}}
+   : section 2. of [RFC7591]
 
 ### `jwt-bearer` grant type {#iana-grant-type-jwt}
 
@@ -229,7 +282,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 2. of {{RFC7591}} and section 6 of {{I-D.parecki-oauth-identity-assertion-authz-grant}}
+   : section 2. of [RFC7591] and section 6 of [I-D.parecki-oauth-identity-assertion-authz-grant]
 
 ### `saml2-bearer` grant type {#iana-grant-type-reg-saml2}
 
@@ -240,7 +293,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 2. of {{RFC7591}}
+   : section 2. of [RFC7591]
 
 ### `token-exchange` grant type {#iana-grant-type-reg-te}
 
@@ -251,7 +304,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 2.1. of {{RFC8693}}
+   : section 2.1. of [RFC8693]
 
 ### `device_code` grant type {#iana-grant-type-reg-dc}
 
@@ -262,7 +315,7 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 3.4. of {{RFC8628}}
+   : section 3.4. of [RFC8628]
 
 ### `ciba` grant type {#iana-grant-type-reg-ciba}
 
@@ -273,11 +326,11 @@ This specification registers the following grant type in the {{IANA.oauth-parame
    : IETF
 
    Specification document(s):
-   : section 4. of {{OpenID.CIBA}}
+   : section 4. of [OpenID.CIBA]
 
 ## OAuth Grant Extension Type Registration {#iana-grant-ext-reg}
 
-This specification registers the following grant extension type in the {{IANA.oauth-parameters}} OAuth Grant Extension Type registry.
+This specification registers the following grant extension type in the [IANA.oauth-parameters] OAuth Grant Extension Type registry.
 
 ### `pkce` grant extension type {#iana-grant-ext-reg-pkce}
 
@@ -288,7 +341,7 @@ This specification registers the following grant extension type in the {{IANA.oa
    : IETF
 
    Specification document(s):
-   : This RFC as a reference to {{RFC7636}}
+   : This RFC as a reference to [RFC7636]
 
 ### `dpop` grant extension type {#iana-grant-ext-reg-dpop}
 
@@ -299,7 +352,7 @@ This specification registers the following grant extension type in the {{IANA.oa
    : IETF
 
    Specification document(s):
-   : This RFC as a reference to {{RFC9449}}
+   : This RFC as a reference to [RFC9449]
 
 ### `wpt` grant extension type {#iana-grant-ext-reg-wpt}
 
@@ -310,7 +363,7 @@ This specification registers the following grant extension type in the {{IANA.oa
    : IETF
 
    Specification document(s):
-   : This RFC as a reference to section 4.2 of {{I-D.ietf-wimse-s2s-protocol}}
+   : This RFC as a reference to section 4.2 of [I-D.ietf-wimse-s2s-protocol]
 
 ### `rar` grant extension type {#iana-grant-ext-rar}
 
@@ -321,7 +374,7 @@ This specification registers the following grant extension type in the {{IANA.oa
    : IETF
 
    Specification document(s):
-   : This RFC as a reference to {{RFC9396}}
+   : This RFC as a reference to [RFC9396]
 
 ### `par` grant extension type {#iana-grant-ext-reg-par}
 
@@ -332,7 +385,7 @@ This specification registers the following grant extension type in the {{IANA.oa
    : IETF
 
    Specification document(s):
-   : This RFC as a reference to {{RFC9126}}
+   : This RFC as a reference to [RFC9126]
 
 ### `jar` grant extension type {#iana-grant-ext-reg-jar}
 
@@ -343,11 +396,11 @@ This specification registers the following grant extension type in the {{IANA.oa
    : IETF
 
    Specification document(s):
-   : This RFC as a reference to {{RFC9101}}
+   : This RFC as a reference to [RFC9101]
 
 ## OAuth Token Endpoint Authentication Methods Registration {#iana-token-authn-reg}
 
-This specification registers additional token endpoint authentication methods in the {{IANA.oauth-parameters}} OAuth Token Endpoint Authentication Methods registry.
+This specification registers additional token endpoint authentication methods in the [IANA.oauth-parameters] OAuth Token Endpoint Authentication Methods registry.
 
 ### `jwt-bearer` token endpoint authentication method {#iana-token-authn-reg-jwt}
 
@@ -358,7 +411,7 @@ This specification registers additional token endpoint authentication methods in
    : IETF
 
    Specification document(s):
-   : This RFC as a reference to {{RFC7591}} and {{I-D.parecki-oauth-identity-assertion-authz-grant}}
+   : This RFC as a reference to [RFC7591] and [I-D.parecki-oauth-identity-assertion-authz-grant]
 
 ### `jwt-svid` token endpoint authentication method {#iana-token-authn-reg-jwt-svid}
 
@@ -380,7 +433,7 @@ This specification registers additional token endpoint authentication methods in
    : IETF
 
    Specification document(s):
-   : This RFC as a reference to {{I-D.ietf-wimse-s2s-protocol}}
+   : This RFC as a reference to [I-D.ietf-wimse-s2s-protocol]
 
 ### `txn_token` token endpoint authentication method {#iana-token-authn-reg-txntoken}
 
@@ -391,11 +444,11 @@ This specification registers additional token endpoint authentication methods in
    : IETF
 
    Specification document(s):
-   : This RFC as a reference to {{I-D.ietf-oauth-transaction-tokens}}
+   : This RFC as a reference to [I-D.ietf-oauth-transaction-tokens]
 
 ## Claims Registration {#iana-claims-reg}
 
-Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, and `cmr` to express client metadata JWT access tokens. This section registers those attributes as claims in the {{IANA.jwt}} registry introduced in {{RFC7519}}.
+Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, and `cmr` to express client metadata JWT access tokens. This section registers those attributes as claims in the [IANA.jwt] registry introduced in [RFC7519].
 
 ### `gty` claim definition {#iana-claims-reg-gty}
 
@@ -458,4 +511,7 @@ Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, 
 # Acknowledgments {#ack}
 {:numbered="false"}
 
-TODO acknowledge.
+
+The authors wants to acknowledge the support and work of the following indivisuals: George Fletcher (Pratical Identity), Christopher Langton (Vulnetix).
+
+The authors wants also to recognize the trail blazers and thought leaders that created the ecosystem without which this draft proposal would not be able to solve customer pain points and secure usage of digital services, especially without being limited to: Vittorio Bertocci†, Brian Campbell (Ping Identity), Justin Richer (MongoDB), Aaron Parecki (Okta), Pieter Kasselman (SPRL), Dr Mike Jones (Self-Issued Consulting, LLC), Dr Daniel Fett (Authlete).
