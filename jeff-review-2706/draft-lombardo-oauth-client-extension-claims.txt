@@ -5,7 +5,7 @@
 Web Authorization Protocol                                   J. Lombardo
 Internet-Draft                                                       AWS
 Intended status: Informational                                A. Babeanu
-Expires: 30 December 2025                                       IndyKite
+Expires: 30 December 2025                                      IndieKite
                                                             28 June 2025
 
 
@@ -16,7 +16,7 @@ Abstract
 
    This specification defines new claims for JWT profiled access tokens
    [RFC9068] so that resource providers can benefit from more granular
-   information about the client: its authentication methods as long as
+   information about the client: its authentication methods as well as
    the grant flow and the grant flow extensions used as part of the
    issuance of the associated tokens.
 
@@ -123,19 +123,19 @@ Table of Contents
 1.  Introduction
 
    Resource providers need information about the subject, the action,
-   the resource, and the context involved in the request in order to be
-   able to determine properly if a resource can be disclosed.  This
-   decision may also involve the help of a Policy Decision Point (PDP).
+   the resource, and the context involved in the request to be able to
+   determine properly, with the help of a Policy Decision Point (PDP) or
+   not, if a resource must be disclosed.
 
    When accessed with a JWT profiled OAuth2 Access Token [RFC9068]
    presented as a bearer token [RFC6750], a resource provider receives
    mainly information about the subject in the form of: - The sub claim,
    - Any user profile claim set by the Authorization Server if
-   applicable, - Any Authenticaiton Information claims like the user
+   applicable, - Any Authentication Information claims like the user
    class of authentication (acrclaim) or user methord of authentication
    (claim amr [RFC8176]) - Any Authorization Information if applicable
 
-   The resource provider has very few information about the client,
+   The resource provider has very little information about the client,
    mainly in the form of the client_id [RFC8693] claim.  It falls short
    in several important circumstances, for instance, in
    [FAPI2.0-Security-Profiles] or [hl7.fhir.uv.smart-app-launch]
@@ -160,7 +160,7 @@ Table of Contents
    capitals, as shown here.
 
    JWT access token:  An OAuth 2.0 access token encoded in JWT format
-      and complying with the requirements described in [RFC9068].
+      and complying to the requirements described in [RFC9068].
 
    This specification uses the terms "access token", "authorization
    server", "authorization endpoint", "authorization request", "client",
@@ -239,16 +239,17 @@ Table of Contents
 
 4.  Authorization Server Metadata
 
-   The following authorization server metadata parameters [RFC8414] are
-   introduced to signal the server's capability
+   The following authorization server metadata parameters are introduced
+   as an extension of [RFC8414], in order to describe the server's
+   capabilities.
 
    support_client_extentison_claims:  Boolean parameter indicating to
       clients and resource servers whether the authorization server will
-      return the extension claimns described in this document.
+      return the extension claims described in this document.
 
    Note: that the non presence of support_client_extentison_claims is
    sufficient for the client to determine that the server is not capable
-   and therefore will not return the extension claimns described in this
+   and therefore will not return the extension claims described in this
    RFC.
 
 5.  Requesting a JWT Access Token with Client Extensions
@@ -264,14 +265,14 @@ Table of Contents
 
 6.  Validating JWT Access Tokens with Client Extensions
 
-   This specification follows the requirements of the section 4. of
+   This specification follows the requirements of the section 4 of
    [RFC9068].
 
 7.  Security Considerations
 
 7.1.  Validation Of Token
 
-   The JWT access token data layout described here is the same as JWT
+   The JWT access token data format described here is the same as JWT
    access token defined by [RFC9068].
 
 7.2.  Processing Of Claims Defined By This Document
@@ -733,17 +734,7 @@ Table of Contents
 
 Acknowledgments
 
-   The authors wants to acknowledge the support and work of the
-   following indivisuals: George Fletcher (Pratical Identity),
-   Christopher Langton (Vulnetix).
-
-   The authors wants also to recognize the trail blazers and thought
-   leaders that created the ecosystem without which this draft proposal
-   would not be able to solve customer pain points and secure usage of
-   digital services, especially without being limited to: Vittorio
-   Bertocci†, Brian Campbell (Ping Identity), Justin Richer (MongoDB),
-   Aaron Parecki (Okta), Pieter Kasselman (SPRL), Dr Mike Jones (Self-
-   Issued Consulting, LLC), Dr Daniel Fett (Authlete).
+   TODO acknowledge.
 
 Authors' Addresses
 
@@ -753,7 +744,7 @@ Authors' Addresses
    Email: jeffsec@amazon.com
 
 
-   Alexandre Babeanu
-   IndyKite
+   Alex Babeanu
+   IndieKite
    Canada
    Email: alex.babeanu@indykite.com
