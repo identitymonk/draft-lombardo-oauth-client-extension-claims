@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-29T01:05:39.627590+00:00",
+  "timestamp": "2025-06-29T01:14:52.178403+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -55,15 +55,15 @@
       "id": "I_kwDOOEwV6s6yOy1u",
       "title": "Backwards compatibility",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/8",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "0x73746F66",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The specification assumes backward compatibility won't be an issue, but doesn't address how existing resource servers might misinterpret these new claims",
       "createdAt": "2025-04-12T05:09:16Z",
-      "updatedAt": "2025-05-09T14:06:21Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-28T19:12:50Z",
+      "closedAt": "2025-06-28T19:12:50Z",
       "comments": [
         {
           "author": "0x73746F66",
@@ -113,6 +113,13 @@
           "body": "@0x73746F66 , so here's the thing: JWT access tokens are currently greatly abused in the field: companies left and right stuff all kinds on claims in JWTs, it's very common practice. I've seen clients explode token header sizes many times (that is a problem). But actual claims or claim names causing a problem to RS's... never seen. I hardly see how this could be a problem for an RS, a Client or an IdP.\n\nI'm not personally against adding more comments for backward compatibility, but given the \"JWT abuse\" I've seen in the wild, this would very much be a very unlikely edge case indeed.\n\nAs far as I know all parties in OAuth flows are supposed to ignore claims they don't understand.",
           "createdAt": "2025-05-09T14:06:20Z",
           "updatedAt": "2025-05-09T14:06:20Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "solved through Draft-01 release",
+          "createdAt": "2025-06-28T19:12:50Z",
+          "updatedAt": "2025-06-28T19:12:50Z"
         }
       ]
     },
@@ -329,15 +336,15 @@
       "id": "I_kwDOOEwV6s6yOzSY",
       "title": "validation requirements for resource servers",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/13",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "0x73746F66",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The gty and cxt claims lack explicit validation requirements for resource servers",
       "createdAt": "2025-04-12T05:13:00Z",
-      "updatedAt": "2025-04-13T20:51:52Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-28T19:12:35Z",
+      "closedAt": "2025-06-28T19:12:35Z",
       "comments": [
         {
           "author": "identitymonk",
@@ -352,6 +359,13 @@
           "body": "Thinking adding a section about `Processing Rules`",
           "createdAt": "2025-04-13T20:51:52Z",
           "updatedAt": "2025-04-13T20:51:52Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "solved through Draft-01 release",
+          "createdAt": "2025-06-28T19:12:35Z",
+          "updatedAt": "2025-06-28T19:12:35Z"
         }
       ]
     },
@@ -419,63 +433,94 @@
       "id": "I_kwDOOEwV6s6yTkEB",
       "title": "Describing the relations to the requirements of FAPI 2.0 Security Profiles and SMART on FHIR v5",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/15",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "identitymonk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Those two frameworks require some explicit type of authentication for clients when they request OAuth2 tokens from the AS.\n\nThis specification proposal aims to provide actionable information in the tokens about those elements for the resource providers to assure, as part of their access control evaluation, that the basic framework requirements are met.\n\nThis should be described in the Introduction.",
       "createdAt": "2025-04-13T20:44:31Z",
-      "updatedAt": "2025-04-13T20:44:31Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-06-28T19:12:21Z",
+      "closedAt": "2025-06-28T19:12:21Z",
+      "comments": [
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "solved through Draft-01 release",
+          "createdAt": "2025-06-28T19:12:21Z",
+          "updatedAt": "2025-06-28T19:12:21Z"
+        }
+      ]
     },
     {
       "number": 16,
       "id": "I_kwDOOEwV6s6yTktz",
       "title": "IANA value registration process description",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/16",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "identitymonk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Need to add the following text in the IANA section:\n\n--------- beginning ---------\nThe following registration procedure is used for the registry established by this specification.\n\nValues are registered on a Specification Required [RFC8126] basis after a two-week review period on the [oauth-ext-review@ietf.org](mailto:oauth-ext-review@ietf.org) mailing list, on the advice of one or more Designated Experts. However, to allow for the allocation of values prior to publication of the final version of a specification, the Designated Experts may approve registration once they are satisfied that the specification will be completed and published. However, if the specification is not completed and published in a timely manner, as determined by the Designated Experts, the Designated Experts may request that IANA withdraw the registration.\n\nRegistration requests sent to the mailing list for review should use an appropriate subject (e.g., \"Request to register JWT profiled OAuth2 Access Token client extensions: example\").\n\nWithin the review period, the Designated Experts will either approve or deny the registration request, communicating this decision to the review list and IANA. Denials should include an explanation and, if applicable, suggestions as to how to make the request successful. The IANA escalation process is followed when the Designated Experts are not responsive within 14 days.\n\nCriteria that should be applied by the Designated Experts includes determining whether the proposed registration duplicates existing functionality, determining whether it is likely to be of general applicability or whether it is useful only for a single application, and whether the registration makes sense.\n\nIANA must only accept registry updates from the Designated Experts and should direct all requests for registration to the review mailing list.\n\nIt is suggested that multiple Designated Experts be appointed who are able to represent the perspectives of different applications using this specification, in order to enable broadly-informed review of registration decisions. In cases where a registration decision could be perceived as creating a conflict of interest for a particular Expert, that Expert should defer to the judgment of the other Experts.\n\nThe reason for the use of the mailing list is to enable public review of registration requests, enabling both Designated Experts and other interested parties to provide feedback on proposed registrations. The reason to allow the Designated Experts to allocate values prior to publication as a final specification is to enable giving authors of specifications proposing registrations the benefit of review by the Designated Experts before the specification is completely done, so that if problems are identified, the authors can iterate and fix them before publication of the final specification.\n--------- end ---------",
       "createdAt": "2025-04-13T20:50:39Z",
-      "updatedAt": "2025-04-13T20:50:39Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-06-28T19:12:11Z",
+      "closedAt": "2025-06-28T19:12:11Z",
+      "comments": [
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "solved through Draft-01 release",
+          "createdAt": "2025-06-28T19:12:11Z",
+          "updatedAt": "2025-06-28T19:12:11Z"
+        }
+      ]
     },
     {
       "number": 17,
       "id": "I_kwDOOEwV6s64Qnfr",
       "title": "Do sender constrained tokens help with the client trust issue",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/17",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gffletch",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "> On the other hand, the RS has very little information about the client, often only a client_id [[RFC8693](https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html#RFC8693)] claim. In particular, the RS lacks any insight about the type of authorization grant flow that the client itself went through, the level of assurance that the client itself may have reached during its own authentication, and in general, lacks any information that would enable it to determine if the client itself can be trusted at all.\n\nIt seems like a sender constrained token would provide authentication proof of the client making the request as well as the token is coming from the client to which the AS issued the token. Does the RS need more than this? Could the RS retrieve this state from the AS on an as needed basis so that it doesn't have to be in the token?",
       "createdAt": "2025-05-26T14:17:09Z",
-      "updatedAt": "2025-05-26T14:17:09Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-06-28T19:12:04Z",
+      "closedAt": "2025-06-28T19:12:03Z",
+      "comments": [
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "The claim provided more information about the grant flow used in between the client and the authorization server which are not covered by sender constraint mechanisms,\n\nSender constraints mechanisms only assured that, whatever the  grant flow and extension used by one client to get those tokens, this is client is the original client. It does not provide any metadata on the \"whatever the grant flow and extensions used\".",
+          "createdAt": "2025-06-28T01:53:22Z",
+          "updatedAt": "2025-06-28T01:53:22Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "solved through Draft-01 release",
+          "createdAt": "2025-06-28T19:12:03Z",
+          "updatedAt": "2025-06-28T19:12:03Z"
+        }
+      ]
     },
     {
       "number": 18,
       "id": "I_kwDOOEwV6s64QtEL",
       "title": "Should `cxt` include other OAuth extensions like RAR",
       "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/18",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gffletch",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Should the `cxt` array also include other OAuth extensions like PAR, RAR, Resource Indicators? \n\nShould the array values just be the RFC numbers which makes extending the array easier?\n\nWhat is the expected behavior if the RS does not understand one of the values in AS issued array?",
       "createdAt": "2025-05-26T14:26:15Z",
-      "updatedAt": "2025-05-28T02:04:02Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-28T19:11:53Z",
+      "closedAt": "2025-06-28T19:11:53Z",
       "comments": [
         {
           "author": "identitymonk",
@@ -483,6 +528,13 @@
           "body": "There was a discussion on an adjacent argument in #14 \n\n- OAuth2 has pretty much aligned on using IANA registry which this proposal will follow. \n- We could had a mention like for CCR that your own values can be used as long as as Client and RP agrees on what it means\n- I would emphasis that OAuth2 has a clear rule of `if you don't understand a claim or parameter, ignore it`",
           "createdAt": "2025-05-28T02:04:01Z",
           "updatedAt": "2025-05-28T02:04:01Z"
+        },
+        {
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "body": "solved through Draft-01 release",
+          "createdAt": "2025-06-28T19:11:53Z",
+          "updatedAt": "2025-06-28T19:11:53Z"
         }
       ]
     }
@@ -773,6 +825,181 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 19,
+      "id": "PR_kwDOOEwV6s6cgWG3",
+      "title": "Jeff review 2706",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/pull/19",
+      "state": "MERGED",
+      "author": "identitymonk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Integrated changes from #18 #8 #17 ",
+      "createdAt": "2025-06-28T02:03:43Z",
+      "updatedAt": "2025-06-28T19:10:30Z",
+      "baseRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "baseRefName": "main",
+      "baseRefOid": "3eb9e0083c8e62219fc7fd03d6c25c34ffcb4f92",
+      "headRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "headRefName": "jeff-review-2706",
+      "headRefOid": "ba62d61af8513d62454cd68e8cd4461e9d405f94",
+      "closedAt": "2025-06-28T19:10:26Z",
+      "mergedAt": "2025-06-28T19:10:26Z",
+      "mergedBy": "identitymonk",
+      "mergeCommit": {
+        "oid": "1e4037dfcb9c56022c23adf0db4cc5ff950e9ac2"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOOEwV6s6w7aP0",
+          "commit": {
+            "abbreviatedOid": "ba62d61"
+          },
+          "author": "baboulebou",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-28T04:45:40Z",
+          "updatedAt": "2025-06-28T15:54:11Z",
+          "comments": [
+            {
+              "originalPosition": 68,
+              "body": "not \"as long as\" but \"as well as\"",
+              "createdAt": "2025-06-28T04:45:40Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 82,
+              "body": "Typo: \"Authentication\"",
+              "createdAt": "2025-06-28T14:55:33Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 86,
+              "body": "- Replace\" \"has very few\" by \"has very little\"\r\n",
+              "createdAt": "2025-06-28T14:56:35Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 89,
+              "body": "rephrase, as follows for example:\r\n\"This document defines four new claims, which enable a more precise description of the flows and methods used during the access token issuance to the client. It follows the JWT profile for access tokens.\"",
+              "createdAt": "2025-06-28T15:00:17Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 100,
+              "body": "... complying to... (not complying with)",
+              "createdAt": "2025-06-28T15:00:50Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 113,
+              "body": "typo. : \"across\" (missing \"s\")\r\n",
+              "createdAt": "2025-06-28T15:02:03Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 121,
+              "body": "- There's a \"TODO\", plan to update this?\r\n- Also, not sure you need to list all the specs here, it won't be future proof... Maybe just a reference to IANA's \"OAuth URI\"'s is enough (https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xml) ? Especially since you say \"not limited to\", so no need to provide an exhaustive list really beyond IANA...",
+              "createdAt": "2025-06-28T15:06:49Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 126,
+              "body": "change to: \"...MAY be issued TO reflect...\" (instead of AND).",
+              "createdAt": "2025-06-28T15:44:18Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 134,
+              "body": "replace: \"... SHOULD be from those registered in IANA...\"\r\nby: \"...SHOULD be a valid OAuth Token Endpoint Authentication method registered with IANA [IANA.oauth-parameters_token-endpoint-auth-method]. Parties using...\"",
+              "createdAt": "2025-06-28T15:48:37Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 139,
+              "body": "\"The following authorization server metadata parameters are introduced as an extension of [RFC8414], in order to describe the server's capabilities.\"",
+              "createdAt": "2025-06-28T15:50:54Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 144,
+              "body": "typo: \"claims\"",
+              "createdAt": "2025-06-28T15:51:37Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 147,
+              "body": "typo: \"claims\"",
+              "createdAt": "2025-06-28T15:51:59Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 159,
+              "body": "no \".\"; i.e., \"...section 4 of [...\"",
+              "createdAt": "2025-06-28T15:52:58Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            },
+            {
+              "originalPosition": 166,
+              "body": "not \"layout\" but \"format\"",
+              "createdAt": "2025-06-28T15:53:28Z",
+              "updatedAt": "2025-06-28T15:54:11Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOOEwV6s6w9pwz",
+          "commit": {
+            "abbreviatedOid": "ba62d61"
+          },
+          "author": "identitymonk",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-28T19:08:32Z",
+          "updatedAt": "2025-06-28T19:08:32Z",
+          "comments": [
+            {
+              "originalPosition": 86,
+              "body": "will change it in the step-up authorization too then",
+              "createdAt": "2025-06-28T19:08:32Z",
+              "updatedAt": "2025-06-28T19:08:33Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "id": "PR_kwDOOEwV6s6ci_c9",
+      "title": "Jeff review 2706",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/pull/20",
+      "state": "MERGED",
+      "author": "identitymonk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Adding Alex feedback",
+      "createdAt": "2025-06-28T19:15:22Z",
+      "updatedAt": "2025-06-28T19:20:37Z",
+      "baseRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "baseRefName": "main",
+      "baseRefOid": "1e4037dfcb9c56022c23adf0db4cc5ff950e9ac2",
+      "headRepository": "identitymonk/draft-lombardo-oauth-client-extension-claims",
+      "headRefName": "jeff-review-2706",
+      "headRefOid": "add17badc7dffec85cee57ad1dbd6417e175b3cb",
+      "closedAt": "2025-06-28T19:20:34Z",
+      "mergedAt": "2025-06-28T19:20:34Z",
+      "mergedBy": "identitymonk",
+      "mergeCommit": {
+        "oid": "3981b021374fa407b51178b47baa19a8fc7feeb0"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
