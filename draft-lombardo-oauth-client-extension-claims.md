@@ -1,6 +1,6 @@
 ---
 title: "OAuth 2.0 client extension claims"
-abbrev: "TODO - Abbreviation"
+abbrev: "OCEC"
 category: info
 
 docname: draft-lombardo-oauth-client-extension-claims-latest
@@ -49,23 +49,23 @@ normative:
     date: 1 September 2021
     author:
       -
-        name: G. Fernandez
+        name: Gonzalo Fernandez Rodriguez
         role: editor
-        org: TElefonica
+        org: Telefonica
       -
-        name: F. Walter
-        role: editor
-        org: Deutsche Telekom AG
-      -
-        name: A. Nennker
+        name: Florian Walter
         role: editor
         org: Deutsche Telekom AG
       -
-        name: D. Tonge
+        name: Axel Nennker
+        role: editor
+        org: Deutsche Telekom AG
+      -
+        name: Dave Tonge
         role: editor
         org: Moneyhub
       -
-        name: B. Campbell
+        name: Brian Campbell
         role: editor
         org: Ping Identity
   RFC8414: # OAuth 2.0 Authorization Server Metadata
@@ -82,7 +82,7 @@ informative:
   RFC9101: # JAR
   RFC9449: # DPOP
   RFC8705: # mTLS client
-  RFC9421: # HTTP Message Signaturenano /etc/update-manager/release-upgrades
+  RFC9421: # HTTP Message Signature
   RFC9700: # OAuth BCP
   I-D.parecki-oauth-identity-assertion-authz-grant: # Assertion grant
   I-D.ietf-wimse-s2s-protocol: # WIMSE W2W
@@ -119,7 +119,7 @@ Resource providers need information about the subject, the action, the resource,
 When accessed with a JWT profiled OAuth2 Access Token [RFC9068] presented as a bearer token [RFC6750], a resource provider receives mainly information about the subject in the form of:
 - The `sub` claim,
 - Any user profile claim set by the Authorization Server if applicable,
-- Any Authentication Information claims like the user class of authentication (`acr`claim) or user methord of authentication (claim `amr` [RFC8176])
+- Any Authentication Information claims like the user class of authentication (`acr`claim) or user method of authentication (claim `amr` [RFC8176])
 - Any Authorization Information if applicable
 
 The resource provider has very little information about the client, mainly in the form of the `client_id` [RFC8693] claim. It falls short in several important circumstances, for instance, in [FAPI2.0-Security-Profiles] or [hl7.fhir.uv.smart-app-launch] regulated APIs when they require peculiar client authentication mechanisms to be enforced or transaction specific details to be present in the token.
@@ -143,20 +143,20 @@ The following claims extend the [RFC9068] access token payload data structure:
 
 ## Client Flow Information Claims {#client-flow-info}
 
-The claims listed in this section MUST be issued and reflect grant type and extensions used with authorization server as part of the authorization request from the client. Their values are dynamic accros all access tokens that derive from a given authorization response to reflect the elements used in the process that lead to their issuance.
+The claims listed in this section MUST be issued and reflect grant type and extensions used with authorization server as part of the authorization request from the client. Their values are dynamic across all access tokens that derive from a given authorization response to reflect the elements used in the process that lead to their issuance.
 
 `gty`:
 : REQUIRED - defines the OAuth2 authorization grant type the client used for the issuance of the access token. String that is an identifier for an OAuth2 Grant type. Values used in the `gty` Claim MUST be from those registered in the IANA Grant Type Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2. of [RFC7591], section 2.1 of [RFC8693], and section 4 of [OpenID.CIBA].
 
 `cxt`:
-: REQUIRED - defines the list of extensions the client used in conjonction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in [RFC7636], Demonstrating Proof of Possession (or DPoP) as defined in [RFC9449]. JSON array of strings that are identifiers for extensions used. Values used in the `cxt` Claim MUST be from those registered in the IANA Client Context Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2 of [RFC8414], and Section 5.1 of [RFC9449].
+: REQUIRED - defines the list of extensions the client used in conjunction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in [RFC7636], Demonstrating Proof of Possession (or DPoP) as defined in [RFC9449]. JSON array of strings that are identifiers for extensions used. Values used in the `cxt` Claim MUST be from those registered in the IANA Client Context Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2 of [RFC8414], and Section 5.1 of [RFC9449].
 
 ## Client Authentication Information Claims {#client-authn-info}
 
-The claims listed in this section MAY be issued and reflect the types and strength of client authentication in the access token that the authentication server enforced prior to returning the authorization response to the client. Their values are fixed and remain the same across all access tokens that derive from a given authorization response, whether the access token was obtained directly in the response (e.g., via the implicit flow) or after obtaining a fresh access token using a refresh token. Those values may change if an access tokenis exchanged for another via an [RFC8693] procedure in order to reflect the specifities of this request.
+The claims listed in this section MAY be issued and reflect the types and strength of client authentication in the access token that the authentication server enforced prior to returning the authorization response to the client. Their values are fixed and remain the same across all access tokens that derive from a given authorization response, whether the access token was obtained directly in the response (e.g., via the implicit flow) or after obtaining a fresh access token using a refresh token. Those values may change if an access token is exchanged for another via an [RFC8693] procedure in order to reflect the specificities of this request.
 
 `ccr`:
-: OPTIONAL - defines the authentication context class reference the client satisfied when authenticating to the authorization server. An absolute URI or registered name from furture RFC SHOULD be used as the `ccr` value; registered names MUST NOT be used with a different meaning than that which is registered. Parties using this claim will need to agree upon the meanings of the values used, which may be context specific.
+: OPTIONAL - defines the authentication context class reference the client satisfied when authenticating to the authorization server. An absolute URI or registered name from future RFC SHOULD be used as the `ccr` value; registered names MUST NOT be used with a different meaning than that which is registered. Parties using this claim will need to agree upon the meanings of the values used, which may be context specific.
 
 `cmr`:
 : OPTIONAL - defines the authentication methods the client used when authenticating to the authorization server. String that is an identifier for an authentication method used in the authentication of the client. For instance, a value might indicate the usage of private JWT as defined in [RFC7521] and [RFC7523] or HTTP message signature as defined in [RFC9421] . The `cmr` value is a case-sensitive string. Values used in the `cmr` Claim SHOULD be from those registered in the IANA OAuth Token Endpoint Authentication Methods Values registry [IANA.oauth-parameters_token-endpoint-auth-method] defined by [RFC7591]; parties using this claim will need to agree upon the meanings of any unregistered values used, which may be context specific.
@@ -512,6 +512,6 @@ Section X.Y of this specification refers to the attributes `gty`, `cxt`, `ccr`, 
 {:numbered="false"}
 
 
-The authors wants to acknowledge the support and work of the following indivisuals: George Fletcher (Pratical Identity), Christopher Langton (Vulnetix).
+The authors wants to acknowledge the support and work of the following individuals: George Fletcher (Practical Identity), Christopher Langton (Vulnetix).
 
 The authors wants also to recognize the trail blazers and thought leaders that created the ecosystem without which this draft proposal would not be able to solve customer pain points and secure usage of digital services, especially without being limited to: Vittorio Bertocci†, Brian Campbell (Ping Identity), Justin Richer (MongoDB), Aaron Parecki (Okta), Pieter Kasselman (SPRL), Dr Mike Jones (Self-Issued Consulting, LLC), Dr Daniel Fett (Authlete).
