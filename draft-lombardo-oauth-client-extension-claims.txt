@@ -5,8 +5,8 @@
 Web Authorization Protocol                                   J. Lombardo
 Internet-Draft                                                       AWS
 Intended status: Informational                                A. Babeanu
-Expires: 30 December 2025                                       IndyKite
-                                                            28 June 2025
+Expires: 1 January 2026                                         IndyKite
+                                                            30 June 2025
 
 
                    OAuth 2.0 client extension claims
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 December 2025.
+   This Internet-Draft will expire on 1 January 2026.
 
 Copyright Notice
 
@@ -132,7 +132,7 @@ Table of Contents
    mainly information about the subject in the form of: - The sub claim,
    - Any user profile claim set by the Authorization Server if
    applicable, - Any Authentication Information claims like the user
-   class of authentication (acrclaim) or user methord of authentication
+   class of authentication (acrclaim) or user method of authentication
    (claim amr [RFC8176]) - Any Authorization Information if applicable
 
    The resource provider has very little information about the client,
@@ -177,7 +177,7 @@ Table of Contents
    The claims listed in this section MUST be issued and reflect grant
    type and extensions used with authorization server as part of the
    authorization request from the client.  Their values are dynamic
-   accros all access tokens that derive from a given authorization
+   across all access tokens that derive from a given authorization
    response to reflect the elements used in the process that lead to
    their issuance.
 
@@ -191,7 +191,7 @@ Table of Contents
       of [OpenID.CIBA].
 
    cxt:  REQUIRED - defines the list of extensions the client used in
-      conjonction with the OAuth2 authorization grant type used for the
+      conjunction with the OAuth2 authorization grant type used for the
       issuance of the access token.  For example but not limited to:
       Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as
       defined in [RFC7636], Demonstrating Proof of Possession (or DPoP)
@@ -212,16 +212,16 @@ Table of Contents
    response, whether the access token was obtained directly in the
    response (e.g., via the implicit flow) or after obtaining a fresh
    access token using a refresh token.  Those values may change if an
-   access tokenis exchanged for another via an [RFC8693] procedure in
-   order to reflect the specifities of this request.
+   access token is exchanged for another via an [RFC8693] procedure in
+   order to reflect the specificities of this request.
 
    ccr:  OPTIONAL - defines the authentication context class reference
       the client satisfied when authenticating to the authorization
-      server.  An absolute URI or registered name from furture RFC
-      SHOULD be used as the ccr value; registered names MUST NOT be used
-      with a different meaning than that which is registered.  Parties
-      using this claim will need to agree upon the meanings of the
-      values used, which may be context specific.
+      server.  An absolute URI or registered name from future RFC SHOULD
+      be used as the ccr value; registered names MUST NOT be used with a
+      different meaning than that which is registered.  Parties using
+      this claim will need to agree upon the meanings of the values
+      used, which may be context specific.
 
    cmr:  OPTIONAL - defines the authentication methods the client used
       when authenticating to the authorization server.  String that is
@@ -583,7 +583,7 @@ Table of Contents
               <https://www.iana.org/assignments/oauth-parameters>.
 
    [OpenID.CIBA]
-              Fernandez, G., Ed., Walter, F., Ed., Nennker, A., Ed.,
+              Rodriguez, G. F., Ed., Walter, F., Ed., Nennker, A., Ed.,
               Tonge, D., Ed., and B. Campbell, Ed., "OpenID Connect
               Client-Initiated Backchannel Authentication Flow - Core
               1.0", September 2021, <https://openid.net/specs/openid-
@@ -735,7 +735,7 @@ Table of Contents
 Acknowledgments
 
    The authors wants to acknowledge the support and work of the
-   following indivisuals: George Fletcher (Pratical Identity),
+   following individuals: George Fletcher (Practical Identity),
    Christopher Langton (Vulnetix).
 
    The authors wants also to recognize the trail blazers and thought
