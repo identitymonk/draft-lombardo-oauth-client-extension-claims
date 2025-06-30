@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>OAuth 2.0 client extension claims</title>
+<meta content="Jean-François Lombardo" name="author">
+<meta content="Alexandre Babeanu" name="author">
+<meta content="
+       This specification defines new claims for JWT profiled access tokens   so that resource providers can benefit from more granular information about the client: its authentication methods as well as the grant flow and the grant flow extensions used as part of the issuance of the associated tokens. 
+    " name="description">
+<meta content="xml2rfc 3.29.0" name="generator">
+<meta content="security" name="keyword">
+<meta content="trust" name="keyword">
+<meta content="draft-lombardo-oauth-client-extension-claims-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.29.0
+    Python 3.12.11
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.1
+    intervaltree 3.1.0
+    Jinja2 3.1.6
+    lxml 5.3.1
+    platformdirs 4.3.8
+    pycountry 24.6.1
+    PyYAML 6.0.2
+    requests 2.32.4
+    setuptools 80.9.0
+    wcwidth 0.2.13
+-->
+<link href="draft-lombardo-oauth-client-extension-claims.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  --font-title: "Sofia Sans Semi Condensed", sans-serif;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: 680;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+  & li {
+    margin-top: 0.5em;
+  }
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+    }
+  }
+  &.olPercent > dt {
+    float: none;
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+}
+dl:not(.dlNewline) > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+  caption-side: bottom;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
+}
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
+  }
+}
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
+}
+
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
+}
+
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+/* Comments */
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+
+@media screen {
+  #toc nav {
+    font-family: var(--font-title);
+    font-weight: 360;
+    & > ul { margin-bottom: 2em; }
+    & ul {
+      margin: 0 0 0 4px;
+      & :is(p, li) {
+        margin: 2px 0;
+      }
+    }
+  }
+  #toc a.toplink {
+    float: right;
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+    &::before { /* css hamburger */
+      float: right;
+      position: relative;
+      width: 1em;
+      height: 1px;
+      left: -164px;
+      margin: 8px 0 0 0;
+      background: white none repeat scroll 0 0;
+      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+      content: "";
+    }
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active {
+    opacity: 1;
+    & nav { display: block; }
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:is(:link, :focus, :hover),
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin: 2px 0.5em 0;
+  }
+}
+
+/* TOC layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+  #toc a.toplink {
+    margin: 8px 0.5em 0;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">OCEC</td>
+<td class="right">June 2025</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Lombardo &amp; Babeanu</td>
+<td class="center">Expires 1 January 2026</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Web Authorization Protocol</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-lombardo-oauth-client-extension-claims-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2025-06-30" class="published">30 June 2025</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Informational</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2026-01-01">1 January 2026</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">J. Lombardo</div>
+<div class="org">AWS</div>
+</div>
+<div class="author">
+      <div class="author-name">A. Babeanu</div>
+<div class="org">IndyKite</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">OAuth 2.0 client extension claims</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This specification defines new claims for JWT profiled access tokens <span>[<a href="#RFC9068" class="cite xref">RFC9068</a>]</span> so that resource providers can benefit from more granular information about the client: its authentication methods as well as the grant flow and the grant flow extensions used as part of the issuance of the associated tokens.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html">https://identitymonk.github.io/draft-lombardo-oauth-client-extension-claims/draft-lombardo-oauth-client-extension-claims.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-lombardo-oauth-client-extension-claims/">https://datatracker.ietf.org/doc/draft-lombardo-oauth-client-extension-claims/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        Web Authorization Protocol  mailing list (<span><a href="mailto:oauth@ietf.org">mailto:oauth@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/oauth/">https://mailarchive.ietf.org/arch/browse/oauth/</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/oauth/">https://www.ietf.org/mailman/listinfo/oauth/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims">https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 1 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2025 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-jwt-access-token-client-ext" class="internal xref">JWT Access Token Client Extensions Data Structure</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-client-flow-information-cla" class="internal xref">Client Flow Information Claims</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-client-authentication-infor" class="internal xref">Client Authentication Information Claims</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-authorization-server-metada" class="internal xref">Authorization Server Metadata</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-requesting-a-jwt-access-tok" class="internal xref">Requesting a JWT Access Token with Client Extensions</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-validating-jwt-access-token" class="internal xref">Validating JWT Access Tokens with Client Extensions</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-validation-of-token" class="internal xref">Validation Of Token</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-processing-of-claims-define" class="internal xref">Processing Of Claims Defined By This Document</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-security-best-practice" class="internal xref">Security Best Practice</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-oauth-grant-type-registrati" class="internal xref">OAuth Grant Type Registration</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
+                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-authorization_code-grant-ty" class="internal xref"><code>authorization_code</code> grant type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.2">
+                    <p id="section-toc.1-1.8.2.1.2.2.1"><a href="#section-8.1.2" class="auto internal xref">8.1.2</a>.  <a href="#name-implicit-grant-type" class="internal xref"><code>implicit</code> grant type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.3">
+                    <p id="section-toc.1-1.8.2.1.2.3.1"><a href="#section-8.1.3" class="auto internal xref">8.1.3</a>.  <a href="#name-password-grant-type" class="internal xref"><code>password</code> grant type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.4">
+                    <p id="section-toc.1-1.8.2.1.2.4.1"><a href="#section-8.1.4" class="auto internal xref">8.1.4</a>.  <a href="#name-client_credentials-grant-ty" class="internal xref"><code>client_credentials</code> grant type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.5">
+                    <p id="section-toc.1-1.8.2.1.2.5.1"><a href="#section-8.1.5" class="auto internal xref">8.1.5</a>.  <a href="#name-refresh_token-grant-type" class="internal xref"><code>refresh_token</code> grant type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.6">
+                    <p id="section-toc.1-1.8.2.1.2.6.1"><a href="#section-8.1.6" class="auto internal xref">8.1.6</a>.  <a href="#name-jwt-bearer-grant-type" class="internal xref"><code>jwt-bearer</code> grant type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.7">
+                    <p id="section-toc.1-1.8.2.1.2.7.1"><a href="#section-8.1.7" class="auto internal xref">8.1.7</a>.  <a href="#name-saml2-bearer-grant-type" class="internal xref"><code>saml2-bearer</code> grant type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.8">
+                    <p id="section-toc.1-1.8.2.1.2.8.1"><a href="#section-8.1.8" class="auto internal xref">8.1.8</a>.  <a href="#name-token-exchange-grant-type" class="internal xref"><code>token-exchange</code> grant type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.9">
+                    <p id="section-toc.1-1.8.2.1.2.9.1"><a href="#section-8.1.9" class="auto internal xref">8.1.9</a>.  <a href="#name-device_code-grant-type" class="internal xref"><code>device_code</code> grant type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.10">
+                    <p id="section-toc.1-1.8.2.1.2.10.1"><a href="#section-8.1.10" class="auto internal xref">8.1.10</a>. <a href="#name-ciba-grant-type" class="internal xref"><code>ciba</code> grant type</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-oauth-grant-extension-type-" class="internal xref">OAuth Grant Extension Type Registration</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.1">
+                    <p id="section-toc.1-1.8.2.2.2.1.1"><a href="#section-8.2.1" class="auto internal xref">8.2.1</a>.  <a href="#name-pkce-grant-extension-type" class="internal xref"><code>pkce</code> grant extension type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.2">
+                    <p id="section-toc.1-1.8.2.2.2.2.1"><a href="#section-8.2.2" class="auto internal xref">8.2.2</a>.  <a href="#name-dpop-grant-extension-type" class="internal xref"><code>dpop</code> grant extension type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.3">
+                    <p id="section-toc.1-1.8.2.2.2.3.1"><a href="#section-8.2.3" class="auto internal xref">8.2.3</a>.  <a href="#name-wpt-grant-extension-type" class="internal xref"><code>wpt</code> grant extension type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.4">
+                    <p id="section-toc.1-1.8.2.2.2.4.1"><a href="#section-8.2.4" class="auto internal xref">8.2.4</a>.  <a href="#name-rar-grant-extension-type" class="internal xref"><code>rar</code> grant extension type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.5">
+                    <p id="section-toc.1-1.8.2.2.2.5.1"><a href="#section-8.2.5" class="auto internal xref">8.2.5</a>.  <a href="#name-par-grant-extension-type" class="internal xref"><code>par</code> grant extension type</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.6">
+                    <p id="section-toc.1-1.8.2.2.2.6.1"><a href="#section-8.2.6" class="auto internal xref">8.2.6</a>.  <a href="#name-jar-grant-extension-type" class="internal xref"><code>jar</code> grant extension type</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3">
+                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="auto internal xref">8.3</a>.  <a href="#name-oauth-token-endpoint-authen" class="internal xref">OAuth Token Endpoint Authentication Methods Registration</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3.2.1">
+                    <p id="section-toc.1-1.8.2.3.2.1.1"><a href="#section-8.3.1" class="auto internal xref">8.3.1</a>.  <a href="#name-jwt-bearer-token-endpoint-a" class="internal xref"><code>jwt-bearer</code> token endpoint authentication method</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3.2.2">
+                    <p id="section-toc.1-1.8.2.3.2.2.1"><a href="#section-8.3.2" class="auto internal xref">8.3.2</a>.  <a href="#name-jwt-svid-token-endpoint-aut" class="internal xref"><code>jwt-svid</code> token endpoint authentication method</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3.2.3">
+                    <p id="section-toc.1-1.8.2.3.2.3.1"><a href="#section-8.3.3" class="auto internal xref">8.3.3</a>.  <a href="#name-wit-token-endpoint-authenti" class="internal xref"><code>wit</code> token endpoint authentication method</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3.2.4">
+                    <p id="section-toc.1-1.8.2.3.2.4.1"><a href="#section-8.3.4" class="auto internal xref">8.3.4</a>.  <a href="#name-txn_token-token-endpoint-au" class="internal xref"><code>txn_token</code> token endpoint authentication method</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4">
+                <p id="section-toc.1-1.8.2.4.1"><a href="#section-8.4" class="auto internal xref">8.4</a>.  <a href="#name-claims-registration" class="internal xref">Claims Registration</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4.2.1">
+                    <p id="section-toc.1-1.8.2.4.2.1.1"><a href="#section-8.4.1" class="auto internal xref">8.4.1</a>.  <a href="#name-gty-claim-definition" class="internal xref"><code>gty</code> claim definition</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4.2.2">
+                    <p id="section-toc.1-1.8.2.4.2.2.1"><a href="#section-8.4.2" class="auto internal xref">8.4.2</a>.  <a href="#name-cxt-claim-definition" class="internal xref"><code>cxt</code> claim definition</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4.2.3">
+                    <p id="section-toc.1-1.8.2.4.2.3.1"><a href="#section-8.4.3" class="auto internal xref">8.4.3</a>.  <a href="#name-ccr-claim-definition" class="internal xref"><code>ccr</code> claim definition</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4.2.4">
+                    <p id="section-toc.1-1.8.2.4.2.4.1"><a href="#section-8.4.4" class="auto internal xref">8.4.4</a>.  <a href="#name-cmr-claim-definition" class="internal xref"><code>cmr</code> claim definition</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">Resource providers need information about the subject, the action, the resource, and the context involved in the request in order to be able to determine properly if a resource can be disclosed. This decision may also involve the help of a Policy Decision Point (PDP).<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">When accessed with a JWT profiled OAuth2 Access Token <span>[<a href="#RFC9068" class="cite xref">RFC9068</a>]</span> presented as a bearer token <span>[<a href="#RFC6750" class="cite xref">RFC6750</a>]</span>, a resource provider receives mainly information about the subject in the form of:
+- The <code>sub</code> claim,
+- Any user profile claim set by the Authorization Server if applicable,
+- Any Authentication Information claims like the user class of authentication (<code>acr</code>claim) or user method of authentication (claim <code>amr</code> <span>[<a href="#RFC8176" class="cite xref">RFC8176</a>]</span>)
+- Any Authorization Information if applicable<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">The resource provider has very little information about the client, mainly in the form of the <code>client_id</code> <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> claim. It falls short in several important circumstances, for instance, in <span>[<a href="#FAPI2.0-Security-Profiles" class="cite xref">FAPI2.0-Security-Profiles</a>]</span> or <span>[<a href="#hl7.fhir.uv.smart-app-launch" class="cite xref">hl7.fhir.uv.smart-app-launch</a>]</span> regulated APIs when they require peculiar client authentication mechanisms to be enforced or transaction specific details to be present in the token.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This document defines 4 new claims allowing to describe with more precise information the client and metadata on how it interacted with the authorization server during the issuance of the access token. It respects description of how to encode access tokens in JWT format.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">The process by which the client interacts with the authorization server is out of scope.<a href="#section-1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="conventions-definitions">
+<section id="section-2">
+      <h2 id="name-conventions-and-definitions">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      </h2>
+<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2-2">
+        <dt id="section-2-2.1">JWT access token:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.2">
+          <p id="section-2-2.2.1">An OAuth 2.0 access token encoded in JWT format and complying to the requirements described in <span>[<a href="#RFC9068" class="cite xref">RFC9068</a>]</span>.<a href="#section-2-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-2-3">This specification uses the terms "access token", "authorization server", "authorization endpoint", "authorization request", "client", "protected resource", and "resource server" defined by "The OAuth 2.0 Authorization Framework" <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="client-ext-data-structure">
+<section id="section-3">
+      <h2 id="name-jwt-access-token-client-ext">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-jwt-access-token-client-ext" class="section-name selfRef">JWT Access Token Client Extensions Data Structure</a>
+      </h2>
+<p id="section-3-1">The following claims extend the <span>[<a href="#RFC9068" class="cite xref">RFC9068</a>]</span> access token payload data structure:<a href="#section-3-1" class="pilcrow">¶</a></p>
+<div id="client-flow-info">
+<section id="section-3.1">
+        <h3 id="name-client-flow-information-cla">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-client-flow-information-cla" class="section-name selfRef">Client Flow Information Claims</a>
+        </h3>
+<p id="section-3.1-1">The claims listed in this section <span class="bcp14">MUST</span> be issued and reflect grant type and extensions used with authorization server as part of the authorization request from the client. Their values are dynamic across all access tokens that derive from a given authorization response to reflect the elements used in the process that lead to their issuance.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-3.1-2">
+          <dt id="section-3.1-2.1">
+<code>gty</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-2.2">
+            <p id="section-3.1-2.2.1"><span class="bcp14">REQUIRED</span> - defines the OAuth2 authorization grant type the client used for the issuance of the access token. String that is an identifier for an OAuth2 Grant type. Values used in the <code>gty</code> Claim <span class="bcp14">MUST</span> be from those registered in the IANA Grant Type Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2. of <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span>, section 2.1 of <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span>, and section 4 of <span>[<a href="#OpenID.CIBA" class="cite xref">OpenID.CIBA</a>]</span>.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-2.3">
+<code>cxt</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-2.4">
+            <p id="section-3.1-2.4.1"><span class="bcp14">REQUIRED</span> - defines the list of extensions the client used in conjunction with the OAuth2 authorization grant type used for the issuance of the access token. For example but not limited to: Proof Key for Code Exchange by OAuth Public Clients (or PKCE) as defined in <span>[<a href="#RFC7636" class="cite xref">RFC7636</a>]</span>, Demonstrating Proof of Possession (or DPoP) as defined in <span>[<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>. JSON array of strings that are identifiers for extensions used. Values used in the <code>cxt</code> Claim <span class="bcp14">MUST</span> be from those registered in the IANA Client Context Reference Values registry TODO established by this RFC and referencing, without being limited to, values established through section 2 of <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>, and Section 5.1 of <span>[<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-3.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="client-authn-info">
+<section id="section-3.2">
+        <h3 id="name-client-authentication-infor">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-client-authentication-infor" class="section-name selfRef">Client Authentication Information Claims</a>
+        </h3>
+<p id="section-3.2-1">The claims listed in this section <span class="bcp14">MAY</span> be issued and reflect the types and strength of client authentication in the access token that the authentication server enforced prior to returning the authorization response to the client. Their values are fixed and remain the same across all access tokens that derive from a given authorization response, whether the access token was obtained directly in the response (e.g., via the implicit flow) or after obtaining a fresh access token using a refresh token. Those values may change if an access token is exchanged for another via an <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> procedure in order to reflect the specificities of this request.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-3.2-2">
+          <dt id="section-3.2-2.1">
+<code>ccr</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.2-2.2">
+            <p id="section-3.2-2.2.1"><span class="bcp14">OPTIONAL</span> - defines the authentication context class reference the client satisfied when authenticating to the authorization server. An absolute URI or registered name from future RFC <span class="bcp14">SHOULD</span> be used as the <code>ccr</code> value; registered names <span class="bcp14">MUST NOT</span> be used with a different meaning than that which is registered. Parties using this claim will need to agree upon the meanings of the values used, which may be context specific.<a href="#section-3.2-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.2-2.3">
+<code>cmr</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.2-2.4">
+            <p id="section-3.2-2.4.1"><span class="bcp14">OPTIONAL</span> - defines the authentication methods the client used when authenticating to the authorization server. String that is an identifier for an authentication method used in the authentication of the client. For instance, a value might indicate the usage of private JWT as defined in <span>[<a href="#RFC7521" class="cite xref">RFC7521</a>]</span> and <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span> or HTTP message signature as defined in <span>[<a href="#RFC9421" class="cite xref">RFC9421</a>]</span> . The <code>cmr</code> value is a case-sensitive string. Values used in the <code>cmr</code> Claim <span class="bcp14">SHOULD</span> be from those registered in the IANA OAuth Token Endpoint Authentication Methods Values registry <span>[<a href="#IANA.oauth-parameters_token-endpoint-auth-method" class="cite xref">IANA.oauth-parameters_token-endpoint-auth-method</a>]</span> defined by <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span>; parties using this claim will need to agree upon the meanings of any unregistered values used, which may be context specific.<a href="#section-3.2-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="as-metadata">
+<section id="section-4">
+      <h2 id="name-authorization-server-metada">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-authorization-server-metada" class="section-name selfRef">Authorization Server Metadata</a>
+      </h2>
+<p id="section-4-1">The following authorization server metadata parameters are introduced as an extension of <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>, in order to describe the server's capabilities.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-4-2">
+        <dt id="section-4-2.1">
+<code>support_client_extentison_claims</code>:</dt>
+        <dd style="margin-left: 1.5em" id="section-4-2.2">
+          <p id="section-4-2.2.1">Boolean parameter indicating to clients and resource servers whether the authorization server will return the extension claims described in this document.<a href="#section-4-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-4-3">Note: that the non presence of <code>support_client_extentison_claims</code> is sufficient for the client to determine that the server is not capable and therefore will not return the extension claims described in this RFC.<a href="#section-4-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="request-jwt-client-ext">
+<section id="section-5">
+      <h2 id="name-requesting-a-jwt-access-tok">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-requesting-a-jwt-access-tok" class="section-name selfRef">Requesting a JWT Access Token with Client Extensions</a>
+      </h2>
+<p id="section-5-1">This specification does not change how clients interacts with authorization servers.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">An authorization server supporting this specification <span class="bcp14">MUST</span> issue a JWT access token with client extensions claims described in this RFC in response to any authorization grant defined by <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> and subsequent extensions meant to result in an access token and as along as the authorization server support this capability.<a href="#section-5-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="validate-jwt-client-ext">
+<section id="section-6">
+      <h2 id="name-validating-jwt-access-token">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-validating-jwt-access-token" class="section-name selfRef">Validating JWT Access Tokens with Client Extensions</a>
+      </h2>
+<p id="section-6-1">This specification follows the requirements of the section 4 of <span>[<a href="#RFC9068" class="cite xref">RFC9068</a>]</span>.<a href="#section-6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security">
+<section id="section-7">
+      <h2 id="name-security-considerations">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<div id="validation-of-token">
+<section id="section-7.1">
+        <h3 id="name-validation-of-token">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-validation-of-token" class="section-name selfRef">Validation Of Token</a>
+        </h3>
+<p id="section-7.1-1">The JWT access token data format described here is the same as JWT access token defined by <span>[<a href="#RFC9068" class="cite xref">RFC9068</a>]</span>.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="processing-of-claims-defined-by-this-document">
+<section id="section-7.2">
+        <h3 id="name-processing-of-claims-define">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-processing-of-claims-define" class="section-name selfRef">Processing Of Claims Defined By This Document</a>
+        </h3>
+<p id="section-7.2-1">Any processor, client or resource server, <span class="bcp14">MUST</span> only process claims described in this document that it understands.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">If a processor does not understand a claim described in this document or its value, it <span class="bcp14">SHOULD</span> ignore it.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-best-practice">
+<section id="section-7.3">
+        <h3 id="name-security-best-practice">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-security-best-practice" class="section-name selfRef">Security Best Practice</a>
+        </h3>
+<p id="section-7.3-1">The security current best practices described in <span>[<a href="#RFC9700" class="cite xref">RFC9700</a>]</span> <span class="bcp14">MUST</span> be applied.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="iana">
+<section id="section-8">
+      <h2 id="name-iana-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-8-1">The following registration procedure is used for the registry established by this specification.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">Values are registered on a Specification Required [RFC8126] basis after a two-week review period on the oauth-ext-review@ietf.org mailing list, on the advice of one or more Designated Experts. However, to allow for the allocation of values prior to publication of the final version of a specification, the Designated Experts may approve registration once they are satisfied that the specification will be completed and published. However, if the specification is not completed and published in a timely manner, as determined by the Designated Experts, the Designated Experts may request that IANA withdraw the registration.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">Registration requests sent to the mailing list for review should use an appropriate subject (e.g., "Request to register JWT profiled OAuth2 Access Token client extensions: example").<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-4">Within the review period, the Designated Experts will either approve or deny the registration request, communicating this decision to the review list and IANA. Denials should include an explanation and, if applicable, suggestions as to how to make the request successful. The IANA escalation process is followed when the Designated Experts are not responsive within 14 days.<a href="#section-8-4" class="pilcrow">¶</a></p>
+<p id="section-8-5">Criteria that should be applied by the Designated Experts includes determining whether the proposed registration duplicates existing functionality, determining whether it is likely to be of general applicability or whether it is useful only for a single application, and whether the registration makes sense.<a href="#section-8-5" class="pilcrow">¶</a></p>
+<p id="section-8-6">IANA must only accept registry updates from the Designated Experts and should direct all requests for registration to the review mailing list.<a href="#section-8-6" class="pilcrow">¶</a></p>
+<p id="section-8-7">It is suggested that multiple Designated Experts be appointed who are able to represent the perspectives of different applications using this specification, in order to enable broadly-informed review of registration decisions. In cases where a registration decision could be perceived as creating a conflict of interest for a particular Expert, that Expert should defer to the judgment of the other Experts.<a href="#section-8-7" class="pilcrow">¶</a></p>
+<p id="section-8-8">The reason for the use of the mailing list is to enable public review of registration requests, enabling both Designated Experts and other interested parties to provide feedback on proposed registrations. The reason to allow the Designated Experts to allocate values prior to publication as a final specification is to enable giving authors of specifications proposing registrations the benefit of review by the Designated Experts before the specification is completely done, so that if problems are identified, the authors can iterate and fix them before publication of the final specification.<a href="#section-8-8" class="pilcrow">¶</a></p>
+<div id="iana-grant-type-reg">
+<section id="section-8.1">
+        <h3 id="name-oauth-grant-type-registrati">
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-oauth-grant-type-registrati" class="section-name selfRef">OAuth Grant Type Registration</a>
+        </h3>
+<p id="section-8.1-1">This specification registers the following grant type in the <span>[<a href="#IANA.oauth-parameters" class="cite xref">IANA.oauth-parameters</a>]</span> OAuth Grant Type registry.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<div id="iana-grant-type-reg-ac">
+<section id="section-8.1.1">
+          <h4 id="name-authorization_code-grant-ty">
+<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-authorization_code-grant-ty" class="section-name selfRef"><code>authorization_code</code> grant type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.1.1-1">
+            <dt id="section-8.1.1-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.1-1.2">
+              <p id="section-8.1.1-1.2.1"><code>authorization_code</code><a href="#section-8.1.1-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.1-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.1-1.4">
+              <p id="section-8.1.1-1.4.1">IETF<a href="#section-8.1.1-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.1-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.1-1.6">
+              <p id="section-8.1.1-1.6.1">section 2. of <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span><a href="#section-8.1.1-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-type-implicit">
+<section id="section-8.1.2">
+          <h4 id="name-implicit-grant-type">
+<a href="#section-8.1.2" class="section-number selfRef">8.1.2. </a><a href="#name-implicit-grant-type" class="section-name selfRef"><code>implicit</code> grant type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.1.2-1">
+            <dt id="section-8.1.2-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.2-1.2">
+              <p id="section-8.1.2-1.2.1"><code>implicit</code><a href="#section-8.1.2-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.2-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.2-1.4">
+              <p id="section-8.1.2-1.4.1">IETF<a href="#section-8.1.2-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.2-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.2-1.6">
+              <p id="section-8.1.2-1.6.1">section 2. of <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span><a href="#section-8.1.2-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-type-reg-pwd">
+<section id="section-8.1.3">
+          <h4 id="name-password-grant-type">
+<a href="#section-8.1.3" class="section-number selfRef">8.1.3. </a><a href="#name-password-grant-type" class="section-name selfRef"><code>password</code> grant type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.1.3-1">
+            <dt id="section-8.1.3-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.3-1.2">
+              <p id="section-8.1.3-1.2.1"><code>password</code><a href="#section-8.1.3-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.3-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.3-1.4">
+              <p id="section-8.1.3-1.4.1">IETF<a href="#section-8.1.3-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.3-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.3-1.6">
+              <p id="section-8.1.3-1.6.1">section 2. of <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span><a href="#section-8.1.3-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-type-reg-cc">
+<section id="section-8.1.4">
+          <h4 id="name-client_credentials-grant-ty">
+<a href="#section-8.1.4" class="section-number selfRef">8.1.4. </a><a href="#name-client_credentials-grant-ty" class="section-name selfRef"><code>client_credentials</code> grant type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.1.4-1">
+            <dt id="section-8.1.4-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.4-1.2">
+              <p id="section-8.1.4-1.2.1"><code>client_credentials</code><a href="#section-8.1.4-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.4-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.4-1.4">
+              <p id="section-8.1.4-1.4.1">IETF<a href="#section-8.1.4-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.4-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.4-1.6">
+              <p id="section-8.1.4-1.6.1">section 2. of <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span><a href="#section-8.1.4-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-type-rt">
+<section id="section-8.1.5">
+          <h4 id="name-refresh_token-grant-type">
+<a href="#section-8.1.5" class="section-number selfRef">8.1.5. </a><a href="#name-refresh_token-grant-type" class="section-name selfRef"><code>refresh_token</code> grant type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.1.5-1">
+            <dt id="section-8.1.5-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.5-1.2">
+              <p id="section-8.1.5-1.2.1"><code>refresh_token</code><a href="#section-8.1.5-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.5-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.5-1.4">
+              <p id="section-8.1.5-1.4.1">IETF<a href="#section-8.1.5-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.5-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.5-1.6">
+              <p id="section-8.1.5-1.6.1">section 2. of <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span><a href="#section-8.1.5-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-type-jwt">
+<section id="section-8.1.6">
+          <h4 id="name-jwt-bearer-grant-type">
+<a href="#section-8.1.6" class="section-number selfRef">8.1.6. </a><a href="#name-jwt-bearer-grant-type" class="section-name selfRef"><code>jwt-bearer</code> grant type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.1.6-1">
+            <dt id="section-8.1.6-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.6-1.2">
+              <p id="section-8.1.6-1.2.1"><code>urn:ietf:params:oauth:grant-type:jwt-bearer</code><a href="#section-8.1.6-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.6-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.6-1.4">
+              <p id="section-8.1.6-1.4.1">IETF<a href="#section-8.1.6-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.6-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.6-1.6">
+              <p id="section-8.1.6-1.6.1">section 2. of <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span> and section 6 of <span>[<a href="#I-D.parecki-oauth-identity-assertion-authz-grant" class="cite xref">I-D.parecki-oauth-identity-assertion-authz-grant</a>]</span><a href="#section-8.1.6-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-type-reg-saml2">
+<section id="section-8.1.7">
+          <h4 id="name-saml2-bearer-grant-type">
+<a href="#section-8.1.7" class="section-number selfRef">8.1.7. </a><a href="#name-saml2-bearer-grant-type" class="section-name selfRef"><code>saml2-bearer</code> grant type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.1.7-1">
+            <dt id="section-8.1.7-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.7-1.2">
+              <p id="section-8.1.7-1.2.1"><code>urn:ietf:params:oauth:grant-type:saml2-bearer</code><a href="#section-8.1.7-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.7-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.7-1.4">
+              <p id="section-8.1.7-1.4.1">IETF<a href="#section-8.1.7-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.7-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.7-1.6">
+              <p id="section-8.1.7-1.6.1">section 2. of <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span><a href="#section-8.1.7-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-type-reg-te">
+<section id="section-8.1.8">
+          <h4 id="name-token-exchange-grant-type">
+<a href="#section-8.1.8" class="section-number selfRef">8.1.8. </a><a href="#name-token-exchange-grant-type" class="section-name selfRef"><code>token-exchange</code> grant type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.1.8-1">
+            <dt id="section-8.1.8-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.8-1.2">
+              <p id="section-8.1.8-1.2.1"><code>urn:ietf:params:oauth:grant-type:token-exchange</code><a href="#section-8.1.8-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.8-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.8-1.4">
+              <p id="section-8.1.8-1.4.1">IETF<a href="#section-8.1.8-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.8-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.8-1.6">
+              <p id="section-8.1.8-1.6.1">section 2.1. of <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span><a href="#section-8.1.8-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-type-reg-dc">
+<section id="section-8.1.9">
+          <h4 id="name-device_code-grant-type">
+<a href="#section-8.1.9" class="section-number selfRef">8.1.9. </a><a href="#name-device_code-grant-type" class="section-name selfRef"><code>device_code</code> grant type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.1.9-1">
+            <dt id="section-8.1.9-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.9-1.2">
+              <p id="section-8.1.9-1.2.1"><code>urn:ietf:params:oauth:grant-type:device_code</code><a href="#section-8.1.9-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.9-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.9-1.4">
+              <p id="section-8.1.9-1.4.1">IETF<a href="#section-8.1.9-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.9-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.9-1.6">
+              <p id="section-8.1.9-1.6.1">section 3.4. of <span>[<a href="#RFC8628" class="cite xref">RFC8628</a>]</span><a href="#section-8.1.9-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-type-reg-ciba">
+<section id="section-8.1.10">
+          <h4 id="name-ciba-grant-type">
+<a href="#section-8.1.10" class="section-number selfRef">8.1.10. </a><a href="#name-ciba-grant-type" class="section-name selfRef"><code>ciba</code> grant type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.1.10-1">
+            <dt id="section-8.1.10-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.10-1.2">
+              <p id="section-8.1.10-1.2.1"><code>urn:openid:params:grant-type:ciba</code><a href="#section-8.1.10-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.10-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.10-1.4">
+              <p id="section-8.1.10-1.4.1">IETF<a href="#section-8.1.10-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.1.10-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.1.10-1.6">
+              <p id="section-8.1.10-1.6.1">section 4. of <span>[<a href="#OpenID.CIBA" class="cite xref">OpenID.CIBA</a>]</span><a href="#section-8.1.10-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="iana-grant-ext-reg">
+<section id="section-8.2">
+        <h3 id="name-oauth-grant-extension-type-">
+<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-oauth-grant-extension-type-" class="section-name selfRef">OAuth Grant Extension Type Registration</a>
+        </h3>
+<p id="section-8.2-1">This specification registers the following grant extension type in the <span>[<a href="#IANA.oauth-parameters" class="cite xref">IANA.oauth-parameters</a>]</span> OAuth Grant Extension Type registry.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<div id="iana-grant-ext-reg-pkce">
+<section id="section-8.2.1">
+          <h4 id="name-pkce-grant-extension-type">
+<a href="#section-8.2.1" class="section-number selfRef">8.2.1. </a><a href="#name-pkce-grant-extension-type" class="section-name selfRef"><code>pkce</code> grant extension type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.2.1-1">
+            <dt id="section-8.2.1-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.1-1.2">
+              <p id="section-8.2.1-1.2.1"><code>pkce</code><a href="#section-8.2.1-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.1-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.1-1.4">
+              <p id="section-8.2.1-1.4.1">IETF<a href="#section-8.2.1-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.1-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.1-1.6">
+              <p id="section-8.2.1-1.6.1">This RFC as a reference to <span>[<a href="#RFC7636" class="cite xref">RFC7636</a>]</span><a href="#section-8.2.1-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-ext-reg-dpop">
+<section id="section-8.2.2">
+          <h4 id="name-dpop-grant-extension-type">
+<a href="#section-8.2.2" class="section-number selfRef">8.2.2. </a><a href="#name-dpop-grant-extension-type" class="section-name selfRef"><code>dpop</code> grant extension type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.2.2-1">
+            <dt id="section-8.2.2-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.2-1.2">
+              <p id="section-8.2.2-1.2.1"><code>dpop</code><a href="#section-8.2.2-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.2-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.2-1.4">
+              <p id="section-8.2.2-1.4.1">IETF<a href="#section-8.2.2-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.2-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.2-1.6">
+              <p id="section-8.2.2-1.6.1">This RFC as a reference to <span>[<a href="#RFC9449" class="cite xref">RFC9449</a>]</span><a href="#section-8.2.2-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-ext-reg-wpt">
+<section id="section-8.2.3">
+          <h4 id="name-wpt-grant-extension-type">
+<a href="#section-8.2.3" class="section-number selfRef">8.2.3. </a><a href="#name-wpt-grant-extension-type" class="section-name selfRef"><code>wpt</code> grant extension type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.2.3-1">
+            <dt id="section-8.2.3-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.3-1.2">
+              <p id="section-8.2.3-1.2.1"><code>wpt</code><a href="#section-8.2.3-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.3-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.3-1.4">
+              <p id="section-8.2.3-1.4.1">IETF<a href="#section-8.2.3-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.3-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.3-1.6">
+              <p id="section-8.2.3-1.6.1">This RFC as a reference to section 4.2 of <span>[<a href="#I-D.ietf-wimse-s2s-protocol" class="cite xref">I-D.ietf-wimse-s2s-protocol</a>]</span><a href="#section-8.2.3-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-ext-rar">
+<section id="section-8.2.4">
+          <h4 id="name-rar-grant-extension-type">
+<a href="#section-8.2.4" class="section-number selfRef">8.2.4. </a><a href="#name-rar-grant-extension-type" class="section-name selfRef"><code>rar</code> grant extension type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.2.4-1">
+            <dt id="section-8.2.4-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.4-1.2">
+              <p id="section-8.2.4-1.2.1"><code>rar</code><a href="#section-8.2.4-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.4-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.4-1.4">
+              <p id="section-8.2.4-1.4.1">IETF<a href="#section-8.2.4-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.4-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.4-1.6">
+              <p id="section-8.2.4-1.6.1">This RFC as a reference to <span>[<a href="#RFC9396" class="cite xref">RFC9396</a>]</span><a href="#section-8.2.4-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-ext-reg-par">
+<section id="section-8.2.5">
+          <h4 id="name-par-grant-extension-type">
+<a href="#section-8.2.5" class="section-number selfRef">8.2.5. </a><a href="#name-par-grant-extension-type" class="section-name selfRef"><code>par</code> grant extension type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.2.5-1">
+            <dt id="section-8.2.5-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.5-1.2">
+              <p id="section-8.2.5-1.2.1"><code>par</code><a href="#section-8.2.5-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.5-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.5-1.4">
+              <p id="section-8.2.5-1.4.1">IETF<a href="#section-8.2.5-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.5-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.5-1.6">
+              <p id="section-8.2.5-1.6.1">This RFC as a reference to <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span><a href="#section-8.2.5-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-grant-ext-reg-jar">
+<section id="section-8.2.6">
+          <h4 id="name-jar-grant-extension-type">
+<a href="#section-8.2.6" class="section-number selfRef">8.2.6. </a><a href="#name-jar-grant-extension-type" class="section-name selfRef"><code>jar</code> grant extension type</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.2.6-1">
+            <dt id="section-8.2.6-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.6-1.2">
+              <p id="section-8.2.6-1.2.1"><code>jar</code><a href="#section-8.2.6-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.6-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.6-1.4">
+              <p id="section-8.2.6-1.4.1">IETF<a href="#section-8.2.6-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.2.6-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.2.6-1.6">
+              <p id="section-8.2.6-1.6.1">This RFC as a reference to <span>[<a href="#RFC9101" class="cite xref">RFC9101</a>]</span><a href="#section-8.2.6-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="iana-token-authn-reg">
+<section id="section-8.3">
+        <h3 id="name-oauth-token-endpoint-authen">
+<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-oauth-token-endpoint-authen" class="section-name selfRef">OAuth Token Endpoint Authentication Methods Registration</a>
+        </h3>
+<p id="section-8.3-1">This specification registers additional token endpoint authentication methods in the <span>[<a href="#IANA.oauth-parameters" class="cite xref">IANA.oauth-parameters</a>]</span> OAuth Token Endpoint Authentication Methods registry.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<div id="iana-token-authn-reg-jwt">
+<section id="section-8.3.1">
+          <h4 id="name-jwt-bearer-token-endpoint-a">
+<a href="#section-8.3.1" class="section-number selfRef">8.3.1. </a><a href="#name-jwt-bearer-token-endpoint-a" class="section-name selfRef"><code>jwt-bearer</code> token endpoint authentication method</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.3.1-1">
+            <dt id="section-8.3.1-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.1-1.2">
+              <p id="section-8.3.1-1.2.1"><code>jwt-bearer</code><a href="#section-8.3.1-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.3.1-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.1-1.4">
+              <p id="section-8.3.1-1.4.1">IETF<a href="#section-8.3.1-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.3.1-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.1-1.6">
+              <p id="section-8.3.1-1.6.1">This RFC as a reference to <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span> and <span>[<a href="#I-D.parecki-oauth-identity-assertion-authz-grant" class="cite xref">I-D.parecki-oauth-identity-assertion-authz-grant</a>]</span><a href="#section-8.3.1-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-token-authn-reg-jwt-svid">
+<section id="section-8.3.2">
+          <h4 id="name-jwt-svid-token-endpoint-aut">
+<a href="#section-8.3.2" class="section-number selfRef">8.3.2. </a><a href="#name-jwt-svid-token-endpoint-aut" class="section-name selfRef"><code>jwt-svid</code> token endpoint authentication method</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.3.2-1">
+            <dt id="section-8.3.2-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.2-1.2">
+              <p id="section-8.3.2-1.2.1"><code>jwt-svid</code><a href="#section-8.3.2-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.3.2-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.2-1.4">
+              <p id="section-8.3.2-1.4.1">IETF<a href="#section-8.3.2-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.3.2-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.2-1.6">
+              <p id="section-8.3.2-1.6.1">This RFC as a reference to <a href="https://github.com/spiffe/spiffe/blob/main/standards/JWT-SVID.md">SPIFFE JWT-SVID</a><a href="#section-8.3.2-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-token-authn-reg-wit">
+<section id="section-8.3.3">
+          <h4 id="name-wit-token-endpoint-authenti">
+<a href="#section-8.3.3" class="section-number selfRef">8.3.3. </a><a href="#name-wit-token-endpoint-authenti" class="section-name selfRef"><code>wit</code> token endpoint authentication method</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.3.3-1">
+            <dt id="section-8.3.3-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.3-1.2">
+              <p id="section-8.3.3-1.2.1"><code>wit</code><a href="#section-8.3.3-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.3.3-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.3-1.4">
+              <p id="section-8.3.3-1.4.1">IETF<a href="#section-8.3.3-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.3.3-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.3-1.6">
+              <p id="section-8.3.3-1.6.1">This RFC as a reference to <span>[<a href="#I-D.ietf-wimse-s2s-protocol" class="cite xref">I-D.ietf-wimse-s2s-protocol</a>]</span><a href="#section-8.3.3-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-token-authn-reg-txntoken">
+<section id="section-8.3.4">
+          <h4 id="name-txn_token-token-endpoint-au">
+<a href="#section-8.3.4" class="section-number selfRef">8.3.4. </a><a href="#name-txn_token-token-endpoint-au" class="section-name selfRef"><code>txn_token</code> token endpoint authentication method</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.3.4-1">
+            <dt id="section-8.3.4-1.1">Type name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.4-1.2">
+              <p id="section-8.3.4-1.2.1"><code>txn_token</code><a href="#section-8.3.4-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.3.4-1.3">Change controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.4-1.4">
+              <p id="section-8.3.4-1.4.1">IETF<a href="#section-8.3.4-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.3.4-1.5">Specification document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.3.4-1.6">
+              <p id="section-8.3.4-1.6.1">This RFC as a reference to <span>[<a href="#I-D.ietf-oauth-transaction-tokens" class="cite xref">I-D.ietf-oauth-transaction-tokens</a>]</span><a href="#section-8.3.4-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="iana-claims-reg">
+<section id="section-8.4">
+        <h3 id="name-claims-registration">
+<a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-claims-registration" class="section-name selfRef">Claims Registration</a>
+        </h3>
+<p id="section-8.4-1">Section X.Y of this specification refers to the attributes <code>gty</code>, <code>cxt</code>, <code>ccr</code>, and <code>cmr</code> to express client metadata JWT access tokens. This section registers those attributes as claims in the <span>[<a href="#IANA.jwt" class="cite xref">IANA.jwt</a>]</span> registry introduced in <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
+<div id="iana-claims-reg-gty">
+<section id="section-8.4.1">
+          <h4 id="name-gty-claim-definition">
+<a href="#section-8.4.1" class="section-number selfRef">8.4.1. </a><a href="#name-gty-claim-definition" class="section-name selfRef"><code>gty</code> claim definition</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.4.1-1">
+            <dt id="section-8.4.1-1.1">Claim Name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.1-1.2">
+              <p id="section-8.4.1-1.2.1"><code>gty</code><a href="#section-8.4.1-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.1-1.3">Claim Description:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.1-1.4">
+              <p id="section-8.4.1-1.4.1">OAuth2 Grant Type used<a href="#section-8.4.1-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.1-1.5">Change Controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.1-1.6">
+              <p id="section-8.4.1-1.6.1">IETF<a href="#section-8.4.1-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+<p id="section-8.4.1-2">Specification Document(s):
+      Section X.Y of this document<a href="#section-8.4.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-claims-cxt">
+<section id="section-8.4.2">
+          <h4 id="name-cxt-claim-definition">
+<a href="#section-8.4.2" class="section-number selfRef">8.4.2. </a><a href="#name-cxt-claim-definition" class="section-name selfRef"><code>cxt</code> claim definition</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.4.2-1">
+            <dt id="section-8.4.2-1.1">Claim Name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.2-1.2">
+              <p id="section-8.4.2-1.2.1"><code>cxt</code><a href="#section-8.4.2-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.2-1.3">Claim Description:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.2-1.4">
+              <p id="section-8.4.2-1.4.1">Client Extensions used on top of the OAuth2 Grant Type<a href="#section-8.4.2-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.2-1.5">Change Controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.2-1.6">
+              <p id="section-8.4.2-1.6.1">IETF<a href="#section-8.4.2-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.2-1.7">Specification Document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.2-1.8">
+              <p id="section-8.4.2-1.8.1">Section X.Y of this document<a href="#section-8.4.2-1.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-claims-ccr">
+<section id="section-8.4.3">
+          <h4 id="name-ccr-claim-definition">
+<a href="#section-8.4.3" class="section-number selfRef">8.4.3. </a><a href="#name-ccr-claim-definition" class="section-name selfRef"><code>ccr</code> claim definition</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.4.3-1">
+            <dt id="section-8.4.3-1.1">Claim Name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.3-1.2">
+              <p id="section-8.4.3-1.2.1"><code>ccr</code><a href="#section-8.4.3-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.3-1.3">Claim Description:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.3-1.4">
+              <p id="section-8.4.3-1.4.1">Client Authentication Class Reference<a href="#section-8.4.3-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.3-1.5">Change Controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.3-1.6">
+              <p id="section-8.4.3-1.6.1">IETF<a href="#section-8.4.3-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.3-1.7">Specification Document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.3-1.8">
+              <p id="section-8.4.3-1.8.1">Section X.Y of this document<a href="#section-8.4.3-1.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-claims-cmr">
+<section id="section-8.4.4">
+          <h4 id="name-cmr-claim-definition">
+<a href="#section-8.4.4" class="section-number selfRef">8.4.4. </a><a href="#name-cmr-claim-definition" class="section-name selfRef"><code>cmr</code> claim definition</a>
+          </h4>
+<span class="break"></span><dl class="dlParallel" id="section-8.4.4-1">
+            <dt id="section-8.4.4-1.1">Claim Name:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.4-1.2">
+              <p id="section-8.4.4-1.2.1"><code>cmr</code><a href="#section-8.4.4-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.4-1.3">Claim Description:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.4-1.4">
+              <p id="section-8.4.4-1.4.1">Client Authentication Methods Reference<a href="#section-8.4.4-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.4-1.5">Change Controller:</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.4-1.6">
+              <p id="section-8.4.4-1.6.1">IETF<a href="#section-8.4.4-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-8.4.4-1.7">Specification Document(s):</dt>
+            <dd style="margin-left: 1.5em" id="section-8.4.4-1.8">
+              <p id="section-8.4.4-1.8.1">Section X.Y of this document<a href="#section-8.4.4-1.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-9">
+      <h2 id="name-references">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-9.1">
+        <h3 id="name-normative-references">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="IANA.oauth-parameters">[IANA.oauth-parameters]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Parameters"</span>, <span>&lt;<a href="https://www.iana.org/assignments/oauth-parameters">https://www.iana.org/assignments/oauth-parameters</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="OpenID.CIBA">[OpenID.CIBA]</dt>
+        <dd>
+<span class="refAuthor">Rodriguez, G. F., Ed.</span>, <span class="refAuthor">Walter, F., Ed.</span>, <span class="refAuthor">Nennker, A., Ed.</span>, <span class="refAuthor">Tonge, D., Ed.</span>, and <span class="refAuthor">B. Campbell, Ed.</span>, <span class="refTitle">"OpenID Connect Client-Initiated Backchannel Authentication Flow - Core 1.0"</span>, <time datetime="2021-09" class="refDate">September 2021</time>, <span>&lt;<a href="https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html">https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6749">[RFC6749]</dt>
+        <dd>
+<span class="refAuthor">Hardt, D., Ed.</span>, <span class="refTitle">"The OAuth 2.0 Authorization Framework"</span>, <span class="seriesInfo">RFC 6749</span>, <span class="seriesInfo">DOI 10.17487/RFC6749</span>, <time datetime="2012-10" class="refDate">October 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6749">https://www.rfc-editor.org/rfc/rfc6749</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7519">[RFC7519]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7519">https://www.rfc-editor.org/rfc/rfc7519</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7591">[RFC7591]</dt>
+        <dd>
+<span class="refAuthor">Richer, J., Ed.</span>, <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Machulak, M.</span>, and <span class="refAuthor">P. Hunt</span>, <span class="refTitle">"OAuth 2.0 Dynamic Client Registration Protocol"</span>, <span class="seriesInfo">RFC 7591</span>, <span class="seriesInfo">DOI 10.17487/RFC7591</span>, <time datetime="2015-07" class="refDate">July 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7591">https://www.rfc-editor.org/rfc/rfc7591</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8414">[RFC8414]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Sakimura, N.</span>, and <span class="refAuthor">J. Bradley</span>, <span class="refTitle">"OAuth 2.0 Authorization Server Metadata"</span>, <span class="seriesInfo">RFC 8414</span>, <span class="seriesInfo">DOI 10.17487/RFC8414</span>, <time datetime="2018-06" class="refDate">June 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8414">https://www.rfc-editor.org/rfc/rfc8414</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8628">[RFC8628]</dt>
+        <dd>
+<span class="refAuthor">Denniss, W.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Jones, M.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"OAuth 2.0 Device Authorization Grant"</span>, <span class="seriesInfo">RFC 8628</span>, <span class="seriesInfo">DOI 10.17487/RFC8628</span>, <time datetime="2019-08" class="refDate">August 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8628">https://www.rfc-editor.org/rfc/rfc8628</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8693">[RFC8693]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Nadalin, A.</span>, <span class="refAuthor">Campbell, B., Ed.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">C. Mortimore</span>, <span class="refTitle">"OAuth 2.0 Token Exchange"</span>, <span class="seriesInfo">RFC 8693</span>, <span class="seriesInfo">DOI 10.17487/RFC8693</span>, <time datetime="2020-01" class="refDate">January 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8693">https://www.rfc-editor.org/rfc/rfc8693</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9068">[RFC9068]</dt>
+      <dd>
+<span class="refAuthor">Bertocci, V.</span>, <span class="refTitle">"JSON Web Token (JWT) Profile for OAuth 2.0 Access Tokens"</span>, <span class="seriesInfo">RFC 9068</span>, <span class="seriesInfo">DOI 10.17487/RFC9068</span>, <time datetime="2021-10" class="refDate">October 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9068">https://www.rfc-editor.org/rfc/rfc9068</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-9.2">
+        <h3 id="name-informative-references">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="FAPI2.0-Security-Profiles">[FAPI2.0-Security-Profiles]</dt>
+        <dd>
+<span class="refAuthor">Fett, D. D., Ed.</span>, <span class="refAuthor">Tonge, D., Ed.</span>, and <span class="refAuthor">J. Heenan, Ed.</span>, <span class="refTitle">"FAPI 2.0 Security Profile"</span>, <span>n.d.</span>, <span>&lt;<a href="https://openid.net/specs/fapi-2_0-security-02.html">https://openid.net/specs/fapi-2_0-security-02.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="hl7.fhir.uv.smart-app-launch">[hl7.fhir.uv.smart-app-launch]</dt>
+        <dd>
+<span class="refTitle">"HL7 FHIR SMART App Launch"</span>, <span>n.d.</span>, <span>&lt;<a href="https://www.hl7.org/fhir/smart-app-launch/app-launch.html#obtain-authorization-code">https://www.hl7.org/fhir/smart-app-launch/app-launch.html#obtain-authorization-code</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-oauth-transaction-tokens">[I-D.ietf-oauth-transaction-tokens]</dt>
+        <dd>
+<span class="refAuthor">Tulshibagwale, A.</span>, <span class="refAuthor">Fletcher, G.</span>, and <span class="refAuthor">P. Kasselman</span>, <span class="refTitle">"Transaction Tokens"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-oauth-transaction-tokens-05</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-transaction-tokens-05">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-transaction-tokens-05</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-wimse-s2s-protocol">[I-D.ietf-wimse-s2s-protocol]</dt>
+        <dd>
+<span class="refAuthor">Campbell, B.</span>, <span class="refAuthor">Salowey, J.</span>, <span class="refAuthor">Schwenkschuster, A.</span>, and <span class="refAuthor">Y. Sheffer</span>, <span class="refTitle">"WIMSE Workload to Workload Authentication"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-wimse-s2s-protocol-05</span>, <time datetime="2025-06-19" class="refDate">19 June 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-wimse-s2s-protocol-05">https://datatracker.ietf.org/doc/html/draft-ietf-wimse-s2s-protocol-05</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.parecki-oauth-identity-assertion-authz-grant">[I-D.parecki-oauth-identity-assertion-authz-grant]</dt>
+        <dd>
+<span class="refAuthor">Parecki, A.</span>, <span class="refAuthor">McGuinness, K.</span>, and <span class="refAuthor">B. Campbell</span>, <span class="refTitle">"Identity Assertion Authorization Grant"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-parecki-oauth-identity-assertion-authz-grant-04</span>, <time datetime="2025-06-20" class="refDate">20 June 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-parecki-oauth-identity-assertion-authz-grant-04">https://datatracker.ietf.org/doc/html/draft-parecki-oauth-identity-assertion-authz-grant-04</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.jwt">[IANA.jwt]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span>&lt;<a href="https://www.iana.org/assignments/jwt">https://www.iana.org/assignments/jwt</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.oauth-parameters_token-endpoint-auth-method">[IANA.oauth-parameters_token-endpoint-auth-method]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Token Endpoint Authentication Methods"</span>, <span>&lt;<a href="https://www.iana.org/assignments/oauth-parameters">https://www.iana.org/assignments/oauth-parameters</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6750">[RFC6750]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span> and <span class="refAuthor">D. Hardt</span>, <span class="refTitle">"The OAuth 2.0 Authorization Framework: Bearer Token Usage"</span>, <span class="seriesInfo">RFC 6750</span>, <span class="seriesInfo">DOI 10.17487/RFC6750</span>, <time datetime="2012-10" class="refDate">October 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6750">https://www.rfc-editor.org/rfc/rfc6750</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7521">[RFC7521]</dt>
+        <dd>
+<span class="refAuthor">Campbell, B.</span>, <span class="refAuthor">Mortimore, C.</span>, <span class="refAuthor">Jones, M.</span>, and <span class="refAuthor">Y. Goland</span>, <span class="refTitle">"Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants"</span>, <span class="seriesInfo">RFC 7521</span>, <span class="seriesInfo">DOI 10.17487/RFC7521</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7521">https://www.rfc-editor.org/rfc/rfc7521</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7523">[RFC7523]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Campbell, B.</span>, and <span class="refAuthor">C. Mortimore</span>, <span class="refTitle">"JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants"</span>, <span class="seriesInfo">RFC 7523</span>, <span class="seriesInfo">DOI 10.17487/RFC7523</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7523">https://www.rfc-editor.org/rfc/rfc7523</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7636">[RFC7636]</dt>
+        <dd>
+<span class="refAuthor">Sakimura, N., Ed.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Agarwal</span>, <span class="refTitle">"Proof Key for Code Exchange by OAuth Public Clients"</span>, <span class="seriesInfo">RFC 7636</span>, <span class="seriesInfo">DOI 10.17487/RFC7636</span>, <time datetime="2015-09" class="refDate">September 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7636">https://www.rfc-editor.org/rfc/rfc7636</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8176">[RFC8176]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Hunt, P.</span>, and <span class="refAuthor">A. Nadalin</span>, <span class="refTitle">"Authentication Method Reference Values"</span>, <span class="seriesInfo">RFC 8176</span>, <span class="seriesInfo">DOI 10.17487/RFC8176</span>, <time datetime="2017-06" class="refDate">June 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8176">https://www.rfc-editor.org/rfc/rfc8176</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8705">[RFC8705]</dt>
+        <dd>
+<span class="refAuthor">Campbell, B.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Sakimura, N.</span>, and <span class="refAuthor">T. Lodderstedt</span>, <span class="refTitle">"OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound Access Tokens"</span>, <span class="seriesInfo">RFC 8705</span>, <span class="seriesInfo">DOI 10.17487/RFC8705</span>, <time datetime="2020-02" class="refDate">February 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8705">https://www.rfc-editor.org/rfc/rfc8705</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9101">[RFC9101]</dt>
+        <dd>
+<span class="refAuthor">Sakimura, N.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">M. Jones</span>, <span class="refTitle">"The OAuth 2.0 Authorization Framework: JWT-Secured Authorization Request (JAR)"</span>, <span class="seriesInfo">RFC 9101</span>, <span class="seriesInfo">DOI 10.17487/RFC9101</span>, <time datetime="2021-08" class="refDate">August 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9101">https://www.rfc-editor.org/rfc/rfc9101</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9126">[RFC9126]</dt>
+        <dd>
+<span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Campbell, B.</span>, <span class="refAuthor">Sakimura, N.</span>, <span class="refAuthor">Tonge, D.</span>, and <span class="refAuthor">F. Skokan</span>, <span class="refTitle">"OAuth 2.0 Pushed Authorization Requests"</span>, <span class="seriesInfo">RFC 9126</span>, <span class="seriesInfo">DOI 10.17487/RFC9126</span>, <time datetime="2021-09" class="refDate">September 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9126">https://www.rfc-editor.org/rfc/rfc9126</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9396">[RFC9396]</dt>
+        <dd>
+<span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Richer, J.</span>, and <span class="refAuthor">B. Campbell</span>, <span class="refTitle">"OAuth 2.0 Rich Authorization Requests"</span>, <span class="seriesInfo">RFC 9396</span>, <span class="seriesInfo">DOI 10.17487/RFC9396</span>, <time datetime="2023-05" class="refDate">May 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9396">https://www.rfc-editor.org/rfc/rfc9396</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9421">[RFC9421]</dt>
+        <dd>
+<span class="refAuthor">Backman, A., Ed.</span>, <span class="refAuthor">Richer, J., Ed.</span>, and <span class="refAuthor">M. Sporny</span>, <span class="refTitle">"HTTP Message Signatures"</span>, <span class="seriesInfo">RFC 9421</span>, <span class="seriesInfo">DOI 10.17487/RFC9421</span>, <time datetime="2024-02" class="refDate">February 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9421">https://www.rfc-editor.org/rfc/rfc9421</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9449">[RFC9449]</dt>
+        <dd>
+<span class="refAuthor">Fett, D.</span>, <span class="refAuthor">Campbell, B.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Jones, M.</span>, and <span class="refAuthor">D. Waite</span>, <span class="refTitle">"OAuth 2.0 Demonstrating Proof of Possession (DPoP)"</span>, <span class="seriesInfo">RFC 9449</span>, <span class="seriesInfo">DOI 10.17487/RFC9449</span>, <time datetime="2023-09" class="refDate">September 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9449">https://www.rfc-editor.org/rfc/rfc9449</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9700">[RFC9700]</dt>
+      <dd>
+<span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Labunets, A.</span>, and <span class="refAuthor">D. Fett</span>, <span class="refTitle">"Best Current Practice for OAuth 2.0 Security"</span>, <span class="seriesInfo">BCP 240</span>, <span class="seriesInfo">RFC 9700</span>, <span class="seriesInfo">DOI 10.17487/RFC9700</span>, <time datetime="2025-01" class="refDate">January 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9700">https://www.rfc-editor.org/rfc/rfc9700</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="ack">
+<section id="appendix-A">
+      <h2 id="name-acknowledgments">
+<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-A-1">The authors wants to acknowledge the support and work of the following individuals: George Fletcher (Practical Identity), Christopher Langton (Vulnetix).<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">The authors wants also to recognize the trail blazers and thought leaders that created the ecosystem without which this draft proposal would not be able to solve customer pain points and secure usage of digital services, especially without being limited to: Vittorio Bertocci†, Brian Campbell (Ping Identity), Justin Richer (MongoDB), Aaron Parecki (Okta), Pieter Kasselman (SPRL), Dr Mike Jones (Self-Issued Consulting, LLC), Dr Daniel Fett (Authlete).<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Jean-François Lombardo</span></div>
+<div dir="auto" class="left"><span class="org">AWS</span></div>
+<div dir="auto" class="left"><span class="country-name">Canada</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:jeffsec@amazon.com" class="email">jeffsec@amazon.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Alexandre Babeanu</span></div>
+<div dir="auto" class="left"><span class="org">IndyKite</span></div>
+<div dir="auto" class="left"><span class="country-name">Canada</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:alex.babeanu@indykite.com" class="email">alex.babeanu@indykite.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
