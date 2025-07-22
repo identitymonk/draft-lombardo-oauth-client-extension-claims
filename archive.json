@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-01T01:15:16.602985+00:00",
+  "timestamp": "2025-07-22T01:11:17.366763+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -537,6 +537,24 @@
           "updatedAt": "2025-06-28T19:11:53Z"
         }
       ]
+    },
+    {
+      "number": 22,
+      "id": "I_kwDOOEwV6s7BkprW",
+      "title": "[IETF-123/Madrid] Adding the IANA registry to be created",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/22",
+      "state": "OPEN",
+      "author": "identitymonk",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "identitymonk"
+      ],
+      "labels": [],
+      "body": "Met with IANA representative who asked to declare the registry to be created",
+      "createdAt": "2025-07-21T07:55:31Z",
+      "updatedAt": "2025-07-21T07:55:36Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
