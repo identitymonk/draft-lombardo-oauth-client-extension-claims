@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-22T01:11:17.366763+00:00",
+  "timestamp": "2025-07-31T01:12:51.040290+00:00",
   "repo": "identitymonk/draft-lombardo-oauth-client-extension-claims",
   "labels": [
     {
@@ -553,6 +553,38 @@
       "body": "Met with IANA representative who asked to declare the registry to be created",
       "createdAt": "2025-07-21T07:55:31Z",
       "updatedAt": "2025-07-21T07:55:36Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 23,
+      "id": "I_kwDOOEwV6s7DF--z",
+      "title": "Why only JWT tokens?",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/23",
+      "state": "OPEN",
+      "author": "yaron-zehavi",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I think the spec can equally be more broadly applied to reference tokens, with the new claims returned to RS through token introspection. \nBTW in terms of wording the spec says resource provider, where resource server is the term usually used in other specs",
+      "createdAt": "2025-07-29T10:41:40Z",
+      "updatedAt": "2025-07-29T10:41:40Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 24,
+      "id": "I_kwDOOEwV6s7DGDvx",
+      "title": "Where would OAuth profiles be expressed?",
+      "url": "https://github.com/identitymonk/draft-lombardo-oauth-client-extension-claims/issues/24",
+      "state": "OPEN",
+      "author": "yaron-zehavi",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "FAPI 1, FAPI 2, OAUTH 2.1, FHIR?\nDo these being to CCR?",
+      "createdAt": "2025-07-29T10:48:29Z",
+      "updatedAt": "2025-07-29T10:48:29Z",
       "closedAt": null,
       "comments": []
     }
